@@ -1,8 +1,18 @@
-import { Entity, PrimaryKey, Property } from '@mikro-orm/core';
+import {
+  Entity,
+  ManyToMany,
+  ManyToOne,
+  PrimaryKey,
+  Property,
+  Unique,
+} from '@mikro-orm/core';
 import { Field, ID, ObjectType } from 'type-graphql';
+import { Category } from './Category';
+import { User } from './User';
 
 @ObjectType()
 @Entity()
+@Unique({ properties: ['slug'] })
 export class Item {
   @Field(() => ID)
   @PrimaryKey()
@@ -10,7 +20,7 @@ export class Item {
 
   @Field()
   @Property()
-  title!: string;
+  name!: string;
 
   @Field({ nullable: true })
   @Property({ nullable: true })
@@ -25,10 +35,22 @@ export class Item {
   price!: number;
 
   @Field(() => String)
-  @Property({ defaultRaw: 'now' })
-  createdAt?: Date = new Date();
+  @Property({ type: 'date', nullable: true })
+  createdAt? = new Date();
 
   @Field(() => String)
-  @Property({ defaultRaw: 'now', onUpdate: () => new Date() })
-  updatedAt?: Date = new Date();
+  @Property({ type: 'date', onUpdate: () => new Date() })
+  updatedAt? = new Date();
+
+  @Field(() => String)
+  @Property()
+  slug: string;
+
+  @Field(() => User)
+  @ManyToOne()
+  seller: User;
+
+  @Field(() => [Category])
+  @ManyToMany(() => Category)
+  categories?: Category[];
 }
