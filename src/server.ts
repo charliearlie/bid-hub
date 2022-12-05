@@ -1,21 +1,23 @@
 import 'reflect-metadata';
-import { MikroORM } from '@mikro-orm/core';
-import express from 'express';
-import * as dotenv from 'dotenv';
 import { ApolloServer } from '@apollo/server';
 import { expressMiddleware } from '@apollo/server/express4';
-import { buildSchema } from 'type-graphql';
-import cors from 'cors';
 import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
-import http from 'http';
+import { MikroORM } from '@mikro-orm/core';
 import { json } from 'body-parser';
+import cors from 'cors';
+import * as dotenv from 'dotenv';
+import express from 'express';
+import http from 'http';
+import { buildSchema } from 'type-graphql';
+
 import mikroORMConfig from './mikro-orm.config';
 import { __prod__ } from './constants';
 
-dotenv.config();
-
 import { Item } from './entities/Item';
 import { ItemResolver } from './resolvers/item-resolver';
+import { User } from './entities/User';
+
+dotenv.config();
 
 const main = async () => {
   const orm = await MikroORM.init(mikroORMConfig);
@@ -25,18 +27,11 @@ const main = async () => {
     await migrator.up();
   }
 
-  // const newItem = await orm.em.create(Item, {
-  //   title: 'New Item created in server.ts',
-  //   description: 'Description of our item',
-  //   imageUrl: 'image.png',
-  //   price: 999,
-  // });
-
-  // console.log({ newItem });
+  const user = await orm.em.findOneOrFail(User, { id: 1 });
 
   const items = await orm.em.find(Item, {});
 
-  console.log({ items });
+  console.log(items);
 
   const app = express();
   const httpServer = http.createServer(app);
