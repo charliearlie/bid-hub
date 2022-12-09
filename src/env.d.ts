@@ -3,7 +3,8 @@ declare namespace NodeJS {
     DATABASE_NAME: string;
     DATABASE_USER: string;
     DATABASE_PASSWORD: string;
+    JWT_SECRET: string;
     SESSION_SECRET: string;
-    CORS_ORIGIN: string;
+    REDIS_URL: string;
   }
 }
