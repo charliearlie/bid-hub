@@ -24,6 +24,10 @@ export class User {
   @Property()
   email: string;
 
+  @Field(() => String)
+  @Property()
+  password: string;
+
   @Field({ nullable: true })
   @Property({ nullable: true })
   avatarUrl?: string;

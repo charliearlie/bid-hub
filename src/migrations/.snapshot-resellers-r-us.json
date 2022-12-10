@@ -79,6 +79,15 @@
           "nullable": false,
           "mappedType": "string"
         },
+        "password": {
+          "name": "password",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "string"
+        },
         "avatar_url": {
           "name": "avatar_url",
           "type": "varchar(255)",
@@ -173,13 +182,31 @@
           "nullable": true,
           "mappedType": "string"
         },
-        "price": {
-          "name": "price",
+        "buy_it_now_price": {
+          "name": "buy_it_now_price",
           "type": "int",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
+          "mappedType": "integer"
+        },
+        "starting_price": {
+          "name": "starting_price",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "integer"
+        },
+        "winning_bid": {
+          "name": "winning_bid",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
           "mappedType": "integer"
         },
         "created_at": {
@@ -210,6 +237,16 @@
           "primary": false,
           "nullable": false,
           "mappedType": "string"
+        },
+        "condition": {
+          "name": "condition",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "default": "'New'",
+          "mappedType": "text"
         },
         "seller_id": {
           "name": "seller_id",
