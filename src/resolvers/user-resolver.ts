@@ -79,4 +79,40 @@ export class UserResolver {
 
     return newUser;
   }
+
+  @Mutation(() => User)
+  async login(
+    @Ctx() { em, req, res }: MyContext,
+    @Arg('email') email: string,
+    @Arg('password') password: string
+  ): Promise<User | ResolverError> {
+    // TODO: Email log in for now but we will change to have both username and email
+    const user = await em.findOneOrFail(User, { email });
+
+    if (!user) {
+      return {
+        field: 'email | password',
+        message: 'Invalid email or password',
+      };
+    }
+
+    const isValidPassword = await bcrypt.compare(password, user.password);
+
+    if (!isValidPassword) {
+      return {
+        field: 'email | password',
+        message: 'Invalid email or password',
+      };
+    }
+
+    const token = sign({ user }, process.env.JWT_SECRET);
+    res.setHeader(
+      'Set-Cookie',
+      `user=${token}; HttpOnly; Max-Age=${1000 * 60 * 60 * 24 * 7}`
+    );
+
+    req.session.userId = user.id;
+
+    return user;
+  }
 }
