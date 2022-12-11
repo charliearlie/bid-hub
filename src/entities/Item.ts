@@ -10,6 +10,13 @@ import { Field, ID, ObjectType } from 'type-graphql';
 import { Category } from './Category';
 import { User } from './User';
 
+export enum Condition {
+  NEW = 'New',
+  USED = 'Used',
+  REFURBISHED = 'Refurbished',
+  DAMAGED = 'Damaged',
+}
+
 @ObjectType()
 @Entity()
 @Unique({ properties: ['slug'] })
@@ -31,8 +38,16 @@ export class Item {
   imageUrl?: string;
 
   @Field()
-  @Property()
-  price!: number;
+  @Property({ nullable: true })
+  buyItNowPrice?: number;
+
+  @Field({ nullable: true })
+  @Property({ nullable: true })
+  startingPrice?: number;
+
+  @Field({ nullable: true })
+  @Property({ nullable: true })
+  winningBid?: number;
 
   @Field(() => String)
   @Property({ type: 'date', nullable: true })
@@ -45,6 +60,10 @@ export class Item {
   @Field(() => String)
   @Property()
   slug: string;
+
+  @Field(() => String)
+  @Property({ default: Condition.NEW, type: 'text' })
+  condition: Condition;
 
   @Field(() => User)
   @ManyToOne()

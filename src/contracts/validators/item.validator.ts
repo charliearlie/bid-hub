@@ -1,4 +1,5 @@
 import { IsNumber, IsOptional, IsString } from 'class-validator';
+import { Condition } from '../../entities/Item';
 import { Field, InputType } from 'type-graphql';
 
 @InputType()
@@ -20,6 +21,10 @@ class ItemValidator {
   @Field()
   @IsNumber()
   public price: number;
+
+  @Field()
+  @IsString()
+  public conditon: Condition;
 }
 
 export default ItemValidator;

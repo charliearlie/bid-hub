@@ -52,6 +52,7 @@ export class ItemResolver {
       ...itemInput,
       slug: toKebabCase(itemInput.name),
       seller: itemSeller,
+      condition: itemInput.conditon,
     });
 
     return newItem;
