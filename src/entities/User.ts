@@ -7,6 +7,7 @@ import {
 } from '@mikro-orm/core';
 import { Field, ID, ObjectType } from 'type-graphql';
 import { Item } from './Item';
+import { Address } from './Address';
 
 @ObjectType()
 @Entity()
@@ -43,4 +44,8 @@ export class User {
   @Field(() => [Item])
   @OneToMany(() => Item, (item) => item.seller)
   itemsForSale?: Item[];
+
+  @Field(() => [Address])
+  @OneToMany(() => Address, (address) => address.user)
+  addresses?: Address[];
 }
