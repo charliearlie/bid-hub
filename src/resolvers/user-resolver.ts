@@ -13,6 +13,7 @@ import { MyContext } from 'types';
 import UserValidator from '../contracts/validators/user.validator';
 import { User } from '../entities/User';
 import { ResolverError } from '../utils';
+import { validateUserRegistration } from './helpers/validate-user';
 
 @ObjectType()
 class UserResponse {
@@ -22,41 +23,6 @@ class UserResponse {
   @Field(() => [ResolverError], { nullable: true })
   errors?: ResolverError[];
 }
-
-type ValidateUserOutput = {
-  success: boolean;
-  errors: ResolverError[];
-};
-
-const validateUserInput = (userInput: Partial<User>): ValidateUserOutput => {
-  const errors: ResolverError[] = [];
-  const { email, password, username } = userInput;
-  if (!username || username.length < 2) {
-    errors.push({
-      field: 'username',
-      message: 'Username must be at least 2 characters long',
-    });
-  }
-
-  if (!email || !/^\S+@\S+\.\S+$/.test(email)) {
-    errors.push({
-      field: 'email',
-      message: 'Not a valid email address',
-    });
-  }
-
-  if (!password || password.length < 6) {
-    errors.push({
-      field: 'password',
-      message: 'Passwords must be at least 6 characters long',
-    });
-  }
-
-  return {
-    success: errors.length === 0,
-    errors: errors,
-  };
-};
 
 @Resolver()
 export class UserResolver {
@@ -87,7 +53,7 @@ export class UserResolver {
     @Ctx() { em, req, res }: MyContext,
     @Arg('userInput') userInput: UserValidator
   ): Promise<UserResponse> {
-    const validateUserResponse = validateUserInput(userInput);
+    const validateUserResponse = validateUserRegistration(userInput);
     if (!validateUserResponse.success) {
       return { errors: validateUserResponse.errors };
     }
