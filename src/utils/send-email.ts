@@ -15,14 +15,12 @@ const sendEmail = async (
   subject: string,
   html: string
 ): Promise<void> => {
-  const info = await transporter.sendMail({
+  await transporter.sendMail({
     to,
     subject,
     sender: 'Bid Hub <info@bidhub.com>',
     html,
   });
-
-  console.log(info.messageId);
 };
 
 export default sendEmail;
