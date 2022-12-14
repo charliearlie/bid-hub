@@ -48,4 +48,7 @@ export class User {
   @Field(() => [Address])
   @OneToMany(() => Address, (address) => address.user)
   addresses?: Address[];
+
+  @Field(() => String)
+  resetToken?: string;
 }

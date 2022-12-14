@@ -12,8 +12,11 @@ import { sign } from 'jsonwebtoken';
 import { MyContext } from 'types';
 import UserValidator from '../contracts/validators/user.validator';
 import { User } from '../entities/User';
-import { ResolverError } from '../utils';
+import { ResolverError, sendEmail } from '../utils';
 import { validateUserRegistration } from './helpers/validate-user';
+import { v4 as uuidv4 } from 'uuid';
+import { FORGOT_PASSWORD_PREFIX } from '../constants';
+import resetPasswordEmailTemplate from './helpers/email/reset-password-email';
 
 @ObjectType()
 class UserResponse {
@@ -123,6 +126,66 @@ export class UserResolver {
 
     console.log('user', user);
 
+    req.session.userId = user.id;
+
+    return { user };
+  }
+
+  @Mutation(() => Boolean)
+  async forgotPassword(
+    @Ctx() { em, redis }: MyContext,
+    @Arg('email') email: string
+  ): Promise<boolean> {
+    const user = await em.findOneOrFail(User, { email });
+
+    if (!user) {
+      return false;
+    }
+
+    const token = uuidv4();
+    await redis.set(FORGOT_PASSWORD_PREFIX + token, user.id, 'EX', 60 * 60);
+
+    const html = resetPasswordEmailTemplate(token);
+    await sendEmail(user.email, 'Reset your password', html);
+
+    return true;
+  }
+
+  @Mutation(() => UserResponse)
+  async resetPassword(
+    @Ctx() { em, redis, req }: MyContext,
+    @Arg('token') token: string,
+    @Arg('newPassword') newPassword: string
+  ): Promise<UserResponse> {
+    const userId = await redis.get(FORGOT_PASSWORD_PREFIX + token);
+    console.log({ userId });
+    if (!userId) {
+      return {
+        errors: [
+          {
+            field: 'password',
+            message: 'Invalid token or token has expired',
+          },
+        ],
+      };
+    }
+
+    const id = Number(userId);
+    const user = await em.findOneOrFail(User, { id });
+
+    if (!user) {
+      return {
+        errors: [
+          {
+            field: 'user',
+            message: 'Token is no longer valid',
+          },
+        ],
+      };
+    }
+
+    user.password = await bcrypt.hash(newPassword, 10);
+    await em.persistAndFlush(user);
     req.session.userId = user.id;
 
     return { user };
