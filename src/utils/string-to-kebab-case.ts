@@ -1,5 +1,4 @@
 export default function toKebabCase(str: string): string {
-  console.log(str);
   if (typeof str !== 'string')
     throw new TypeError('This function requires a string parameter');
 
