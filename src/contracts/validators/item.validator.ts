@@ -1,6 +1,13 @@
-import { IsNumber, IsOptional, IsString } from 'class-validator';
+import {
+  IsArray,
+  IsNumber,
+  IsObject,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 import { Condition } from '../../entities/Item';
 import { Field, InputType } from 'type-graphql';
+import { CategoryValidator as Category } from '../../contracts/validators/category.validator';
 
 @InputType()
 class ItemValidator {
@@ -25,6 +32,11 @@ class ItemValidator {
   @Field()
   @IsString()
   public conditon: Condition;
+
+  @Field(() => [Category])
+  @IsArray()
+  @IsObject({ each: true })
+  public categories: Category[];
 }
 
 export default ItemValidator;

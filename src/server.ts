@@ -20,6 +20,7 @@ import { __prod__ } from './constants';
 import { ItemResolver } from './resolvers/item-resolver';
 import { User } from './entities/User';
 import { UserResolver } from './resolvers/user-resolver';
+import { Item } from './entities/Item';
 
 dotenv.config();
 
@@ -36,6 +37,10 @@ const main = async () => {
   const users = await orm.em.find(User, {});
 
   console.log(users);
+
+  const items = await orm.em.find(Item, {});
+
+  console.log({ items });
 
   const app = express();
   const httpServer = http.createServer(app);
