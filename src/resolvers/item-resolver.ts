@@ -6,7 +6,7 @@ import { toKebabCase } from '../utils';
 import { User } from '../entities/User';
 
 @Resolver(() => Item)
-export class ItemResolver {
+class ItemResolver {
   // Get all items
   @Query(() => [Item])
   async items(@Ctx() { em }: MyContext): Promise<Item[]> {
@@ -75,3 +75,5 @@ export class ItemResolver {
     return true;
   }
 }
+
+export default ItemResolver;

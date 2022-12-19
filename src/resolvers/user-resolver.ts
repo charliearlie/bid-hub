@@ -28,7 +28,7 @@ class UserResponse {
 }
 
 @Resolver()
-export class UserResolver {
+class UserResolver {
   @Query(() => [User])
   async getUsers(@Ctx() { em }: MyContext): Promise<User[]> {
     return em.find(User, {});
@@ -191,3 +191,5 @@ export class UserResolver {
     return { user };
   }
 }
+
+export default UserResolver;

@@ -7,7 +7,7 @@ import {
 } from 'class-validator';
 import { Condition } from '../../entities/Item';
 import { Field, InputType } from 'type-graphql';
-import { CategoryValidator as Category } from '../../contracts/validators/category.validator';
+import Category from '../../contracts/validators/category.validator';
 
 @InputType()
 class ItemValidator {

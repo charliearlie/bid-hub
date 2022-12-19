@@ -1,25 +1,31 @@
 import 'reflect-metadata';
+
+// Express
+import cors from 'cors';
+import express from 'express';
+import http from 'http';
+import session from 'express-session';
+import { json } from 'body-parser';
+
+// Redis
+import connectRedis from 'connect-redis';
+import Redis from 'ioredis';
+
+// Apollo
 import { ApolloServer } from '@apollo/server';
 import { expressMiddleware } from '@apollo/server/express4';
 import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
 import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin/landingPage/default';
-import { MikroORM } from '@mikro-orm/core';
-import { json } from 'body-parser';
-import session from 'express-session';
-import cors from 'cors';
+
 import * as dotenv from 'dotenv';
-import express from 'express';
-import http from 'http';
 import { buildSchema } from 'type-graphql';
-import Redis from 'ioredis';
-import connectRedis from 'connect-redis';
 
+import { MikroORM } from '@mikro-orm/core';
 import mikroORMConfig from './mikro-orm.config';
-import { __prod__ } from './constants';
 
-import { ItemResolver } from './resolvers/item-resolver';
+import { __prod__ } from './constants';
+import { CategoryResolver, ItemResolver, UserResolver } from './resolvers';
 import { User } from './entities/User';
-import { UserResolver } from './resolvers/user-resolver';
 import { Item } from './entities/Item';
 
 dotenv.config();
@@ -70,7 +76,7 @@ const main = async () => {
 
   const server = new ApolloServer({
     schema: await buildSchema({
-      resolvers: [ItemResolver, UserResolver],
+      resolvers: [CategoryResolver, ItemResolver, UserResolver],
     }),
     plugins: [
       ApolloServerPluginDrainHttpServer({ httpServer }),

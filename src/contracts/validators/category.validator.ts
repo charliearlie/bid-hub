@@ -4,7 +4,7 @@ import { Field, InputType } from 'type-graphql';
 
 @Entity()
 @InputType()
-export class CategoryValidator {
+class CategoryValidator {
   @Field()
   @IsString()
   @Property()
@@ -15,3 +15,5 @@ export class CategoryValidator {
   @Property({ nullable: true })
   description?: string;
 }
+
+export default CategoryValidator;
