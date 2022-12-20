@@ -51,13 +51,13 @@ class ItemResolver {
     const { categories: categoryIds } = itemInput;
     const categories = await em.find(Category, categoryIds);
 
-    console.log({ categories });
     const itemSeller = await em.findOneOrFail(User, { id: userId });
     const newItem = await em.create(Item, {
       ...itemInput,
       slug: toKebabCase(itemInput.name),
       seller: itemSeller,
       condition: itemInput.conditon,
+      categories,
     });
 
     return newItem;
