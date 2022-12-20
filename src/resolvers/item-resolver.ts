@@ -4,6 +4,7 @@ import { Item } from '../entities/Item';
 import { MyContext } from '../../types';
 import { toKebabCase } from '../utils';
 import { User } from '../entities/User';
+import { Category } from '../entities/Category';
 
 @Resolver(() => Item)
 class ItemResolver {
@@ -47,13 +48,16 @@ class ItemResolver {
     @Arg('itemInput') itemInput: ItemValidator,
     @Arg('userId') userId: number
   ): Promise<Item> {
+    const { categories: categoryIds } = itemInput;
+    const categories = await em.find(Category, categoryIds);
+
+    console.log({ categories });
     const itemSeller = await em.findOneOrFail(User, { id: userId });
     const newItem = await em.create(Item, {
       ...itemInput,
       slug: toKebabCase(itemInput.name),
       seller: itemSeller,
       condition: itemInput.conditon,
-      categories: itemInput.categories,
     });
 
     return newItem;
