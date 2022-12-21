@@ -49,14 +49,18 @@ class ItemResolver {
     @Arg('userId') userId: number
   ): Promise<Item> {
     const { categories: categoryIds } = itemInput;
-    const categories = await em.find(Category, categoryIds);
+    let categories: Category[] = [];
+
+    if (categoryIds && categoryIds.length > 0) {
+      categories = await em.find(Category, categoryIds);
+    }
 
     const itemSeller = await em.findOneOrFail(User, { id: userId });
     const newItem = await em.create(Item, {
       ...itemInput,
       slug: toKebabCase(itemInput.name),
       seller: itemSeller,
-      condition: itemInput.conditon,
+      condition: itemInput.condition,
       categories,
     });
 
@@ -64,6 +68,44 @@ class ItemResolver {
   }
 
   // Edit item
+  @Mutation(() => Item)
+  async editItem(
+    @Ctx() { em }: MyContext,
+    @Arg('id', () => ID) id: number,
+    @Arg('itemInput') itemInput: ItemValidator
+  ): Promise<Item | null> {
+    const {
+      name,
+      description,
+      imageUrl,
+      price,
+      categories: categoryIds,
+    } = itemInput;
+
+    console.log(categoryIds);
+    const itemToEdit = await em.findOneOrFail(Item, id);
+    const categories = await em.find(Category, categoryIds);
+
+    itemToEdit.name = name;
+    itemToEdit.description = description;
+    itemToEdit.imageUrl = imageUrl;
+    itemToEdit.buyItNowPrice = price;
+
+    const updateResult = await em.nativeUpdate(
+      Item,
+      { id },
+      {
+        name: itemInput.name,
+        description: itemInput.description,
+        condition: itemInput.condition,
+      }
+    );
+
+    if (updateResult !== 1) {
+      throw new Error('Could not update item');
+
+    return itemToEdit;
+  }
 
   // Delete item
   @Mutation(() => Boolean)

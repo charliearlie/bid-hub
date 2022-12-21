@@ -24,10 +24,11 @@ class ItemValidator {
 
   @Field()
   @IsString()
-  public conditon: Condition;
+  public condition: Condition;
 
-  @Field(() => [ID])
+  @Field(() => [ID], { nullable: true })
   @IsArray()
+  @IsOptional()
   public categories: number[];
 }
 
