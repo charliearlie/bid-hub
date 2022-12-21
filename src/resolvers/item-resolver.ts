@@ -1,10 +1,30 @@
-import { Arg, Ctx, ID, Mutation, Query, Resolver } from 'type-graphql';
+import {
+  Arg,
+  Ctx,
+  Field,
+  ID,
+  Mutation,
+  ObjectType,
+  Query,
+  Resolver,
+} from 'type-graphql';
 import ItemValidator from '../contracts/validators/item.validator';
 import { Item } from '../entities/Item';
 import { MyContext } from '../../types';
-import { toKebabCase } from '../utils';
+import { ResolverError, createSlug } from '../utils';
 import { User } from '../entities/User';
 import { Category } from '../entities/Category';
+import { NotFoundError } from '@mikro-orm/core';
+
+// I think we can reuse this and just rename `item` something generic like `data` and import it into files
+@ObjectType()
+class ItemResponse {
+  @Field(() => Item, { nullable: true })
+  item?: Item;
+
+  @Field(() => [ResolverError], { nullable: true })
+  errors?: ResolverError[];
+}
 
 @Resolver(() => Item)
 class ItemResolver {
@@ -19,11 +39,24 @@ class ItemResolver {
   async getItemById(
     @Ctx() { em }: MyContext,
     @Arg('id') id: number
-  ): Promise<Item | null> {
-    console.log({ id });
-    const item = await em.findOne(Item, { id });
+  ): Promise<ItemResponse> {
+    let item;
+    try {
+      item = await em.findOneOrFail(Item, { id });
+    } catch (error) {
+      if (error instanceof NotFoundError) {
+        return {
+          errors: [
+            {
+              field: 'item',
+              message: `No item was found with an ID of ${id}`,
+            },
+          ],
+        };
+      }
+    }
 
-    return item;
+    return { item };
   }
 
   // Search for items
@@ -42,29 +75,41 @@ class ItemResolver {
     return matchedItems;
   }
   // Create item
-  @Mutation(() => Item)
+  @Mutation(() => ItemResponse)
   async addItem(
     @Ctx() { em }: MyContext,
     @Arg('itemInput') itemInput: ItemValidator,
     @Arg('userId') userId: number
-  ): Promise<Item> {
+  ): Promise<ItemResponse> {
     const { categories: categoryIds } = itemInput;
     let categories: Category[] = [];
 
-    if (categoryIds && categoryIds.length > 0) {
-      categories = await em.find(Category, categoryIds);
+    try {
+      if (categoryIds && categoryIds.length > 0) {
+        categories = await em.find(Category, categoryIds);
+      }
+
+      const itemSeller = await em.findOneOrFail(User, { id: userId });
+      const newItem = await em.create(Item, {
+        ...itemInput,
+        slug: createSlug(itemInput.name),
+        seller: itemSeller,
+        condition: itemInput.condition,
+        categories,
+      });
+
+      // todo: figure out why id isn't generated at this point
+      return { item: newItem };
+    } catch (error) {
+      return {
+        errors: [
+          {
+            field: 'item',
+            message: 'Could not update item',
+          },
+        ],
+      };
     }
-
-    const itemSeller = await em.findOneOrFail(User, { id: userId });
-    const newItem = await em.create(Item, {
-      ...itemInput,
-      slug: toKebabCase(itemInput.name),
-      seller: itemSeller,
-      condition: itemInput.condition,
-      categories,
-    });
-
-    return newItem;
   }
 
   // Edit item
