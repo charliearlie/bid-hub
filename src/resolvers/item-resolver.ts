@@ -84,6 +84,7 @@ class ItemResolver {
 
     console.log(categoryIds);
     const itemToEdit = await em.findOneOrFail(Item, id);
+    // todo: fix bug with editing item categories
     const categories = await em.find(Category, categoryIds);
 
     itemToEdit.name = name;
@@ -103,6 +104,7 @@ class ItemResolver {
 
     if (updateResult !== 1) {
       throw new Error('Could not update item');
+    }
 
     return itemToEdit;
   }
