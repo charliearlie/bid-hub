@@ -14,7 +14,7 @@ import { MyContext } from '../../types';
 import { ResolverError, createSlug } from '../utils';
 import { User } from '../entities/User';
 import { Category } from '../entities/Category';
-import { NotFoundError, wrap } from '@mikro-orm/core';
+import { FilterQuery, NotFoundError, wrap } from '@mikro-orm/core';
 
 // I think we can reuse this and just rename `item` something generic like `data` and import it into files
 @ObjectType()
@@ -63,16 +63,11 @@ class ItemResolver {
   @Query(() => [Item])
   async searchItems(
     @Ctx() { em }: MyContext,
-    @Arg('searchExpression') searchExpression: string
+    @Arg('searchQuery') searchQuery: string
   ): Promise<Item[]> {
-    const items = await em.find(Item, {});
+    const items = await em.find(Item, { name: { $ilike: `%${searchQuery}%` } });
 
-    // Basic now. This will be a fuzzy search that goes through more than the item name
-    const matchedItems = items.filter((item) =>
-      item.name.toLowerCase().includes(searchExpression)
-    );
-
-    return matchedItems;
+    return items;
   }
   // Create item
   @Mutation(() => ItemResponse)
