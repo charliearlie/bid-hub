@@ -1,6 +1,5 @@
 import {
   Entity,
-  ManyToMany,
   OneToMany,
   PrimaryKey,
   Property,
@@ -9,7 +8,6 @@ import {
 import { Field, ID, ObjectType } from 'type-graphql';
 import { Item } from './Item';
 import { Address } from './Address';
-import { Category } from './Category';
 
 @ObjectType()
 @Entity()

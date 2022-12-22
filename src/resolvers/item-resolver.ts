@@ -14,7 +14,7 @@ import { MyContext } from '../../types';
 import { ResolverError, createSlug } from '../utils';
 import { User } from '../entities/User';
 import { Category } from '../entities/Category';
-import { NotFoundError } from '@mikro-orm/core';
+import { NotFoundError, wrap } from '@mikro-orm/core';
 
 // I think we can reuse this and just rename `item` something generic like `data` and import it into files
 @ObjectType()
@@ -98,7 +98,7 @@ class ItemResolver {
         categories,
       });
 
-      // todo: figure out why id isn't generated at this point
+      await em.persistAndFlush(newItem);
       return { item: newItem };
     } catch (error) {
       return {
@@ -127,31 +127,20 @@ class ItemResolver {
       categories: categoryIds,
     } = itemInput;
 
-    console.log(categoryIds);
-    const itemToEdit = await em.findOneOrFail(Item, id);
-    // todo: fix bug with editing item categories
+    const existingItem = await em.findOneOrFail(Item, id);
     const categories = await em.find(Category, categoryIds);
 
-    itemToEdit.name = name;
-    itemToEdit.description = description;
-    itemToEdit.imageUrl = imageUrl;
-    itemToEdit.buyItNowPrice = price;
+    const toSave = wrap(existingItem).assign({
+      name,
+      description,
+      imageUrl,
+      buyItNowPrice: price,
+      categories,
+    });
 
-    const updateResult = await em.nativeUpdate(
-      Item,
-      { id },
-      {
-        name: itemInput.name,
-        description: itemInput.description,
-        condition: itemInput.condition,
-      }
-    );
+    await em.persistAndFlush(toSave);
 
-    if (updateResult !== 1) {
-      throw new Error('Could not update item');
-    }
-
-    return itemToEdit;
+    return toSave;
   }
 
   // Delete item

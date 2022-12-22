@@ -1,6 +1,6 @@
 import { createSlug } from '.';
 
-describe('kebabCase', () => {
+describe('createSlug', () => {
   it('should replace capital letters in a string with "- and lower case"', () => {
     const str = 'Air force 1 pink';
     expect(createSlug(str)).toBe('air-force-1-pink');
