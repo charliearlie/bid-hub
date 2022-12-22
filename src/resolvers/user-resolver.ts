@@ -12,6 +12,7 @@ import { sign } from 'jsonwebtoken';
 import { MyContext } from 'types';
 import UserValidator from '../contracts/validators/user.validator';
 import { User } from '../entities/User';
+import { Address } from '../entities/Address';
 import { ResolverError, sendEmail } from '../utils';
 import { validateUserRegistration } from './helpers/validate-user';
 import { v4 as uuidv4 } from 'uuid';
@@ -124,8 +125,6 @@ class UserResolver {
       `user=${token}; HttpOnly; Max-Age=${1000 * 60 * 60 * 24 * 7}`
     );
 
-    console.log('user', user);
-
     req.session.userId = user.id;
 
     return { user };
@@ -189,6 +188,55 @@ class UserResolver {
     req.session.userId = user.id;
 
     return { user };
+  }
+
+  @Mutation(() => UserResponse)
+  async addAddress(
+    @Ctx() { em, req }: MyContext,
+    @Arg('addressLine1') addressLine1: string,
+    @Arg('addressLine2') addressLine2: string,
+    @Arg('city') city: string,
+    @Arg('postCode') postCode: string
+  ): Promise<UserResponse> {
+    if (req.session.userId) {
+      const user = await em.findOneOrFail(User, req.session.userId);
+      if (user) {
+        const newAddress = await em.create(Address, {
+          addressName: 'Home',
+          firstLine: addressLine1,
+          secondLine: addressLine2,
+          thirdLine: '',
+          cityOrTown: city,
+          postCode,
+          user,
+        });
+
+        user.addresses = user.addresses
+          ? [...user.addresses, newAddress]
+          : undefined;
+        await em.persistAndFlush(user);
+
+        return { user };
+      }
+
+      return {
+        errors: [
+          {
+            field: 'user',
+            message: 'User not found',
+          },
+        ],
+      };
+    }
+
+    return {
+      errors: [
+        {
+          field: 'user',
+          message: 'User not logged in',
+        },
+      ],
+    };
   }
 }
 
