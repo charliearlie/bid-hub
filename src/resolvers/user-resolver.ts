@@ -16,8 +16,9 @@ import { Address } from '../entities/Address';
 import { ResolverError, sendEmail } from '../utils';
 import { validateUserRegistration } from './helpers/validate-user';
 import { v4 as uuidv4 } from 'uuid';
-import { FORGOT_PASSWORD_PREFIX } from '../constants';
+import { FORGOT_PASSWORD_PREFIX, MAGIC_LINK_PREFIX } from '../constants';
 import resetPasswordEmailTemplate from './helpers/email/reset-password-email';
+import magicLinkEmailTemplate from './helpers/email/magic-link-email';
 
 @ObjectType()
 class UserResponse {
@@ -157,7 +158,6 @@ class UserResolver {
     @Arg('newPassword') newPassword: string
   ): Promise<UserResponse> {
     const userId = await redis.get(FORGOT_PASSWORD_PREFIX + token);
-    console.log({ userId });
     if (!userId) {
       return {
         errors: [
@@ -237,6 +237,58 @@ class UserResolver {
         },
       ],
     };
+  }
+
+  @Mutation(() => Boolean)
+  async emailMagiclink(
+    @Ctx() { em, redis }: MyContext,
+    @Arg('email') email: string
+  ): Promise<boolean> {
+    const user = await em.findOneOrFail(User, { email });
+
+    if (!user) {
+      return false;
+    }
+
+    const token = uuidv4();
+    await redis.set(MAGIC_LINK_PREFIX + token, user.id, 'EX', 60 * 60);
+
+    const html = magicLinkEmailTemplate(token);
+    await sendEmail(user.email, 'Log in to Bid Hub', html);
+
+    return true;
+  }
+
+  @Mutation(() => Boolean)
+  async handleMagicEmailLogin(
+    @Ctx() { em, req, res, redis }: MyContext,
+    @Arg('loginToken') loginToken: string
+  ): Promise<boolean> {
+    const userId = await redis.get(MAGIC_LINK_PREFIX + loginToken);
+    if (!userId) {
+      return false;
+    }
+
+    const id = Number(userId);
+    const user = await em.findOneOrFail(User, { id });
+
+    if (!user) {
+      return false;
+    }
+
+    req.session.userId = id;
+
+    const token = sign(
+      { email: user.email, username: user.username, id: user.id },
+      process.env.JWT_SECRET
+    );
+
+    res.cookie('user', token, {
+      maxAge: 1000 * 60 * 60 * 24 * 7,
+      httpOnly: true,
+    });
+
+    return true;
   }
 }
 
