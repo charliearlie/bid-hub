@@ -38,7 +38,7 @@ class UserResolver {
   async me(@Ctx() { em, req }: MyContext): Promise<UserResponse> {
     const id = req.session.userId;
     if (id) {
-      return { user: await em.findOneOrFail(User, { id }) };
+      return { user: await em.findOneOrFail(User, { id }), success: true };
     }
 
     return {
@@ -74,10 +74,10 @@ class UserResolver {
       { email: newUser.email, username: newUser.username, id: newUser.id },
       process.env.JWT_SECRET
     );
-    res.setHeader(
-      'Set-Cookie',
-      `user=${token}; HttpOnly; Max-Age=${1000 * 60 * 60 * 24 * 7}`
-    );
+    res.cookie('user', token, {
+      maxAge: 1000 * 60 * 60 * 24 * 7,
+      httpOnly: true,
+    });
     req.session.userId = newUser.id;
 
     return { user: newUser, success: true };
@@ -122,14 +122,28 @@ class UserResolver {
       { email: user.email, username: user.username, id: user.id },
       process.env.JWT_SECRET
     );
-    res.setHeader(
-      'Set-Cookie',
-      `user=${token}; HttpOnly; Max-Age=${1000 * 60 * 60 * 24 * 7}`
-    );
+    res.cookie('user', token, {
+      maxAge: 1000 * 60 * 60 * 24 * 7,
+      httpOnly: true,
+    });
 
     req.session.userId = user.id;
 
     return { user, success: true };
+  }
+
+  @Mutation(() => Boolean)
+  async logout(@Ctx() { req, res }: MyContext): Promise<Boolean> {
+    return new Promise((resolve) => {
+      req.session.destroy((error) => {
+        res.clearCookie('user');
+        res.clearCookie('qid'); // todo: put this in a variable. Maybe even env variable
+        if (error) {
+          console.error(error);
+        }
+      });
+      resolve(true);
+    });
   }
 
   @Mutation(() => Boolean)
@@ -190,7 +204,7 @@ class UserResolver {
     await em.persistAndFlush(user);
     req.session.userId = user.id;
 
-    return { user };
+    return { user, success: true };
   }
 
   @Mutation(() => UserResponse)
@@ -219,7 +233,7 @@ class UserResolver {
           : undefined;
         await em.persistAndFlush(user);
 
-        return { user };
+        return { user, success: true };
       }
 
       return {
