@@ -13,20 +13,18 @@ import { MyContext } from 'types';
 import UserValidator from '../contracts/validators/user.validator';
 import { User } from '../entities/User';
 import { Address } from '../entities/Address';
-import { ResolverError, sendEmail } from '../utils';
+import { sendEmail } from '../utils';
 import { validateUserRegistration } from './helpers/validate-user';
 import { v4 as uuidv4 } from 'uuid';
 import { FORGOT_PASSWORD_PREFIX, MAGIC_LINK_PREFIX } from '../constants';
 import resetPasswordEmailTemplate from './helpers/email/reset-password-email';
 import magicLinkEmailTemplate from './helpers/email/magic-link-email';
+import BidHubResponse from './helpers/Response';
 
 @ObjectType()
-class UserResponse {
+class UserResponse extends BidHubResponse {
   @Field(() => User, { nullable: true })
   user?: User;
-
-  @Field(() => [ResolverError], { nullable: true })
-  errors?: ResolverError[];
 }
 
 @Resolver()
@@ -50,6 +48,7 @@ class UserResolver {
           message: 'No user found',
         },
       ],
+      success: false,
     };
   }
 
@@ -60,7 +59,7 @@ class UserResolver {
   ): Promise<UserResponse> {
     const validateUserResponse = validateUserRegistration(userInput);
     if (!validateUserResponse.success) {
-      return { errors: validateUserResponse.errors };
+      return { errors: validateUserResponse.errors, success: false };
     }
 
     const hashedPassword = await bcrypt.hash(userInput.password, 10);
@@ -81,7 +80,7 @@ class UserResolver {
     );
     req.session.userId = newUser.id;
 
-    return { user: newUser };
+    return { user: newUser, success: true };
   }
 
   @Mutation(() => UserResponse)
@@ -101,6 +100,7 @@ class UserResolver {
             message: 'Invalid email or password',
           },
         ],
+        success: false,
       };
     }
 
@@ -114,6 +114,7 @@ class UserResolver {
             message: 'Invalid email or password',
           },
         ],
+        success: false,
       };
     }
 
@@ -128,7 +129,7 @@ class UserResolver {
 
     req.session.userId = user.id;
 
-    return { user };
+    return { user, success: true };
   }
 
   @Mutation(() => Boolean)
@@ -166,6 +167,7 @@ class UserResolver {
             message: 'Invalid token or token has expired',
           },
         ],
+        success: false,
       };
     }
 
@@ -180,6 +182,7 @@ class UserResolver {
             message: 'Token is no longer valid',
           },
         ],
+        success: false,
       };
     }
 
@@ -226,6 +229,7 @@ class UserResolver {
             message: 'User not found',
           },
         ],
+        success: false,
       };
     }
 
@@ -236,6 +240,7 @@ class UserResolver {
           message: 'User not logged in',
         },
       ],
+      success: false,
     };
   }
 

@@ -11,19 +11,16 @@ import {
 import ItemValidator from '../contracts/validators/item.validator';
 import { Item } from '../entities/Item';
 import { MyContext } from '../../types';
-import { ResolverError, createSlug } from '../utils';
+import { createSlug } from '../utils';
 import { User } from '../entities/User';
 import { Category } from '../entities/Category';
-import { FilterQuery, NotFoundError, wrap } from '@mikro-orm/core';
+import { NotFoundError, wrap } from '@mikro-orm/core';
+import BidHubResponse from './helpers/Response';
 
-// I think we can reuse this and just rename `item` something generic like `data` and import it into files
 @ObjectType()
-class ItemResponse {
+class ItemResponse extends BidHubResponse {
   @Field(() => Item, { nullable: true })
   item?: Item;
-
-  @Field(() => [ResolverError], { nullable: true })
-  errors?: ResolverError[];
 }
 
 @Resolver(() => Item)
@@ -52,11 +49,12 @@ class ItemResolver {
               message: `No item was found with an ID of ${id}`,
             },
           ],
+          success: false,
         };
       }
     }
 
-    return { item };
+    return { item, success: true };
   }
 
   // Search for items
@@ -94,7 +92,7 @@ class ItemResolver {
       });
 
       await em.persistAndFlush(newItem);
-      return { item: newItem };
+      return { item: newItem, success: true };
     } catch (error) {
       return {
         errors: [
@@ -103,6 +101,7 @@ class ItemResolver {
             message: 'Could not update item',
           },
         ],
+        success: false,
       };
     }
   }

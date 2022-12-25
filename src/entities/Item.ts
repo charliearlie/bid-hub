@@ -2,11 +2,13 @@ import {
   Entity,
   ManyToMany,
   ManyToOne,
+  OneToMany,
   PrimaryKey,
   Property,
   Unique,
 } from '@mikro-orm/core';
 import { Field, ID, ObjectType } from 'type-graphql';
+import { Bid } from './Bid';
 import { Category } from './Category';
 import { User } from './User';
 
@@ -72,4 +74,8 @@ export class Item {
   @Field(() => [Category])
   @ManyToMany(() => Category)
   categories?: Category[];
+
+  @Field(() => [Bid])
+  @OneToMany(() => Bid, (bid) => bid.item)
+  bids?: Bid[];
 }

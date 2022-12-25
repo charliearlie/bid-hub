@@ -27,6 +27,7 @@ import { __prod__ } from './constants';
 import { CategoryResolver, ItemResolver, UserResolver } from './resolvers';
 import { User } from './entities/User';
 import { Item } from './entities/Item';
+import BidResolver from './resolvers/bid-resolver';
 
 dotenv.config();
 
@@ -76,7 +77,7 @@ const main = async () => {
 
   const server = new ApolloServer({
     schema: await buildSchema({
-      resolvers: [CategoryResolver, ItemResolver, UserResolver],
+      resolvers: [CategoryResolver, ItemResolver, UserResolver, BidResolver],
     }),
     plugins: [
       ApolloServerPluginDrainHttpServer({ httpServer }),

@@ -7,12 +7,13 @@ import path from 'path';
 import { Category } from './entities/Category';
 import { User } from './entities/User';
 import { Address } from './entities/Address';
+import { Bid } from './entities/Bid';
 
 const config: Options<PostgreSqlDriver> = {
   migrations: {
     path: path.join(__dirname, './migrations'),
   },
-  entities: [Address, Item, Category, User],
+  entities: [Address, Item, Category, User, Bid],
   dbName: 'resellers-r-us',
   type: 'postgresql',
   user: 'postgres',

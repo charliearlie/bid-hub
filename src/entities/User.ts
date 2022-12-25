@@ -8,6 +8,7 @@ import {
 import { Field, ID, ObjectType } from 'type-graphql';
 import { Item } from './Item';
 import { Address } from './Address';
+import { Bid } from './Bid';
 
 @ObjectType()
 @Entity()
@@ -48,4 +49,8 @@ export class User {
   @Field(() => [Address])
   @OneToMany(() => Address, (address) => address.user)
   addresses?: Address[];
+
+  @Field(() => [Bid])
+  @OneToMany(() => Bid, (bid) => bid.user)
+  bids?: Bid[];
 }
