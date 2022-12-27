@@ -9,6 +9,7 @@ import { Field, ID, ObjectType } from 'type-graphql';
 import { Item } from './Item';
 import { Address } from './Address';
 import { Bid } from './Bid';
+import { Payment } from './Payment';
 
 @ObjectType()
 @Entity()
@@ -21,6 +22,14 @@ export class User {
   @Field(() => String)
   @Property()
   username!: string;
+
+  @Field(() => String)
+  @Property()
+  firstName?: string; // Optional until a user tries to purchase something
+
+  @Field(() => String)
+  @Property()
+  lastName?: string;
 
   @Field(() => String)
   @Property()
@@ -53,4 +62,8 @@ export class User {
   @Field(() => [Bid])
   @OneToMany(() => Bid, (bid) => bid.user)
   bids?: Bid[];
+
+  @Field(() => [Payment])
+  @OneToMany(() => Payment, (payment) => payment.user)
+  paymentCards?: Payment[];
 }

@@ -16,7 +16,11 @@ import { Address } from '../entities/Address';
 import { sendEmail } from '../utils';
 import { validateUserRegistration } from './helpers/validate-user';
 import { v4 as uuidv4 } from 'uuid';
-import { FORGOT_PASSWORD_PREFIX, MAGIC_LINK_PREFIX } from '../constants';
+import {
+  FORGOT_PASSWORD_PREFIX,
+  MAGIC_LINK_PREFIX,
+  SESSION_COOKIE,
+} from '../constants';
 import resetPasswordEmailTemplate from './helpers/email/reset-password-email';
 import magicLinkEmailTemplate from './helpers/email/magic-link-email';
 import BidHubResponse from './helpers/Response';
@@ -134,10 +138,10 @@ class UserResolver {
 
   @Mutation(() => Boolean)
   async logout(@Ctx() { req, res }: MyContext): Promise<Boolean> {
+    res.clearCookie('user');
+    res.clearCookie(SESSION_COOKIE);
     return new Promise((resolve) => {
       req.session.destroy((error) => {
-        res.clearCookie('user');
-        res.clearCookie('qid'); // todo: put this in a variable. Maybe even env variable
         if (error) {
           console.error(error);
         }

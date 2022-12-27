@@ -23,7 +23,7 @@ import { buildSchema } from 'type-graphql';
 import { MikroORM } from '@mikro-orm/core';
 import mikroORMConfig from './mikro-orm.config';
 
-import { __prod__ } from './constants';
+import { SESSION_COOKIE, __prod__ } from './constants';
 import { CategoryResolver, ItemResolver, UserResolver } from './resolvers';
 import { User } from './entities/User';
 import { Item } from './entities/Item';
@@ -58,7 +58,7 @@ const main = async () => {
 
   app.use(
     session({
-      name: 'qid',
+      name: SESSION_COOKIE,
       store: new RedisStore({
         client: redis,
         disableTouch: true,
