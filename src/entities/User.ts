@@ -23,12 +23,12 @@ export class User {
   @Property()
   username!: string;
 
-  @Field(() => String)
-  @Property()
+  @Field(() => String, { nullable: true })
+  @Property({ nullable: true })
   firstName?: string; // Optional until a user tries to purchase something
 
-  @Field(() => String)
-  @Property()
+  @Field(() => String, { nullable: true })
+  @Property({ nullable: true })
   lastName?: string;
 
   @Field(() => String)
