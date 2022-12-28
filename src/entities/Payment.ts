@@ -49,6 +49,6 @@ export class Payment {
   updatedAt? = new Date();
 
   @Field(() => User)
-  @ManyToOne()
+  @ManyToOne(() => User)
   user: User;
 }
