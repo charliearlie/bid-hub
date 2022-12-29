@@ -74,8 +74,6 @@ class UserResolver {
     });
     await em.persistAndFlush(newUser);
 
-    console.log({ newUser });
-
     const token = sign(
       { email: newUser.email, username: newUser.username, id: newUser.id },
       process.env.JWT_SECRET
