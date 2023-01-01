@@ -13,6 +13,7 @@ import { MyContext } from 'types';
 import UserValidator from '../contracts/validators/user.validator';
 import { User } from '../entities/User';
 import { Address } from '../entities/Address';
+import { PaymentMethod, PaymentType } from '../entities/Payment'; // todo: add one file which exports all entities
 import { sendEmail } from '../utils';
 import { validateUserRegistration } from './helpers/validate-user';
 import { v4 as uuidv4 } from 'uuid';
@@ -24,6 +25,7 @@ import {
 import resetPasswordEmailTemplate from './helpers/email/reset-password-email';
 import magicLinkEmailTemplate from './helpers/email/magic-link-email';
 import BidHubResponse from './helpers/Response';
+import PaymentMethodValidator from '../contracts/validators/payment.validator';
 
 @ObjectType()
 class UserResponse extends BidHubResponse {
@@ -312,6 +314,57 @@ class UserResolver {
     });
 
     return true;
+  }
+
+  @Mutation(() => UserResponse)
+  async addPaymentMethod(
+    @Ctx() { em, req }: MyContext,
+    @Arg('cardDetails') cardDetails: PaymentMethodValidator
+  ): Promise<UserResponse> {
+    if (req.session.userId) {
+      const { cardName, cardNumber, expiryDate, type } = cardDetails;
+      const user = await em.findOneOrFail(User, req.session.userId);
+      if (user) {
+        const hashedCardNumber = await bcrypt.hash(cardNumber, 10);
+        const lastFourDigits = cardNumber.slice(-4);
+
+        const newPaymentMethod = await em.create(PaymentMethod, {
+          cardNumber: hashedCardNumber,
+          lastFourDigits,
+          cardName: cardName || '',
+          type,
+          expiryDate,
+          user,
+        });
+
+        user.paymentCards = user.paymentCards
+          ? [...user.paymentCards, newPaymentMethod]
+          : undefined;
+        await em.persistAndFlush(user);
+
+        return { user, success: true };
+      }
+
+      return {
+        errors: [
+          {
+            field: 'user',
+            message: 'User not found',
+          },
+        ],
+        success: false,
+      };
+    }
+
+    return {
+      errors: [
+        {
+          field: 'user',
+          message: 'User not logged in',
+        },
+      ],
+      success: false,
+    };
   }
 }
 

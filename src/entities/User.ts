@@ -9,7 +9,7 @@ import { Field, ID, ObjectType } from 'type-graphql';
 import { Item } from './Item';
 import { Address } from './Address';
 import { Bid } from './Bid';
-import { Payment } from './Payment';
+import { PaymentMethod } from './Payment';
 
 @ObjectType()
 @Entity()
@@ -63,7 +63,7 @@ export class User {
   @OneToMany(() => Bid, (bid) => bid.user)
   bids?: Bid[];
 
-  @Field(() => [Payment])
-  @OneToMany(() => Payment, (payment) => payment.user)
-  paymentCards?: Payment[];
+  @Field(() => [PaymentMethod])
+  @OneToMany(() => PaymentMethod, (paymentMethod) => paymentMethod.user)
+  paymentCards?: PaymentMethod[];
 }

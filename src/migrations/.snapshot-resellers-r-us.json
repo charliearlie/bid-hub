@@ -229,8 +229,8 @@
           "nullable": false,
           "mappedType": "string"
         },
-        "billing_address": {
-          "name": "billing_address",
+        "expiry_date": {
+          "name": "expiry_date",
           "type": "varchar(255)",
           "unsigned": false,
           "autoincrement": false,
@@ -238,8 +238,8 @@
           "nullable": false,
           "mappedType": "string"
         },
-        "avatar_url": {
-          "name": "avatar_url",
+        "billing_address": {
+          "name": "billing_address",
           "type": "varchar(255)",
           "unsigned": false,
           "autoincrement": false,
@@ -277,11 +277,11 @@
           "mappedType": "integer"
         }
       },
-      "name": "payment",
+      "name": "payment_method",
       "schema": "public",
       "indexes": [
         {
-          "keyName": "payment_pkey",
+          "keyName": "payment_method_pkey",
           "columnNames": [
             "id"
           ],
@@ -292,12 +292,12 @@
       ],
       "checks": [],
       "foreignKeys": {
-        "payment_user_id_foreign": {
-          "constraintName": "payment_user_id_foreign",
+        "payment_method_user_id_foreign": {
+          "constraintName": "payment_method_user_id_foreign",
           "columnNames": [
             "user_id"
           ],
-          "localTableName": "public.payment",
+          "localTableName": "public.payment_method",
           "referencedColumnNames": [
             "id"
           ],

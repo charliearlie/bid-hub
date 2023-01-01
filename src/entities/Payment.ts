@@ -3,7 +3,7 @@ import { Field, ID, ObjectType } from 'type-graphql';
 import { Address } from './Address';
 import { User } from './User';
 
-enum PaymentType {
+export enum PaymentType {
   AMEX = 'American Express',
   MASTERCARD = 'Mastercard',
   VISA = 'Visa',
@@ -11,7 +11,7 @@ enum PaymentType {
 
 @ObjectType()
 @Entity()
-export class Payment {
+export class PaymentMethod {
   @Field(() => ID)
   @PrimaryKey()
   id!: number;
@@ -32,13 +32,13 @@ export class Payment {
   @Property()
   lastFourDigits: string;
 
-  @Field(() => Address)
+  @Field(() => String)
   @Property()
-  billingAddress: Address;
+  expiryDate: string;
 
-  @Field({ nullable: true })
+  @Field(() => Address)
   @Property({ nullable: true })
-  avatarUrl?: string;
+  billingAddress?: Address;
 
   @Field(() => String)
   @Property({ type: 'date' })
