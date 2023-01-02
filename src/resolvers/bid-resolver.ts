@@ -7,10 +7,8 @@ import {
   Query,
   Resolver,
 } from 'type-graphql';
-import { Item } from '../entities/Item';
+import { Bid, Item, User } from '../entities';
 import { MyContext } from '../../types';
-import { User } from '../entities/User';
-import { Bid } from '../entities/Bid';
 import { NotFoundError } from '@mikro-orm/core';
 import BidHubResponse from './helpers/Response';
 

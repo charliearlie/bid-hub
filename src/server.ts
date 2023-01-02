@@ -24,10 +24,13 @@ import { MikroORM } from '@mikro-orm/core';
 import mikroORMConfig from './mikro-orm.config';
 
 import { SESSION_COOKIE, __prod__ } from './constants';
-import { CategoryResolver, ItemResolver, UserResolver } from './resolvers';
-import { User } from './entities/User';
-import { Item } from './entities/Item';
-import BidResolver from './resolvers/bid-resolver';
+import {
+  BidResolver,
+  CategoryResolver,
+  ItemResolver,
+  UserResolver,
+} from './resolvers';
+import { Item, User } from './entities';
 
 dotenv.config();
 

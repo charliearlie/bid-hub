@@ -11,9 +11,7 @@ import bcrypt from 'bcrypt';
 import { sign } from 'jsonwebtoken';
 import { MyContext } from 'types';
 import UserValidator from '../contracts/validators/user.validator';
-import { User } from '../entities/User';
-import { Address } from '../entities/Address';
-import { PaymentMethod, PaymentType } from '../entities/Payment'; // todo: add one file which exports all entities
+import { Address, PaymentMethod, User } from '../entities';
 import { sendEmail } from '../utils';
 import { validateUserRegistration } from './helpers/validate-user';
 import { v4 as uuidv4 } from 'uuid';

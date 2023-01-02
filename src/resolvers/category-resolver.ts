@@ -1,6 +1,6 @@
 import { Arg, Ctx, ID, Mutation, Query, Resolver } from 'type-graphql';
 import { MyContext } from '../../types';
-import { Category } from '../entities/Category';
+import { Category } from '../entities';
 import CategoryValidator from '../contracts/validators/category.validator';
 
 @Resolver(() => Category)

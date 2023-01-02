@@ -8,13 +8,11 @@ import {
   Query,
   Resolver,
 } from 'type-graphql';
+import { NotFoundError, wrap } from '@mikro-orm/core';
 import ItemValidator from '../contracts/validators/item.validator';
-import { Item } from '../entities/Item';
+import { Category, Item, User } from '../entities';
 import { MyContext } from '../../types';
 import { createSlug } from '../utils';
-import { User } from '../entities/User';
-import { Category } from '../entities/Category';
-import { NotFoundError, wrap } from '@mikro-orm/core';
 import BidHubResponse from './helpers/Response';
 
 @ObjectType()
