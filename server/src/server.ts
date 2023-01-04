@@ -56,7 +56,7 @@ const main = async () => {
   const httpServer = http.createServer(app);
 
   app.set('trust proxy', !__prod__);
-  app.set('Access-Control-Allow-Origin', 'https://studio.apollographql.com');
+  app.set('Access-Control-Allow-Origin', process.env.FRONTEND_URL);
   app.set('Access-Control-Allow-Credentials', true);
 
   app.use(
@@ -94,7 +94,10 @@ const main = async () => {
 
   app.use(
     '/graphql',
-    cors<cors.CorsRequest>(),
+    cors<cors.CorsRequest>({
+      credentials: true,
+      origin: process.env.FRONTEND_URL,
+    }),
     json(),
     expressMiddleware(server, {
       context: async ({ req, res }) => ({
