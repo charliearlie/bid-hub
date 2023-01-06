@@ -16,7 +16,7 @@ export default function FormField({
     <div className="mb-4 flex flex-col">
       <label className="block font-bold">{label}</label>
       <input
-        className="focus:shadow-outline rounded px-3 py-2 text-lg"
+        className="focus:shadow-outline rounded px-3 py-2 text-lg autofill:text-lg"
         onChange={handleChange}
         {...props}
       />
