@@ -1,5 +1,6 @@
 import { gql, useMutation } from "@apollo/client";
 import { ChangeEvent, FormEvent, useState } from "react";
+import FormField from "~/components/form/form-field";
 
 const LOGIN_USER = gql`
   mutation Login($email: String!, $password: String!) {
@@ -45,25 +46,36 @@ export default function LoginRoute() {
   if (error) return <p>Error</p>;
 
   return (
-    <div>
-      <h3>Login</h3>
-      <form onSubmit={submitForm}>
-        <div>
-          <label>
-            Email: <input onChange={handleChange} type="text" name="email" />
-          </label>
-        </div>
-        <div>
-          <label>
-            Password:{" "}
-            <input onChange={handleChange} type="password" name="password" />
-          </label>
-        </div>
-        <div>
-          <button className="button">Login</button>
-        </div>
-      </form>
-      {data && JSON.stringify(data)}
-    </div>
+    <main>
+      <div className="flex flex-col flex-wrap content-center">
+        <h1 className="text-center text-3xl font-bold">Log in to Bidhub</h1>
+        <form
+          className="mb-4 w-full max-w-sm rounded bg-white px-8 pt-6 pb-8 sm:shadow-md"
+          onSubmit={submitForm}
+        >
+          <FormField
+            handleChange={handleChange}
+            label="Email"
+            type="text"
+            name="email"
+          />
+          <FormField
+            handleChange={handleChange}
+            label="Password"
+            name="password"
+            type="password"
+          />
+          <div className="flex justify-between">
+            <button className="rounded bg-violet-700 px-4 py-2 text-lg font-semibold text-white hover:bg-violet-900">
+              Log in
+            </button>
+            <button className="rounded px-0 py-2 font-semibold text-black">
+              Forgot password?
+            </button>
+          </div>
+        </form>
+        {data && JSON.stringify(data)}
+      </div>
+    </main>
   );
 }
