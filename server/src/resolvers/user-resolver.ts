@@ -9,12 +9,12 @@ import {
 } from 'type-graphql';
 import bcrypt from 'bcrypt';
 import { sign } from 'jsonwebtoken';
+import { v4 as uuidv4 } from 'uuid';
 import { MyContext } from 'types';
 import UserValidator from '../contracts/validators/user.validator';
 import { Address, PaymentMethod, User } from '../entities';
-import { sendEmail } from '../utils';
 import { validateUserRegistration } from './helpers/validate-user';
-import { v4 as uuidv4 } from 'uuid';
+import { sendEmail } from '../utils';
 import {
   FORGOT_PASSWORD_PREFIX,
   MAGIC_LINK_PREFIX,
@@ -93,10 +93,37 @@ class UserResolver {
     @Arg('email') email: string,
     @Arg('password') password: string
   ): Promise<UserResponse> {
-    // TODO: Email log in for now but we will change to have both username and email
-    const user = await em.findOneOrFail(User, { email });
+    try {
+      // TODO: Email log in for now but we will change to have both username and email
+      const user = await em.findOneOrFail(User, { email });
 
-    if (!user) {
+      const isValidPassword = await bcrypt.compare(password, user.password);
+
+      if (!isValidPassword) {
+        return {
+          errors: [
+            {
+              field: 'email | password',
+              message: 'Invalid email or password',
+            },
+          ],
+          success: false,
+        };
+      }
+
+      const token = sign(
+        { email: user.email, username: user.username, id: user.id },
+        process.env.JWT_SECRET
+      );
+      res.cookie('user', token, {
+        maxAge: 1000 * 60 * 60 * 24 * 7,
+        httpOnly: true,
+      });
+
+      req.session.userId = user.id;
+
+      return { user, success: true };
+    } catch (error) {
       return {
         errors: [
           {
@@ -107,33 +134,6 @@ class UserResolver {
         success: false,
       };
     }
-
-    const isValidPassword = await bcrypt.compare(password, user.password);
-
-    if (!isValidPassword) {
-      return {
-        errors: [
-          {
-            field: 'email | password',
-            message: 'Invalid email or password',
-          },
-        ],
-        success: false,
-      };
-    }
-
-    const token = sign(
-      { email: user.email, username: user.username, id: user.id },
-      process.env.JWT_SECRET
-    );
-    res.cookie('user', token, {
-      maxAge: 1000 * 60 * 60 * 24 * 7,
-      httpOnly: true,
-    });
-
-    req.session.userId = user.id;
-
-    return { user, success: true };
   }
 
   @Mutation(() => Boolean)
