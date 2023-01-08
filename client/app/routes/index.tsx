@@ -1,6 +1,7 @@
 import { json, LoaderFunction } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { gql, request } from "graphql-request";
+import { requestClient } from "~/util/gql-request";
 
 const CATEGORY_QUERY = gql`
   query Categories {
@@ -14,11 +15,10 @@ const CATEGORY_QUERY = gql`
   }
 `;
 
-export const loader: LoaderFunction = async () => {
-  const response = await request(
-    "http://localhost:4000/graphql/",
-    CATEGORY_QUERY
-  );
+export const loader: LoaderFunction = async ({ request }) => {
+  const response = await requestClient.request(CATEGORY_QUERY, undefined, {
+    Cookie: request.headers.get("Cookie") || "",
+  });
   return json({ data: response });
 };
 

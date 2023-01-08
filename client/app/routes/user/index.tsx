@@ -1,6 +1,7 @@
 import { json } from "@remix-run/node";
-import { gql, useQuery } from "@apollo/client";
 import { useLoaderData } from "@remix-run/react";
+import { gql, request as gqlRequest } from "graphql-request";
+import { requestClient } from "~/util/gql-request";
 
 const ME_QUERY = gql`
   query Me {
@@ -23,21 +24,15 @@ const ME_QUERY = gql`
 export async function loader({ request }: any) {
   // Surely must be a way to do this without using this same code in every loader?
   const cookieHeader = request.headers.get("Cookie");
-  return json({ cookieHeader });
+  const response = await requestClient.request(ME_QUERY, undefined, {
+    Cookie: cookieHeader,
+  });
+  return json({ data: response });
 }
 
 export default function UserRoute(req: Request) {
-  const { cookieHeader } = useLoaderData();
-  const { data, error, loading } = useQuery(ME_QUERY, {
-    context: {
-      headers: {
-        Cookie: cookieHeader,
-      },
-    },
-  });
-
-  if (error) return <p>{JSON.stringify(error)}</p>;
-
-  if (loading) return <p>Loading...</p>;
-  return <div>{JSON.stringify(data)}</div>;
+  const {
+    data: { me },
+  } = useLoaderData();
+  return <div>{JSON.stringify(me)}</div>;
 }
