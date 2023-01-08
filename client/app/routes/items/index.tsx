@@ -1,4 +1,6 @@
-import { gql, useQuery } from "@apollo/client";
+import { json, LoaderFunction } from "@remix-run/node";
+import { useLoaderData } from "@remix-run/react";
+import { gql, request } from "graphql-request";
 
 const ITEMS_QUERY = gql`
   query Items {
@@ -19,16 +21,16 @@ const ITEMS_QUERY = gql`
   }
 `;
 
+export const loader: LoaderFunction = async () => {
+  const response = await request("http://localhost:4000/graphql/", ITEMS_QUERY);
+  return json({ data: response });
+};
+
 export default function ItemsIndexRoute() {
-  const { data, error, loading } = useQuery(ITEMS_QUERY);
+  const {
+    data: { items },
+  } = useLoaderData();
+  console.log(items);
 
-  if (loading) {
-    return <p>Loading...</p>;
-  }
-
-  if (error) {
-    return <p>Error</p>;
-  }
-
-  return <div>{JSON.stringify(data)}</div>;
+  return <div>{JSON.stringify(items)}</div>;
 }

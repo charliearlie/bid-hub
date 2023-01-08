@@ -1,5 +1,3 @@
-import { gql, useMutation } from "@apollo/client";
-
 // const ADD_ITEM = gql`
 //   mutation addItem($name: String!, $description: String!, $price: String!, $imageUrl: String!, $conditon: String) {
 //     addItem({ name: $name, description: $description, price: $price, imageUrl: $imageUrl, condition: $condition }) {

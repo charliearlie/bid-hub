@@ -1,10 +1,12 @@
-import { gql, useMutation } from "@apollo/client";
-import { Link, useActionData } from "@remix-run/react";
+import { Link, useActionData, useTransition } from "@remix-run/react";
 import { redirect } from "@remix-run/router";
 import FormField from "~/components/form/form-field";
 import Alert, { AlertType } from "~/components/alert";
 import Spinner from "~/components/spinner";
 import Form, { FormData } from "~/components/form/form";
+import { ActionArgs, ActionFunction, json } from "@remix-run/node";
+import { gql, request as gqlRequest } from "graphql-request";
+import { requestClient } from "~/util/gql-request";
 
 const LOGIN_USER = gql`
   mutation Login($email: String!, $password: String!) {
@@ -23,17 +25,38 @@ const LOGIN_USER = gql`
   }
 `;
 
-export default function LoginRoute() {
-  const [login, { error, data, loading }] = useMutation(LOGIN_USER);
+type ActionData = { email: null | string; password: null | string } | undefined;
 
-  const submitForm = async (values: FormData) => {
-    await login({ variables: values });
-    redirect("/");
+export const action: ActionFunction = async ({ request }: ActionArgs) => {
+  const formData = await request.formData();
+
+  const email = formData.get("email");
+  const password = formData.get("password");
+
+  const errors: ActionData = {
+    email: email ? null : "Email is required",
+    password: password ? null : "Password is required",
   };
+  const hasErrors = Object.values(errors).some((errorMessage) => errorMessage);
+  if (hasErrors) {
+    return json<ActionData>(errors);
+  }
 
-  // This shouldn't be too important right now as the errors are handled on the server and returned in the data payload
-  if (error) return <p>Error</p>;
+  const response = await requestClient.request(LOGIN_USER, { email, password });
 
+  if (!response.success) {
+    return json(response.login);
+  }
+
+  return redirect("/");
+};
+
+export default function LoginRoute() {
+  const actionData = useActionData();
+  const transition = useTransition();
+  console.log(transition);
+
+  const isSubmitting = Boolean(transition.submission);
   return (
     <main>
       <div className="flex flex-col flex-wrap content-center">
@@ -44,9 +67,9 @@ export default function LoginRoute() {
             email: "",
             password: "",
           }}
-          handleSubmit={submitForm}
+          method="post"
         >
-          {data?.login.success === false && (
+          {actionData?.success === false && (
             <Alert message="Invalid email or password" type={AlertType.ERROR} />
           )}
           <FormField
@@ -57,7 +80,7 @@ export default function LoginRoute() {
           <FormField label="Password" name="password" type="password" />
           <div className="flex justify-between">
             <button className="w-20 rounded bg-violet-700 px-3 py-2 text-lg font-semibold text-white hover:bg-violet-900">
-              {loading ? <Spinner /> : "Log in"}
+              {isSubmitting ? <Spinner /> : "Log in"}
             </button>
             <Link
               className="px-0 py-2 font-semibold text-blue-700 hover:text-slate-500"

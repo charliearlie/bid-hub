@@ -7,7 +7,7 @@ type Props = {
   children: ReactNode;
   css?: string;
   initialFormValues: FormData;
-  handleSubmit: (values: FormData) => void;
+  handleSubmit?: (values: FormData) => void;
   overrideStyles?: boolean;
 };
 
@@ -24,9 +24,10 @@ export default function Form({
   const [formState, setFormState] = useState<FormState>(initialFormValues);
 
   const submitForm = async (e: FormEvent<HTMLFormElement>) => {
-    e.stopPropagation();
-    e.preventDefault();
-    handleSubmit(formState);
+    // Keep these if method is not provided and handleSubmit is
+    // e.stopPropagation();
+    // e.preventDefault();
+    if (handleSubmit) handleSubmit(formState);
   };
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>): void => {
@@ -39,7 +40,6 @@ export default function Form({
   return (
     <form
       className="mb-4 w-full max-w-sm rounded bg-white px-8 pt-6 pb-8 sm:shadow-md"
-      onSubmit={submitForm}
       {...props}
     >
       {React.Children.map(children, (child) => {

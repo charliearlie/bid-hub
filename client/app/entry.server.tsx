@@ -1,58 +1,111 @@
+import { PassThrough } from "stream";
 import type { EntryContext } from "@remix-run/node";
+import { Response } from "@remix-run/node";
 import { RemixServer } from "@remix-run/react";
-import { renderToString } from "react-dom/server";
-import { getDataFromTree } from "@apollo/client/react/ssr";
-import {
-  ApolloProvider,
-  ApolloClient,
-  InMemoryCache,
-  createHttpLink,
-} from "@apollo/client";
+import isbot from "isbot";
+import { renderToPipeableStream } from "react-dom/server";
+
+const ABORT_DELAY = 5000;
 
 export default function handleRequest(
-  request: Request, // Request type from the Fetch API
+  request: Request,
   responseStatusCode: number,
-  responseHeaders: Headers, // Headers type from the Fetch API
+  responseHeaders: Headers,
   remixContext: EntryContext
 ) {
-  const client = new ApolloClient({
-    ssrMode: true,
-    cache: new InMemoryCache(),
-    link: createHttpLink({
-      uri: "http://localhost:4000/graphql",
-      headers: request.headers,
-      credentials: "include",
-    }),
-  });
+  return isbot(request.headers.get("user-agent"))
+    ? handleBotRequest(
+        request,
+        responseStatusCode,
+        responseHeaders,
+        remixContext
+      )
+    : handleBrowserRequest(
+        request,
+        responseStatusCode,
+        responseHeaders,
+        remixContext
+      );
+}
 
-  const App = (
-    <ApolloProvider client={client}>
-      <RemixServer context={remixContext} url={request.url} />
-    </ApolloProvider>
-  );
+function handleBotRequest(
+  request: Request,
+  responseStatusCode: number,
+  responseHeaders: Headers,
+  remixContext: EntryContext
+) {
+  return new Promise((resolve, reject) => {
+    let didError = false;
 
-  return getDataFromTree(App).then(() => {
-    // Extract the entirety of the Apollo Client cache's current state
-    const initialState = client.extract();
+    const { pipe, abort } = renderToPipeableStream(
+      <RemixServer context={remixContext} url={request.url} />,
+      {
+        onAllReady() {
+          const body = new PassThrough();
 
-    const markup = renderToString(
-      <>
-        {App}
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `window.__APOLLO_STATE__=${JSON.stringify(
-              initialState
-            ).replace(/</g, "\\u003c")}`, // The replace call escapes the < character to prevent cross-site scripting attacks that are possible via the presence of </script> in a string literal
-          }}
-        />
-      </>
+          responseHeaders.set("Content-Type", "text/html");
+
+          resolve(
+            new Response(body, {
+              headers: responseHeaders,
+              status: didError ? 500 : responseStatusCode,
+            })
+          );
+
+          pipe(body);
+        },
+        onShellError(error: unknown) {
+          reject(error);
+        },
+        onError(error: unknown) {
+          didError = true;
+
+          console.error(error);
+        },
+      }
     );
 
-    responseHeaders.set("Content-Type", "text/html");
+    setTimeout(abort, ABORT_DELAY);
+  });
+}
 
-    return new Response("<!DOCTYPE html>" + markup, {
-      status: responseStatusCode,
-      headers: responseHeaders,
-    });
+function handleBrowserRequest(
+  request: Request,
+  responseStatusCode: number,
+  responseHeaders: Headers,
+  remixContext: EntryContext
+) {
+  return new Promise((resolve, reject) => {
+    let didError = false;
+
+    const { pipe, abort } = renderToPipeableStream(
+      <RemixServer context={remixContext} url={request.url} />,
+      {
+        onShellReady() {
+          const body = new PassThrough();
+
+          responseHeaders.set("Content-Type", "text/html");
+
+          resolve(
+            new Response(body, {
+              headers: responseHeaders,
+              status: didError ? 500 : responseStatusCode,
+            })
+          );
+
+          pipe(body);
+        },
+        onShellError(err: unknown) {
+          reject(err);
+        },
+        onError(error: unknown) {
+          didError = true;
+
+          console.error(error);
+        },
+      }
+    );
+
+    setTimeout(abort, ABORT_DELAY);
   });
 }

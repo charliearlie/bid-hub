@@ -1,4 +1,6 @@
-import { gql, useQuery } from "@apollo/client";
+import { json, LoaderFunction } from "@remix-run/node";
+import { useLoaderData } from "@remix-run/react";
+import { gql, request } from "graphql-request";
 
 const CATEGORY_QUERY = gql`
   query Categories {
@@ -12,8 +14,18 @@ const CATEGORY_QUERY = gql`
   }
 `;
 
-export default function Index() {
-  const { data } = useQuery(CATEGORY_QUERY);
+export const loader: LoaderFunction = async () => {
+  const response = await request(
+    "http://localhost:4000/graphql/",
+    CATEGORY_QUERY
+  );
+  return json({ data: response });
+};
 
-  return <div>{JSON.stringify(data)}</div>;
+export default function Index() {
+  const {
+    data: { categories },
+  } = useLoaderData();
+
+  return <div>{JSON.stringify(categories)}</div>;
 }

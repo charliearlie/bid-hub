@@ -1,27 +1,22 @@
-import {
-  ApolloClient,
-  ApolloProvider,
-  createHttpLink,
-  InMemoryCache,
-} from "@apollo/client";
 import { RemixBrowser } from "@remix-run/react";
-import { hydrate } from "react-dom";
+import { startTransition, StrictMode } from "react";
+import { hydrateRoot } from "react-dom/client";
 
-function Client() {
-  const link = createHttpLink({
-    uri: "http://localhost:4000/graphql",
-    credentials: "include",
+function hydrate() {
+  startTransition(() => {
+    hydrateRoot(
+      document,
+      <StrictMode>
+        <RemixBrowser />
+      </StrictMode>
+    );
   });
-  const client = new ApolloClient({
-    cache: new InMemoryCache().restore(window.__APOLLO_STATE__),
-    link,
-  });
-
-  return (
-    <ApolloProvider client={client}>
-      <RemixBrowser />
-    </ApolloProvider>
-  );
 }
 
-hydrate(<Client />, document);
+if (typeof requestIdleCallback === "function") {
+  requestIdleCallback(hydrate);
+} else {
+  // Safari doesn't support requestIdleCallback
+  // https://caniuse.com/requestidlecallback
+  setTimeout(hydrate, 1);
+}
