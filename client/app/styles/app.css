@@ -740,24 +740,6 @@ video {
   color: rgb(29 78 216 / var(--tw-text-opacity));
 }
 
-.transition {
-  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, -webkit-backdrop-filter;
-  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
-  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter, -webkit-backdrop-filter;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-duration: 150ms;
-}
-
-.autofill\:text-lg:-webkit-autofill {
-  font-size: 1.125rem;
-  line-height: 1.75rem;
-}
-
-.autofill\:text-lg:autofill {
-  font-size: 1.125rem;
-  line-height: 1.75rem;
-}
-
 .autofill\:first-line\:text-lg:-webkit-autofill::first-line {
   font-size: 1.125rem;
   line-height: 1.75rem;

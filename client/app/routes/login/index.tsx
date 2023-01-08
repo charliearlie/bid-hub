@@ -1,11 +1,11 @@
-import { Link, useActionData, useTransition } from "@remix-run/react";
-import { redirect } from "@remix-run/router";
+import { Link, useActionData, useTransition }
+import { createUserSession } from "~/session.server";
 import FormField from "~/components/form/form-field";
 import Alert, { AlertType } from "~/components/alert";
 import Spinner from "~/components/spinner";
 import Form, { FormData } from "~/components/form/form";
 import { ActionArgs, ActionFunction, json } from "@remix-run/node";
-import { gql, request as gqlRequest } from "graphql-request";
+import { gql } from "graphql-request";
 import { requestClient } from "~/util/gql-request";
 
 const LOGIN_USER = gql`
@@ -21,6 +21,7 @@ const LOGIN_USER = gql`
         message
       }
       success
+      jwt
     }
   }
 `;
@@ -44,19 +45,19 @@ export const action: ActionFunction = async ({ request }: ActionArgs) => {
 
   const response = await requestClient.request(LOGIN_USER, { email, password });
 
-  if (!response.success) {
+  if (!response.login.success) {
     return json(response.login);
   }
 
-  return redirect("/");
+  return createUserSession({
+    request,
+    userId: response.login.user.id,
+    jwt: response.login.jwt,
+  });
 };
 
 export default function LoginRoute() {
   const actionData = useActionData();
-  const transition = useTransition();
-  console.log(transition);
-
-  const isSubmitting = Boolean(transition.submission);
   return (
     <main>
       <div className="flex flex-col flex-wrap content-center">
@@ -80,7 +81,7 @@ export default function LoginRoute() {
           <FormField label="Password" name="password" type="password" />
           <div className="flex justify-between">
             <button className="w-20 rounded bg-violet-700 px-3 py-2 text-lg font-semibold text-white hover:bg-violet-900">
-              {isSubmitting ? <Spinner /> : "Log in"}
+              Log in
             </button>
             <Link
               className="px-0 py-2 font-semibold text-blue-700 hover:text-slate-500"
