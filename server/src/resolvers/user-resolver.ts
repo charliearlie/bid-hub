@@ -29,6 +29,8 @@ import PaymentMethodValidator from '../contracts/validators/payment.validator';
 class UserResponse extends BidHubResponse {
   @Field(() => User, { nullable: true })
   user?: User;
+  @Field(() => String, { nullable: true })
+  jwt?: string;
 }
 
 @Resolver()
@@ -58,7 +60,7 @@ class UserResolver {
 
   @Mutation(() => UserResponse)
   async register(
-    @Ctx() { em, req, res }: MyContext,
+    @Ctx() { em }: MyContext,
     @Arg('userInput') userInput: UserValidator
   ): Promise<UserResponse> {
     const validateUserResponse = validateUserRegistration(userInput);
@@ -78,13 +80,8 @@ class UserResolver {
       { email: newUser.email, username: newUser.username, id: newUser.id },
       process.env.JWT_SECRET
     );
-    res.cookie('user', token, {
-      maxAge: 1000 * 60 * 60 * 24 * 7,
-      httpOnly: true,
-    });
-    req.session.userId = newUser.id;
 
-    return { user: newUser, success: true };
+    return { user: newUser, success: true, jwt: token };
   }
 
   @Mutation(() => UserResponse)
@@ -122,7 +119,7 @@ class UserResolver {
 
       req.session.userId = user.id;
 
-      return { user, success: true };
+      return { user, success: true, jwt: token };
     } catch (error) {
       return {
         errors: [

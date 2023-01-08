@@ -6,6 +6,7 @@ import express from 'express';
 import http from 'http';
 import session from 'express-session';
 import { json } from 'body-parser';
+import cookieParser from 'cookie-parser';
 
 // Redis
 import connectRedis from 'connect-redis';
@@ -31,6 +32,7 @@ import {
   UserResolver,
 } from './resolvers';
 import { Item, User } from './entities';
+import setCurrentUser from './middleware/user-session';
 
 dotenv.config();
 
@@ -58,6 +60,7 @@ const main = async () => {
   app.set('trust proxy', !__prod__);
   app.set('Access-Control-Allow-Origin', process.env.FRONTEND_URL);
   app.set('Access-Control-Allow-Credentials', true);
+  app.use(cookieParser());
 
   app.use(
     session({
@@ -78,6 +81,7 @@ const main = async () => {
     })
   );
 
+  app.use(setCurrentUser);
   const server = new ApolloServer({
     schema: await buildSchema({
       resolvers: [CategoryResolver, ItemResolver, UserResolver, BidResolver],
