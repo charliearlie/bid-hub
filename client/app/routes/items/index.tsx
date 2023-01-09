@@ -1,6 +1,6 @@
 import { json, LoaderFunction } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
-import { gql, request } from "graphql-request";
+import { gql, requestClient } from "~/util/gql-request";
 
 const ITEMS_QUERY = gql`
   query Items {
@@ -22,7 +22,7 @@ const ITEMS_QUERY = gql`
 `;
 
 export const loader: LoaderFunction = async () => {
-  const response = await request("http://localhost:4000/graphql/", ITEMS_QUERY);
+  const response = await requestClient.request(ITEMS_QUERY);
   return json({ data: response });
 };
 
@@ -30,7 +30,6 @@ export default function ItemsIndexRoute() {
   const {
     data: { items },
   } = useLoaderData();
-  console.log(items);
 
   return <div>{JSON.stringify(items)}</div>;
 }

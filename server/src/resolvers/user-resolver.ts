@@ -30,7 +30,7 @@ class UserResponse extends BidHubResponse {
   @Field(() => User, { nullable: true })
   user?: User;
   @Field(() => String, { nullable: true })
-  jwt?: string;
+  token?: string;
 }
 
 @Resolver()
@@ -81,7 +81,7 @@ class UserResolver {
       process.env.JWT_SECRET
     );
 
-    return { user: newUser, success: true, jwt: token };
+    return { user: newUser, success: true, token };
   }
 
   @Mutation(() => UserResponse)
@@ -119,7 +119,7 @@ class UserResolver {
 
       req.session.userId = user.id;
 
-      return { user, success: true, jwt: token };
+      return { user, success: true, token };
     } catch (error) {
       return {
         errors: [

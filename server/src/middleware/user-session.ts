@@ -7,11 +7,13 @@ export default function setCurrentUser(
   next: NextFunction
 ) {
   const token = req.cookies.jwt;
-  const userId = getUserIdFromToken(token);
+  if (token) {
+    const userId = getUserIdFromToken(token);
 
-  if (userId) {
-    // @ts-ignore - will resolve this soon
-    req.session.userId = userId;
+    if (userId) {
+      // @ts-ignore - will resolve this soon
+      req.session.userId = userId;
+    }
   }
 
   next();

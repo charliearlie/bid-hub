@@ -1,6 +1,6 @@
 import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
-import { gql, request as gqlRequest } from "graphql-request";
+import { gql } from "graphql-request";
 import { requestClient } from "~/util/gql-request";
 
 const ME_QUERY = gql`
