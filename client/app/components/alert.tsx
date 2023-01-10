@@ -4,6 +4,21 @@ export enum AlertType {
   WARN = "warn",
 }
 
+const classes = {
+  [AlertType.ERROR]: {
+    background: "bg-red-100",
+    border: "border-red-400",
+  },
+  [AlertType.INFO]: {
+    background: "bg-blue-200",
+    border: "border-blue-500",
+  },
+  [AlertType.WARN]: {
+    background: "bg-yellow-200",
+    border: "border-yellow-500",
+  },
+};
+
 type Props = {
   message: string;
   title?: string;
@@ -15,10 +30,12 @@ export default function Alert({
   title,
   type = AlertType.INFO,
 }: Props) {
+  const { background, border } = classes[type];
   return (
     <div
-      className="relative mb-4 w-full max-w-sm rounded border border-red-400 bg-red-100 px-8 py-3 text-red-700"
+      className={`relative mb-4 w-full max-w-sm rounded border ${background} ${border} px-8 py-3 text-red-700`}
       role="alert"
+      data-testid="alert-component"
     >
       {title && <strong className="font-bold">{title}</strong>}
       <span className="block sm:inline">{message}</span>
