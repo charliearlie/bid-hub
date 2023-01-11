@@ -1,4 +1,8 @@
 import React, { ChangeEvent, FormEvent, ReactNode, useState } from "react";
+import {
+  Form as RemixForm,
+  FormProps as RemixFormProps,
+} from "@remix-run/react";
 import FormField, { FormFieldProps } from "./form-field";
 
 export type FormData = Record<string, string | number>;
@@ -11,11 +15,13 @@ type Props = {
   overrideStyles?: boolean;
 };
 
-type FormProps = React.HTMLProps<HTMLFormElement> & Props;
+type FormProps = RemixFormProps & Props;
 
 export default function Form({
+  css,
   children,
   initialFormValues,
+  overrideStyles,
   handleSubmit,
   ...props
 }: FormProps) {
@@ -38,7 +44,7 @@ export default function Form({
   };
 
   return (
-    <form
+    <RemixForm
       className="mb-4 w-full max-w-sm rounded bg-white px-8 pt-6 pb-8 sm:shadow-md"
       {...props}
     >
@@ -51,6 +57,6 @@ export default function Form({
         }
         return child;
       })}
-    </form>
+    </RemixForm>
   );
 }

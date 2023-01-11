@@ -1,10 +1,11 @@
-import { Link, useActionData } from "@remix-run/react";
+import { Link, useActionData, useTransition } from "@remix-run/react";
 import { ActionArgs, ActionFunction, json } from "@remix-run/node";
 import Alert, { AlertType } from "~/components/alert";
 import Form from "~/components/form/form";
 import FormField from "~/components/form/form-field";
 import { createUserSession } from "~/session.server";
 import { gql, requestClient } from "~/util/gql-request";
+import Spinner from "~/components/spinner";
 
 const LOGIN_USER = gql`
   mutation Login($email: String!, $password: String!) {
@@ -57,6 +58,7 @@ export const action: ActionFunction = async ({ request }: ActionArgs) => {
 
 export default function LoginRoute() {
   const actionData = useActionData();
+  const transition = useTransition();
 
   return (
     <main>
@@ -81,7 +83,7 @@ export default function LoginRoute() {
           <FormField label="Password" name="password" type="password" />
           <div className="flex justify-between">
             <button className="w-25 rounded bg-violet-700 px-3 py-2 text-lg font-semibold text-white hover:bg-violet-900">
-              Log in
+              {transition.state !== "idle" ? <Spinner /> : "Log in"}
             </button>
             <Link
               className="px-0 py-2 font-semibold text-blue-700 hover:text-slate-500"

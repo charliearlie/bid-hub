@@ -5,6 +5,7 @@ import Form from "~/components/form/form";
 import FormField from "~/components/form/form-field";
 import { createUserSession } from "~/session.server";
 import { gql, requestClient } from "~/util/gql-request";
+import Spinner from "~/components/spinner";
 
 const REGISTER_USER = gql`
   mutation Register($email: String!, $password: String!, $username: String!) {
@@ -69,6 +70,7 @@ export const action: ActionFunction = async ({ request }: ActionArgs) => {
 
 export default function RegisterRoute() {
   const actionData = useActionData();
+  const transition = useTransition();
   return (
     <main>
       <div className="flex flex-col flex-wrap content-center">
@@ -90,7 +92,7 @@ export default function RegisterRoute() {
           <FormField label="Password" name="password" type="password" />
           <div className="flex justify-between">
             <button className="w-25 rounded bg-violet-700 px-3 py-2 text-lg font-semibold text-white hover:bg-violet-900">
-              Sign up
+              {transition.state === "idle" ? <Spinner /> : "Sign up"}
             </button>
             <Link
               className="px-0 py-2 font-semibold text-blue-700 hover:text-slate-500"
