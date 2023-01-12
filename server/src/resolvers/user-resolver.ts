@@ -169,11 +169,12 @@ class UserResolver {
 
   @Mutation(() => UserResponse)
   async resetPassword(
-    @Ctx() { em, redis, req }: MyContext,
+    @Ctx() { em, redis }: MyContext,
     @Arg('token') token: string,
     @Arg('newPassword') newPassword: string
   ): Promise<UserResponse> {
     const userId = await redis.get(FORGOT_PASSWORD_PREFIX + token);
+    console.log(token);
     if (!userId) {
       return {
         errors: [
@@ -203,9 +204,13 @@ class UserResolver {
 
     user.password = await bcrypt.hash(newPassword, 10);
     await em.persistAndFlush(user);
-    req.session.userId = user.id;
 
-    return { user, success: true };
+    const tokenForCookie = sign(
+      { email: user.email, username: user.username, id: user.id },
+      process.env.JWT_SECRET
+    );
+
+    return { user, success: true, token: tokenForCookie };
   }
 
   @Mutation(() => UserResponse)
