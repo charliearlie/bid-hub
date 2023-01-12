@@ -29,13 +29,6 @@ export default function Form({
   type FormState = Record<FormKeys, FormData[FormKeys]>;
   const [formState, setFormState] = useState<FormState>(initialFormValues);
 
-  const submitForm = async (e: FormEvent<HTMLFormElement>) => {
-    // Keep these if method is not provided and handleSubmit is
-    // e.stopPropagation();
-    // e.preventDefault();
-    if (handleSubmit) handleSubmit(formState);
-  };
-
   const handleChange = (event: ChangeEvent<HTMLInputElement>): void => {
     setFormState({
       ...formState,
