@@ -87,12 +87,13 @@ class UserResolver {
   @Mutation(() => UserResponse)
   async login(
     @Ctx() { em, req, res }: MyContext,
-    @Arg('email') email: string,
+    @Arg('emailOrUsername') emailOrUsername: string,
     @Arg('password') password: string
   ): Promise<UserResponse> {
     try {
-      // TODO: Email log in for now but we will change to have both username and email
-      const user = await em.findOneOrFail(User, { email });
+      const user = await em.findOneOrFail(User, {
+        $or: [{ email: emailOrUsername }, { username: emailOrUsername }],
+      });
 
       const isValidPassword = await bcrypt.compare(password, user.password);
 

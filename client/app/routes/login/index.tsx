@@ -25,16 +25,18 @@ const LOGIN_USER = gql`
   }
 `;
 
-type ActionData = { email: null | string; password: null | string } | undefined;
+type ActionData =
+  | { emailOrUsername: null | string; password: null | string }
+  | undefined;
 
 export const action: ActionFunction = async ({ request }: ActionArgs) => {
   const formData = await request.formData();
 
-  const email = formData.get("email");
+  const emailOrUsername = formData.get("emailOrUsername");
   const password = formData.get("password");
 
   const errors: ActionData = {
-    email: email ? null : "Email is required",
+    emailOrUsername: emailOrUsername ? null : "Email or username is required",
     password: password ? null : "Password is required",
   };
 
@@ -43,7 +45,10 @@ export const action: ActionFunction = async ({ request }: ActionArgs) => {
     return json<ActionData>(errors);
   }
 
-  const response = await requestClient.request(LOGIN_USER, { email, password });
+  const response = await requestClient.request(LOGIN_USER, {
+    emailOrUsername,
+    password,
+  });
 
   if (!response.login.success) {
     return json(response.login);
@@ -67,17 +72,20 @@ export default function LoginRoute() {
         <Form
           className="mb-4 w-full max-w-sm rounded bg-white px-8 pt-6 pb-8 sm:shadow-md"
           initialFormValues={{
-            email: "",
+            emailOrUsername: "",
             password: "",
           }}
           method="post"
         >
           {actionData?.success === false && (
-            <Alert message="Invalid email or password" type={AlertType.ERROR} />
+            <Alert
+              message="Invalid email, username or password"
+              type={AlertType.ERROR}
+            />
           )}
           <FormField
-            label="Email" // Could default label to input name with a capital letter?
-            name="email"
+            label="Email or username" // Could default label to input name with a capital letter?
+            name="emailOrUsername"
             type="text"
           />
           <FormField label="Password" name="password" type="password" />
