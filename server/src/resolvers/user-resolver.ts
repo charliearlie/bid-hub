@@ -174,7 +174,6 @@ class UserResolver {
     @Arg('newPassword') newPassword: string
   ): Promise<UserResponse> {
     const userId = await redis.get(FORGOT_PASSWORD_PREFIX + token);
-    console.log(token);
     if (!userId) {
       return {
         errors: [
