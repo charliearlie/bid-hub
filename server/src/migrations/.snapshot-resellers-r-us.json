@@ -154,6 +154,26 @@
           "nullable": false,
           "length": 6,
           "mappedType": "datetime"
+        },
+        "active": {
+          "name": "active",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "default": "'true'",
+          "mappedType": "string"
+        },
+        "feedback_score": {
+          "name": "feedback_score",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "default": "0",
+          "mappedType": "integer"
         }
       },
       "name": "user",
@@ -729,6 +749,106 @@
             "user_id"
           ],
           "localTableName": "public.address",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.user",
+          "updateRule": "cascade"
+        }
+      }
+    },
+    {
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "unsigned": true,
+          "autoincrement": true,
+          "primary": true,
+          "nullable": false,
+          "mappedType": "integer"
+        },
+        "reviewed_user_id": {
+          "name": "reviewed_user_id",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "integer"
+        },
+        "reviewer_id": {
+          "name": "reviewer_id",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "integer"
+        },
+        "feedback": {
+          "name": "feedback",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "string"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamptz(0)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "mappedType": "datetime"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamptz(0)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "mappedType": "datetime"
+        }
+      },
+      "name": "user_review",
+      "schema": "public",
+      "indexes": [
+        {
+          "keyName": "user_review_pkey",
+          "columnNames": [
+            "id"
+          ],
+          "composite": false,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {
+        "user_review_reviewed_user_id_foreign": {
+          "constraintName": "user_review_reviewed_user_id_foreign",
+          "columnNames": [
+            "reviewed_user_id"
+          ],
+          "localTableName": "public.user_review",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.user",
+          "updateRule": "cascade"
+        },
+        "user_review_reviewer_id_foreign": {
+          "constraintName": "user_review_reviewer_id_foreign",
+          "columnNames": [
+            "reviewer_id"
+          ],
+          "localTableName": "public.user_review",
           "referencedColumnNames": [
             "id"
           ],
