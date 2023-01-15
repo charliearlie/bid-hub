@@ -1,5 +1,6 @@
 import {
   Arg,
+  Args,
   Ctx,
   Field,
   Mutation,
@@ -365,6 +366,38 @@ class UserResolver {
       ],
       success: false,
     };
+  }
+
+  @Mutation(() => UserResponse)
+  async editUser(
+    @Ctx() { em, req }: MyContext,
+    @Arg('password') password: string,
+    @Arg('confirmPassword') confirmPassword: string,
+    @Arg('avatarUrl') avatarUrl: string,
+    @Arg('username') username?: string
+  ): Promise<UserResponse> {
+    try {
+      const user = await em.findOneOrFail(User, req.session.userId);
+      user.password = password || user.password;
+      user.avatarUrl = avatarUrl || user.avatarUrl;
+
+      await em.persistAndFlush(user);
+
+      const updatedUser = await em.findOne(User, req.session.userId);
+
+      return { user: updatedUser || user, success: true };
+    } catch (error: unknown) {
+      console.log(error);
+      return {
+        errors: [
+          {
+            field: 'user',
+            message: 'Something went wrong',
+          },
+        ],
+        success: false,
+      };
+    }
   }
 }
 

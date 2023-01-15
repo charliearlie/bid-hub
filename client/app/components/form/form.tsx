@@ -37,10 +37,7 @@ export default function Form({
   };
 
   return (
-    <RemixForm
-      className="mb-4 w-full max-w-sm rounded bg-white px-8 pt-6 pb-8 sm:shadow-md"
-      {...props}
-    >
+    <RemixForm {...props}>
       {React.Children.map(children, (child) => {
         if (React.isValidElement(child) && child.type === FormField) {
           const props: Partial<FormFieldProps> = {
