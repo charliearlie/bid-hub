@@ -70,10 +70,10 @@ class UserResolver {
     }
 
     const hashedPassword = await bcrypt.hash(userInput.password, 10);
-
     const newUser = em.create(User, {
       ...userInput,
       password: hashedPassword,
+      active: true,
     });
     await em.persistAndFlush(newUser);
 

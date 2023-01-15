@@ -10,6 +10,7 @@ import { Item } from './Item';
 import { Address } from './Address';
 import { Bid } from './Bid';
 import { PaymentMethod } from './Payment';
+import { UserReview } from './UserReview';
 
 @ObjectType()
 @Entity()
@@ -66,4 +67,20 @@ export class User {
   @Field(() => [PaymentMethod])
   @OneToMany(() => PaymentMethod, (paymentMethod) => paymentMethod.user)
   paymentCards?: PaymentMethod[];
+
+  @Field(() => String)
+  @Property({ nullable: true, default: 'true' })
+  active?: string;
+
+  @Field(() => Number)
+  @Property({ nullable: true, default: 0 })
+  feedbackScore: number;
+
+  @Field(() => [UserReview])
+  @OneToMany(() => UserReview, (userReview) => userReview.reviewedUser)
+  feedback?: UserReview[];
+
+  @Field(() => [UserReview])
+  @OneToMany(() => UserReview, (userReview) => userReview.reviewer)
+  feedbackGiven?: UserReview[];
 }
