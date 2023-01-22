@@ -8,8 +8,8 @@ import { gql, requestClient } from "~/util/gql-request";
 import Spinner from "~/components/spinner";
 
 const LOGIN_USER = gql`
-  mutation Login($email: String!, $password: String!) {
-    login(email: $email, password: $password) {
+  mutation Login($emailOrUsername: String!, $password: String!) {
+    login(emailOrUsername: $emailOrUsername, password: $password) {
       user {
         id
         username
