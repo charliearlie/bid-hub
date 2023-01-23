@@ -1,25 +1,7 @@
 import { json } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
-import { gql } from "graphql-request";
+import { Outlet, useLoaderData } from "@remix-run/react";
+import { ME_QUERY } from "~/gql/queries/me";
 import { requestClient } from "~/util/gql-request";
-
-const ME_QUERY = gql`
-  query Me {
-    me {
-      user {
-        username
-        id
-        addresses {
-          addressName
-        }
-      }
-      errors {
-        field
-        message
-      }
-    }
-  }
-`;
 
 export async function loader({ request }: any) {
   // Surely must be a way to do this without using this same code in every loader?
@@ -34,5 +16,11 @@ export default function UserRoute(req: Request) {
   const {
     data: { me },
   } = useLoaderData();
-  return <div>{JSON.stringify(me)}</div>;
+  return (
+    <div>
+      <main>
+        <Outlet />
+      </main>
+    </div>
+  );
 }

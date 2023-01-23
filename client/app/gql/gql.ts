@@ -18,7 +18,6 @@ const documents = {
     "\n  mutation Login($emailOrUsername: String!, $password: String!) {\n    login(emailOrUsername: $emailOrUsername, password: $password) {\n      user {\n        id\n        username\n        email\n      }\n      errors {\n        field\n        message\n      }\n      success\n      token\n    }\n  }\n": types.LoginDocument,
     "\n  mutation Register($email: String!, $password: String!, $username: String!) {\n    register(\n      userInput: { email: $email, password: $password, username: $username }\n    ) {\n      user {\n        id\n        username\n        email\n        createdAt\n      }\n      errors {\n        field\n        message\n      }\n      success\n      token\n    }\n  }\n": types.RegisterDocument,
     "\n  mutation ForgotPassword($email: String!) {\n    forgotPassword(email: $email)\n  }\n": types.ForgotPasswordDocument,
-    "\n  query Me {\n    me {\n      user {\n        username\n        id\n        addresses {\n          addressName\n        }\n      }\n      errors {\n        field\n        message\n      }\n    }\n  }\n": types.MeDocument,
     "\n  mutation ResetPassword($newPassword: String!, $token: String!) {\n    resetPassword(newPassword: $newPassword, token: $token) {\n      success\n      user {\n        id\n      }\n      token\n    }\n  }\n": types.ResetPasswordDocument,
 };
 
@@ -56,10 +55,6 @@ export function graphql(source: "\n  mutation Register($email: String!, $passwor
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n  mutation ForgotPassword($email: String!) {\n    forgotPassword(email: $email)\n  }\n"): (typeof documents)["\n  mutation ForgotPassword($email: String!) {\n    forgotPassword(email: $email)\n  }\n"];
-/**
- * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
- */
-export function graphql(source: "\n  query Me {\n    me {\n      user {\n        username\n        id\n        addresses {\n          addressName\n        }\n      }\n      errors {\n        field\n        message\n      }\n    }\n  }\n"): (typeof documents)["\n  query Me {\n    me {\n      user {\n        username\n        id\n        addresses {\n          addressName\n        }\n      }\n      errors {\n        field\n        message\n      }\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
