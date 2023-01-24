@@ -24,6 +24,7 @@ export async function createUserSession({
 }) {
   const session = await getSession(request);
   session.set(USER_SESSION_KEY, userId);
+
   const headers = new Headers();
   headers.append(
     "Set-Cookie",
@@ -31,17 +32,26 @@ export async function createUserSession({
       maxAge: 60 * 60 * 24 * 7, // 7 days,
     })
   );
+
   if (jwt) {
     headers.append("Set-Cookie", `jwt=${jwt}`);
   }
+
   return redirect("/", {
     headers,
   });
 }
 
-async function getSession(request: Request) {
+export async function getSession(request: Request) {
   const cookie = request.headers.get("Cookie");
   return sessionStorage.getSession(cookie);
+}
+
+export async function getUserIdFromSession(request: Request) {
+  const session = await getSession(request);
+  const userId = session.get(USER_SESSION_KEY);
+
+  return userId;
 }
 
 export async function logout(request: Request) {
