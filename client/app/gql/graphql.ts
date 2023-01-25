@@ -58,6 +58,15 @@ export type CategoryValidator = {
   title: Scalars['String'];
 };
 
+export type EditUserValidator = {
+  avatarUrl?: InputMaybe<Scalars['String']>;
+  email?: InputMaybe<Scalars['String']>;
+  firstName?: InputMaybe<Scalars['String']>;
+  lastName?: InputMaybe<Scalars['String']>;
+  password?: InputMaybe<Scalars['String']>;
+  username?: InputMaybe<Scalars['String']>;
+};
+
 export type Item = {
   __typename?: 'Item';
   bids: Array<Bid>;
@@ -154,10 +163,7 @@ export type MutationEditItemArgs = {
 
 
 export type MutationEditUserArgs = {
-  avatarUrl: Scalars['String'];
-  confirmPassword: Scalars['String'];
-  password: Scalars['String'];
-  username: Scalars['String'];
+  editedUserDetails: EditUserValidator;
 };
 
 
@@ -294,6 +300,8 @@ export type UserReview = {
 export type UserValidator = {
   avatarUrl?: InputMaybe<Scalars['String']>;
   email: Scalars['String'];
+  firstName?: InputMaybe<Scalars['String']>;
+  lastName?: InputMaybe<Scalars['String']>;
   password: Scalars['String'];
   username: Scalars['String'];
 };

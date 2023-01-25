@@ -47,8 +47,6 @@ export const action: ActionFunction = async ({
     token: params.token,
   });
 
-  console.log(response);
-
   if (!response.resetPassword.success) {
     return json(response.resetPassword.success);
   }

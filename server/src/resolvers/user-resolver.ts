@@ -1,6 +1,5 @@
 import {
   Arg,
-  Args,
   Ctx,
   Field,
   Mutation,
@@ -25,6 +24,7 @@ import resetPasswordEmailTemplate from './helpers/email/reset-password-email';
 import magicLinkEmailTemplate from './helpers/email/magic-link-email';
 import BidHubResponse from './helpers/Response';
 import PaymentMethodValidator from '../contracts/validators/payment.validator';
+import EditUserValidator from '../contracts/validators/user/edit-user.validator';
 
 @ObjectType()
 class UserResponse extends BidHubResponse {
@@ -73,7 +73,8 @@ class UserResolver {
     const newUser = em.create(User, {
       ...userInput,
       password: hashedPassword,
-      active: true,
+      active: 'true',
+      feedbackScore: 0,
     });
     await em.persistAndFlush(newUser);
 
@@ -371,15 +372,15 @@ class UserResolver {
   @Mutation(() => UserResponse)
   async editUser(
     @Ctx() { em, req }: MyContext,
-    @Arg('password') password: string,
-    @Arg('confirmPassword') confirmPassword: string,
-    @Arg('avatarUrl') avatarUrl: string,
-    @Arg('username') username?: string
+    @Arg('editedUserDetails') editedUserDetails: EditUserValidator
   ): Promise<UserResponse> {
     try {
+      const { avatarUrl, firstName, lastName, password } = editedUserDetails;
+
       const user = await em.findOneOrFail(User, req.session.userId);
       user.password = password || user.password;
       user.avatarUrl = avatarUrl || user.avatarUrl;
+      user.firstName = firstName || user.firstName;
 
       await em.persistAndFlush(user);
 

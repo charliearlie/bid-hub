@@ -8,6 +8,8 @@ const ME_QUERY = gql`
         username
         email
         avatarUrl
+        firstName
+        lastName
       }
     }
   }
