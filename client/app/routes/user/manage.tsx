@@ -12,58 +12,58 @@ import Alert, { AlertType } from "~/components/alert";
 import Form from "~/components/form/form";
 import FormField from "~/components/form/form-field";
 import Spinner from "~/components/spinner";
-import { gql, requestWithCredentials } from "~/util/gql-request";
-import { ME_QUERY } from "~/gql/queries/me";
+import { requestWithCredentials } from "~/gql/util/gql-request";
+import { ME_QUERY } from "~/gql/queries";
 import { UserValidator as User } from "~/gql/graphql";
+import { EDIT_USER } from "~/gql/mutations/edit-user";
 
-const EDIT_USER = gql`
-  mutation ResetPassword($newPassword: String!, $token: String!) {
-    resetPassword(newPassword: $newPassword, token: $token) {
-      success
-      user {
-        id
-      }
-      token
-    }
-  }
-`;
-
-type ActionData =
-  | { password: null | string; confirmPassword: null | string }
-  | undefined;
-
-export const action: ActionFunction = async ({
-  params,
-  request,
-}: ActionArgs) => {
-  const formData = await request.formData();
-
-  const userId = await getUserIdFromSession(request);
-
-  //   const password = formData.get("password");
-  //   const confirmPassword = formData.get("confirmPassword");
-
-  //   const errors: ActionData = {
-  //     password: password ? null : "Password is required",
-  //     confirmPassword: confirmPassword ? null : "Please confirm your password",
-  //   };
-
-  //   const hasErrors = Object.values(errors).some((errorMessage) => errorMessage);
-  //   if (hasErrors) {
-  //     return json<ActionData>(errors);
-  //   }
-
-  //   const response = await requestClient.request(EDIT_USER, {
-  //     newPassword: password,
-  //     token: params.token,
-  //   });
-
-  return json(true);
+// todo: Move this into own file or make more generic and just look for a key value pair of strings
+type ActionData = {
+  username: null | string;
+  avatarUrl: null | string;
+  firstName: null | string;
+  lastName: null | string;
 };
 
 type LoaderData = {
   success: boolean;
   user: User; // I believe this will have to exist because we will redirect if there is no user data
+};
+
+export const action: ActionFunction = async ({ request }: ActionArgs) => {
+  const formData = await request.formData();
+
+  const avatarUrl = formData.get("avatarUrl");
+  const firstName = formData.get("firstName");
+  const lastName = formData.get("lastName");
+  const username = formData.get("username");
+
+  const errors: ActionData = {
+    firstName: null, // todo: Do some validation to ensure this is a valid first name
+    lastName: null, // Same as above but we must ensure that the user can save without adding their name
+    avatarUrl: null, // Same
+    username: null, // again same
+  };
+
+  const hasErrors = Object.values(errors).some((errorMessage) => errorMessage);
+  if (hasErrors) {
+    return json<ActionData>(errors);
+  }
+
+  const editedUserDetails = {
+    avatarUrl,
+    firstName,
+    lastName,
+    username,
+  };
+
+  const response = await requestWithCredentials(EDIT_USER, request, {
+    editedUserDetails,
+  });
+
+  console.log(response);
+
+  return json(true);
 };
 
 export const loader: LoaderFunction = async ({ request }: DataFunctionArgs) => {
@@ -78,7 +78,7 @@ export const loader: LoaderFunction = async ({ request }: DataFunctionArgs) => {
   return redirect("/");
 };
 
-export default function ForgotPasswordRoute() {
+export default function ManageUserRoute() {
   const loaderData = useLoaderData<LoaderData>();
   const actionData = useActionData();
   const transition = useTransition();
@@ -94,22 +94,38 @@ export default function ForgotPasswordRoute() {
             <Alert type={AlertType.ERROR} message="Something went wrong" />
           )}
           <Form
-            className="mb-4 w-full max-w-sm rounded bg-white px-8 pt-6 pb-8 sm:shadow-md"
+            className="mb-4 w-full rounded bg-white px-8 pt-6 pb-8 sm:shadow-md"
             initialFormValues={user}
             method="post"
           >
-            <FormField label="Username" name="username" type="text" />
-            <FormField label="Password" name="password" type="password" />
+            <FormField label="Username" labelLeft name="username" type="text" />
+            <FormField
+              label="Password"
+              labelLeft
+              name="password"
+              type="password"
+            />
             <FormField
               label="Confirm password"
+              labelLeft
               name="confirmPassword"
               type="password"
             />
-            <FormField label="First name" name="firstName" type="text" />
-            <FormField label="Last name" name="lastName" type="text" />
+            <FormField
+              label="First name"
+              labelLeft
+              name="firstName"
+              type="text"
+            />
+            <FormField
+              label="Last name"
+              labelLeft
+              name="lastName"
+              type="text"
+            />
             <div className="flex justify-center">
               <button className="w-25 rounded bg-violet-700 px-3 py-2 text-lg font-semibold text-white hover:bg-violet-900">
-                {transition.state !== "idle" ? <Spinner /> : "Update user"}
+                {transition.state !== "idle" ? <Spinner /> : "Update"}
               </button>
             </div>
           </Form>
