@@ -267,7 +267,7 @@ class UserResolver {
   }
 
   @Mutation(() => Boolean)
-  async emailMagiclink(
+  async emailMagicLink(
     @Ctx() { em, redis }: MyContext,
     @Arg('email') email: string
   ): Promise<boolean> {
@@ -375,12 +375,12 @@ class UserResolver {
     @Arg('editedUserDetails') editedUserDetails: EditUserValidator
   ): Promise<UserResponse> {
     try {
-      const { avatarUrl, firstName, lastName, password } = editedUserDetails;
+      const { avatarUrl, firstName, lastName } = editedUserDetails;
 
       const user = await em.findOneOrFail(User, req.session.userId);
-      user.password = password || user.password;
       user.avatarUrl = avatarUrl || user.avatarUrl;
       user.firstName = firstName || user.firstName;
+      user.lastName = lastName || user.lastName;
 
       await em.persistAndFlush(user);
 

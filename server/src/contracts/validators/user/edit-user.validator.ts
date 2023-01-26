@@ -27,11 +27,6 @@ class EditUserValidator {
   @Field({ nullable: true })
   @IsString()
   @IsOptional()
-  public password: string;
-
-  @Field({ nullable: true })
-  @IsString()
-  @IsOptional()
   public avatarUrl: string;
 }
 
