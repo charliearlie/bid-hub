@@ -1,25 +1,30 @@
-import { ChangeEvent } from "react";
+import { forwardRef, ReactElement } from "react";
 
 export type FormFieldProps = {
-  handleChange?: (event: ChangeEvent<HTMLInputElement>) => void;
   label: string;
+  labelLeft?: boolean;
 };
 
 type Props = FormFieldProps & React.HTMLProps<HTMLInputElement>;
 
-export default function FormField({
-  handleChange,
-  label,
-  ...props
-}: Props): React.ReactElement {
-  return (
-    <div className="mb-4 flex flex-col">
-      <label className="block font-bold">{label}</label>
-      <input
-        className="focus:shadow-outline rounded px-3 py-2 text-lg autofill:first-line:text-lg"
-        onChange={handleChange}
-        {...props}
-      />
-    </div>
-  );
-}
+const FormField = forwardRef<HTMLInputElement, Props>(
+  ({ label, labelLeft, ...props }, ref): ReactElement => {
+    return (
+      <div
+        className={`mb-4 flex ${
+          labelLeft ? "flex-row items-center justify-between" : "flex-col"
+        }`}
+      >
+        <label className="block font-bold">{label}</label>
+        <input
+          className="focus:shadow-outline rounded border border-solid border-gray-300 bg-white bg-clip-padding px-3
+        py-2 text-lg autofill:first-line:text-lg"
+          {...props}
+          ref={ref}
+        />
+      </div>
+    );
+  }
+);
+
+export default FormField;
