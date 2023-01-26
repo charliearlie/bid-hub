@@ -1,6 +1,6 @@
-import { gql } from "~/util/gql-request";
+import { gql } from "~/gql/util/gql-request";
 
-const ME_QUERY = gql`
+export const ME_QUERY = gql`
   query Me {
     me {
       success
@@ -14,5 +14,3 @@ const ME_QUERY = gql`
     }
   }
 `;
-
-export { ME_QUERY };

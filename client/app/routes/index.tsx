@@ -1,6 +1,6 @@
 import { json, LoaderFunction } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
-import { gql, requestClient } from "~/util/gql-request";
+import { gql, requestClient } from "~/gql/util/gql-request";
 
 const CATEGORY_QUERY = gql`
   query Categories {

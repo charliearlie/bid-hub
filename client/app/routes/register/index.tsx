@@ -4,7 +4,7 @@ import Alert, { AlertType } from "~/components/alert";
 import Form from "~/components/form/form";
 import FormField from "~/components/form/form-field";
 import { createUserSession } from "~/session.server";
-import { gql, requestClient } from "~/util/gql-request";
+import { gql, requestClient } from "~/gql/util/gql-request";
 import Spinner from "~/components/spinner";
 
 const REGISTER_USER = gql`
