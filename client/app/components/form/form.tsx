@@ -30,15 +30,12 @@ export default function Form({
   type FormState = Record<FormKeys, FormData[FormKeys]>;
   const [formState, setFormState] = useState<FormState>(initialFormValues);
 
-  console.log(formState);
   const handleChange = (event: ChangeEvent<HTMLInputElement>): void => {
     setFormState({
       ...formState,
       [event.target.name]: event.target.value,
     });
   };
-
-  //TODO: Got to correctly bind the form state to the form so it's displayed on page load
 
   return (
     <RemixForm {...props}>
@@ -47,7 +44,7 @@ export default function Form({
           const props: Partial<FormFieldProps> = {
             ...child.props,
             handleChange,
-            value: formState[child.props.name],
+            defaultValue: formState[child.props.name],
           };
           return React.cloneElement(child, props);
         }
