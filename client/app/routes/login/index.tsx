@@ -1,29 +1,14 @@
+import React, { useRef } from "react";
 import { Link, useActionData, useTransition } from "@remix-run/react";
 import { ActionArgs, ActionFunction, json } from "@remix-run/node";
 import Alert, { AlertType } from "~/components/alert";
 import Form from "~/components/form/form";
 import FormField from "~/components/form/form-field";
 import { createUserSession } from "~/session.server";
-import { gql, requestClient } from "~/util/gql-request";
+import { requestClient } from "~/gql/util/gql-request";
+import { LOGIN_USER } from "~/gql/mutations/login-user";
 import Spinner from "~/components/spinner";
-
-const LOGIN_USER = gql`
-  mutation Login($emailOrUsername: String!, $password: String!) {
-    login(emailOrUsername: $emailOrUsername, password: $password) {
-      user {
-        id
-        username
-        email
-      }
-      errors {
-        field
-        message
-      }
-      success
-      token
-    }
-  }
-`;
+import { SEND_MAGIC_LINK } from "~/gql/mutations/send-magic-link";
 
 type ActionData =
   | { emailOrUsername: null | string; password: null | string }
@@ -62,15 +47,34 @@ export const action: ActionFunction = async ({ request }: ActionArgs) => {
 };
 
 export default function LoginRoute() {
+  const emailInputRef = useRef<HTMLInputElement>(null);
   const actionData = useActionData();
   const transition = useTransition();
 
+  const handleMagicLinkClick = async (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    // We'll do this for now but it makes more sense to move the magic link button out of the form
+    e.stopPropagation();
+    e.preventDefault();
+
+    const userEmail = emailInputRef.current?.value;
+
+    if (userEmail) {
+      await requestClient.request(SEND_MAGIC_LINK, {
+        email: userEmail,
+      });
+    }
+
+    console.log("Magic link button clicked", emailInputRef.current?.value);
+  };
+
   return (
-    <main>
-      <div className="flex flex-col flex-wrap content-center">
+    <main className="flex flex-col flex-wrap content-center">
+      <div className="mb-4 w-full max-w-sm rounded bg-white px-8 pt-6 pb-8 sm:shadow-md">
         <h1 className="text-center text-3xl font-bold">Log in to Bidhub</h1>
         <Form
-          className="mb-4 w-full max-w-sm rounded bg-white px-8 pt-6 pb-8 sm:shadow-md"
+          className=""
           initialFormValues={{
             emailOrUsername: "",
             password: "",
@@ -87,20 +91,27 @@ export default function LoginRoute() {
             label="Email or username" // Could default label to input name with a capital letter?
             name="emailOrUsername"
             type="text"
+            ref={emailInputRef}
           />
           <FormField label="Password" name="password" type="password" />
-          <div className="flex justify-between">
-            <button className="w-25 rounded bg-violet-700 px-3 py-2 text-lg font-semibold text-white hover:bg-violet-900">
+          <div className="flex flex-col gap-2">
+            <button className="rounded bg-violet-700 px-3 py-2 text-lg font-semibold text-white hover:bg-violet-900">
               {transition.state !== "idle" ? <Spinner /> : "Log in"}
             </button>
             <Link
               className="px-0 py-2 font-semibold text-blue-700 hover:text-slate-500"
               to="/forgot-password"
             >
-              Forgot password?
+              Forgot your password?
             </Link>
           </div>
         </Form>
+        <button
+          className="w-full rounded bg-green-700 px-3 py-2 text-lg font-semibold text-white hover:bg-violet-900"
+          onClick={handleMagicLinkClick}
+        >
+          {transition.state !== "idle" ? <Spinner /> : "Send Magic Link"}
+        </button>
       </div>
     </main>
   );
