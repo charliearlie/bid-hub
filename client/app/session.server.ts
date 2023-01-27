@@ -1,9 +1,4 @@
-import {
-  createCookie,
-  createCookieSessionStorage,
-  Headers,
-  redirect,
-} from "@remix-run/node";
+import { createCookieSessionStorage, Headers, redirect } from "@remix-run/node";
 
 const sessionStorage = createCookieSessionStorage({
   cookie: {
@@ -11,7 +6,7 @@ const sessionStorage = createCookieSessionStorage({
     httpOnly: true,
     path: "/",
     sameSite: "lax",
-    secrets: ["elaerilthbblaesaaseeizlire"],
+    secrets: [process.env.SESSION_SECRET],
     secure: process.env.NODE_ENV === "production",
   },
 });
