@@ -35,6 +35,9 @@ export default function App() {
         <Links />
       </head>
       <body>
+        <p className="flex justify-center">
+          Design has not been considered as of yet
+        </p>
         <Outlet />
         <ScrollRestoration />
         <Scripts />

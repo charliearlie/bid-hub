@@ -100,7 +100,7 @@ export default function LoginRoute() {
             </button>
             <Link
               className="px-0 py-2 font-semibold text-blue-700 hover:text-slate-500"
-              to="/forgot-password"
+              to="/user/forgot-password"
             >
               Forgot your password?
             </Link>
