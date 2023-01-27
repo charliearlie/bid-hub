@@ -3,7 +3,7 @@ import { DataFunctionArgs, LoaderFunction } from "@remix-run/node";
 import Alert, { AlertType } from "~/components/alert";
 import Form from "~/components/form/form";
 import FormField from "~/components/form/form-field";
-import { requestClient } from "~/util/gql-request.server";
+import { requestClient } from "~/gql/util/gql-request.server";
 import Spinner from "~/components/spinner";
 import { createUserSession } from "~/session.server";
 import { HANDLE_MAGIC_EMAIL_LOGIN } from "~/gql/mutations";

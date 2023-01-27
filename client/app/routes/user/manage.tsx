@@ -11,7 +11,7 @@ import Alert, { AlertType } from "~/components/alert";
 import Form from "~/components/form/form";
 import FormField from "~/components/form/form-field";
 import Spinner from "~/components/spinner";
-import { requestWithCredentials } from "~/util/gql-request.server";
+import { requestWithCredentials } from "~/gql/util/gql-request.server";
 import { ME_QUERY } from "~/gql/queries";
 import { UserValidator as User } from "~/gql/graphql";
 import { EDIT_USER } from "~/gql/mutations/edit-user";
