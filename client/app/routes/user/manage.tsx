@@ -7,12 +7,11 @@ import {
   LoaderFunction,
   redirect,
 } from "@remix-run/node";
-import { getUserIdFromSession } from "~/session.server";
 import Alert, { AlertType } from "~/components/alert";
 import Form from "~/components/form/form";
 import FormField from "~/components/form/form-field";
 import Spinner from "~/components/spinner";
-import { requestWithCredentials } from "~/gql/util/gql-request";
+import { requestWithCredentials } from "~/util/gql-request.server";
 import { ME_QUERY } from "~/gql/queries";
 import { UserValidator as User } from "~/gql/graphql";
 import { EDIT_USER } from "~/gql/mutations/edit-user";
@@ -57,11 +56,9 @@ export const action: ActionFunction = async ({ request }: ActionArgs) => {
     username,
   };
 
-  const response = await requestWithCredentials(EDIT_USER, request, {
+  await requestWithCredentials(EDIT_USER, request, {
     editedUserDetails,
   });
-
-  console.log(response);
 
   return json(true);
 };

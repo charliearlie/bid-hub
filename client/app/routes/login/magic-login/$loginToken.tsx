@@ -1,19 +1,9 @@
 import { useActionData, useTransition } from "@remix-run/react";
-import {
-  ActionArgs,
-  ActionFunction,
-  DataFunctionArgs,
-  json,
-  LoaderFunction,
-} from "@remix-run/node";
+import { DataFunctionArgs, LoaderFunction } from "@remix-run/node";
 import Alert, { AlertType } from "~/components/alert";
 import Form from "~/components/form/form";
 import FormField from "~/components/form/form-field";
-import {
-  gql,
-  requestClient,
-  requestWithCredentials,
-} from "~/gql/util/gql-request";
+import { requestClient } from "~/util/gql-request.server";
 import Spinner from "~/components/spinner";
 import { createUserSession } from "~/session.server";
 import { HANDLE_MAGIC_EMAIL_LOGIN } from "~/gql/mutations";
@@ -22,14 +12,14 @@ export const loader: LoaderFunction = async ({
   params,
   request,
 }: DataFunctionArgs) => {
-  const response = await requestClient.request(HANDLE_MAGIC_EMAIL_LOGIN);
-
-  console.log(response);
+  const response = await requestClient.request(HANDLE_MAGIC_EMAIL_LOGIN, {
+    loginToken: params.loginToken,
+  });
 
   return createUserSession({
     request,
-    userId: response.login.user.id,
-    jwt: response.login.token,
+    userId: response.handleMagicEmailLogin.user.id,
+    jwt: response.handleMagicEmailLogin.token,
   });
 };
 

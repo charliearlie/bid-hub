@@ -307,17 +307,12 @@ class UserResolver {
       };
     }
 
-    req.session.userId = id;
-
     const token = sign(
       { email: user.email, username: user.username, id: user.id },
       process.env.JWT_SECRET
     );
 
-    res.cookie('user', token, {
-      maxAge: 1000 * 60 * 60 * 24 * 7,
-      httpOnly: true,
-    });
+    req.session.userId = user.id;
 
     return { user, token, success: true };
   }

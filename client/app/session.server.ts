@@ -1,4 +1,9 @@
-import { createCookieSessionStorage, Headers, redirect } from "@remix-run/node";
+import {
+  createCookie,
+  createCookieSessionStorage,
+  Headers,
+  redirect,
+} from "@remix-run/node";
 
 const sessionStorage = createCookieSessionStorage({
   cookie: {
@@ -24,6 +29,9 @@ export async function createUserSession({
 }) {
   const session = await getSession(request);
   session.set(USER_SESSION_KEY, userId);
+  if (jwt) {
+    session.set("jwt", jwt);
+  }
 
   const headers = new Headers();
   headers.append(
@@ -32,10 +40,6 @@ export async function createUserSession({
       maxAge: 60 * 60 * 24 * 7, // 7 days,
     })
   );
-
-  if (jwt) {
-    headers.append("Set-Cookie", `jwt=${jwt}`);
-  }
 
   return redirect("/", {
     headers,

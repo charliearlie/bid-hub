@@ -59,7 +59,6 @@ export default function LoginRoute() {
     e.preventDefault();
 
     const userEmail = emailInputRef.current?.value;
-    console.log(userEmail);
 
     if (userEmail) {
       await requestClient.request(SEND_MAGIC_LINK, {
@@ -109,15 +108,9 @@ export default function LoginRoute() {
         </Form>
         <button
           className="w-full rounded bg-green-700 px-3 py-2 text-lg font-semibold text-white hover:bg-violet-900"
-          onClick={() => console.log("clicked magic button")}
+          onClick={handleMagicLinkClick}
         >
           {transition.state !== "idle" ? <Spinner /> : "Send Magic Link"}
-        </button>
-        <button
-          className="w-full rounded bg-green-700 px-3 py-2 text-lg font-semibold text-white hover:bg-violet-900"
-          onClick={() => console.log("clicked magic button")}
-        >
-          Click to work
         </button>
       </div>
     </main>
