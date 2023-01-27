@@ -112,7 +112,7 @@ export type Mutation = {
   editUser: UserResponse;
   emailMagicLink: Scalars['Boolean'];
   forgotPassword: Scalars['Boolean'];
-  handleMagicEmailLogin: Scalars['Boolean'];
+  handleMagicEmailLogin: UserResponse;
   login: UserResponse;
   logout: Scalars['Boolean'];
   placeBid: BidResponse;

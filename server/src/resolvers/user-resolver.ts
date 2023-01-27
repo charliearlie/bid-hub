@@ -286,21 +286,25 @@ class UserResolver {
     return true;
   }
 
-  @Mutation(() => Boolean)
+  @Mutation(() => UserResponse)
   async handleMagicEmailLogin(
     @Ctx() { em, req, res, redis }: MyContext,
     @Arg('loginToken') loginToken: string
-  ): Promise<boolean> {
+  ): Promise<UserResponse> {
     const userId = await redis.get(MAGIC_LINK_PREFIX + loginToken);
-    if (!userId) {
-      return false;
-    }
-
+    // todo: move error handling somewhere else as it's pulluting this file
     const id = Number(userId);
     const user = await em.findOneOrFail(User, { id });
-
     if (!user) {
-      return false;
+      return {
+        errors: [
+          {
+            field: 'user',
+            message: 'Token is no longer valid',
+          },
+        ],
+        success: false,
+      };
     }
 
     req.session.userId = id;
@@ -315,7 +319,7 @@ class UserResolver {
       httpOnly: true,
     });
 
-    return true;
+    return { user, token, success: true };
   }
 
   @Mutation(() => UserResponse)

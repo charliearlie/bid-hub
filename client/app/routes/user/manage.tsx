@@ -129,6 +129,7 @@ export default function ManageUserRoute() {
               </button>
             </div>
           </Form>
+          <button onClick={() => console.log("button clicked")}>Hello</button>
         </div>
       </main>
     );
