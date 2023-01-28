@@ -43,7 +43,7 @@ export default function Form({
         if (React.isValidElement(child) && child.type === FormField) {
           const props: Partial<FormFieldProps> = {
             ...child.props,
-            handleChange,
+            onChange: handleChange,
             defaultValue: formState[child.props.name],
           };
           return React.cloneElement(child, props);
