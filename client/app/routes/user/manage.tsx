@@ -37,8 +37,6 @@ export const action: ActionFunction = async ({ request }: ActionArgs) => {
   const lastName = formData.get("lastName");
   const username = formData.get("username");
 
-  console.log(avatarImage);
-
   const errors: ActionData = {
     firstName: null, // todo: Do some validation to ensure this is a valid first name
     lastName: null, // Same as above but we must ensure that the user can save without adding their name
@@ -62,7 +60,6 @@ export const action: ActionFunction = async ({ request }: ActionArgs) => {
       body: data,
     });
     const image = await res.json();
-    console.log(image);
 
     const editedUserDetails = {
       avatarUrl: image.secure_url,
