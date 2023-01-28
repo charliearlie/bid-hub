@@ -1,4 +1,4 @@
-import type { MetaFunction } from "@remix-run/node";
+import { json, MetaFunction } from "@remix-run/node";
 import {
   Links,
   LiveReload,
@@ -6,6 +6,7 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  useLoaderData,
 } from "@remix-run/react";
 import styles from "./styles/app.css";
 
@@ -21,6 +22,10 @@ export function links() {
   ];
 }
 
+export async function loader() {
+  return json({ ENV: process.env });
+}
+
 export const meta: MetaFunction = () => ({
   charset: "utf-8",
   title: "BidHub (Bid on shit you want)",
@@ -28,6 +33,7 @@ export const meta: MetaFunction = () => ({
 });
 
 export default function App() {
+  const data = useLoaderData();
   return (
     <html lang="en">
       <head>
@@ -39,6 +45,13 @@ export default function App() {
           Design has not been considered as of yet
         </p>
         <Outlet />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `window.process = ${JSON.stringify({
+              env: data.ENV,
+            })}`,
+          }}
+        />
         <ScrollRestoration />
         <Scripts />
         <LiveReload />
