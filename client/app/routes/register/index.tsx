@@ -92,7 +92,7 @@ export default function RegisterRoute() {
           <FormField label="Password" name="password" type="password" />
           <div className="flex justify-between">
             <button className="w-25 rounded bg-violet-700 px-3 py-2 text-lg font-semibold text-white hover:bg-violet-900">
-              {transition.state === "idle" ? <Spinner /> : "Sign up"}
+              {transition.state !== "idle" ? <Spinner /> : "Sign up"}
             </button>
             <Link
               className="px-0 py-2 font-semibold text-blue-700 hover:text-slate-500"

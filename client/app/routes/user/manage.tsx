@@ -19,7 +19,7 @@ import { EDIT_USER } from "~/gql/mutations/edit-user";
 // todo: Move this into own file or make more generic and just look for a key value pair of strings
 type ActionData = {
   username: null | string;
-  avatarUrl: null | string;
+  avatarImage: null | string;
   firstName: null | string;
   lastName: null | string;
 };
@@ -32,7 +32,7 @@ type LoaderData = {
 export const action: ActionFunction = async ({ request }: ActionArgs) => {
   const formData = await request.formData();
 
-  const avatarUrl = formData.get("avatarUrl");
+  const avatarImage = formData.get("avatarImage");
   const firstName = formData.get("firstName");
   const lastName = formData.get("lastName");
   const username = formData.get("username");
@@ -40,7 +40,7 @@ export const action: ActionFunction = async ({ request }: ActionArgs) => {
   const errors: ActionData = {
     firstName: null, // todo: Do some validation to ensure this is a valid first name
     lastName: null, // Same as above but we must ensure that the user can save without adding their name
-    avatarUrl: null, // Same
+    avatarImage: null, // Same
     username: null, // again same
   };
 
@@ -49,16 +49,29 @@ export const action: ActionFunction = async ({ request }: ActionArgs) => {
     return json<ActionData>(errors);
   }
 
-  const editedUserDetails = {
-    avatarUrl,
-    firstName,
-    lastName,
-    username,
-  };
+  if (avatarImage) {
+    const data = new FormData();
+    data.append("file", avatarImage);
+    data.append("upload_preset", "bidhub_user_avatar");
 
-  await requestWithCredentials(EDIT_USER, request, {
-    editedUserDetails,
-  });
+    console.log("process", process.env);
+    const res = await fetch(process.env.CLOUDINARY_URL, {
+      method: "POST",
+      body: data,
+    });
+    const image = await res.json();
+
+    const editedUserDetails = {
+      avatarUrl: image.secure_url,
+      firstName,
+      lastName,
+      username,
+    };
+
+    await requestWithCredentials(EDIT_USER, request, {
+      editedUserDetails,
+    });
+  }
 
   return json(true);
 };
@@ -92,6 +105,7 @@ export default function ManageUserRoute() {
           )}
           <Form
             className="mb-4 w-full rounded bg-white px-8 pt-6 pb-8 sm:shadow-md"
+            encType="multipart/form-data"
             initialFormValues={user}
             method="post"
           >
@@ -120,6 +134,7 @@ export default function ManageUserRoute() {
               name="lastName"
               type="text"
             />
+            <input type="file" name="avatarImage" />
             <div className="flex justify-center">
               <button className="w-25 rounded bg-violet-700 px-3 py-2 text-lg font-semibold text-white hover:bg-violet-900">
                 {transition.state !== "idle" ? <Spinner /> : "Update"}
