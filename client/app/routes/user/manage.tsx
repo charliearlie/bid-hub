@@ -15,6 +15,7 @@ import { requestWithCredentials } from "~/gql/util/gql-request.server";
 import { ME_QUERY } from "~/gql/queries";
 import { UserValidator as User } from "~/gql/graphql";
 import { EDIT_USER } from "~/gql/mutations/edit-user";
+import { formValidationRegexes } from "~/util/form-validation-regexes";
 
 // todo: Move this into own file or make more generic and just look for a key value pair of strings
 type ActionData = {
@@ -30,6 +31,7 @@ type LoaderData = {
 };
 
 export const action: ActionFunction = async ({ request }: ActionArgs) => {
+  let image = null;
   const formData = await request.formData();
 
   const avatarImage = formData.get("avatarImage");
@@ -53,25 +55,23 @@ export const action: ActionFunction = async ({ request }: ActionArgs) => {
     const data = new FormData();
     data.append("file", avatarImage);
     data.append("upload_preset", "bidhub_user_avatar");
-
-    console.log("process", process.env);
     const res = await fetch(process.env.CLOUDINARY_URL, {
       method: "POST",
       body: data,
     });
-    const image = await res.json();
-
-    const editedUserDetails = {
-      avatarUrl: image.secure_url,
-      firstName,
-      lastName,
-      username,
-    };
-
-    await requestWithCredentials(EDIT_USER, request, {
-      editedUserDetails,
-    });
+    image = await res.json();
   }
+
+  const editedUserDetails = {
+    avatarUrl: image?.secure_url ?? null,
+    firstName,
+    lastName,
+    username,
+  };
+
+  await requestWithCredentials(EDIT_USER, request, {
+    editedUserDetails,
+  });
 
   return json(true);
 };
@@ -127,6 +127,10 @@ export default function ManageUserRoute() {
               labelLeft
               name="firstName"
               type="text"
+              validateFunc={(string) => {
+                return formValidationRegexes.textOnly.test(string);
+              }}
+              errorMessage="Name must be letters only"
             />
             <FormField
               label="Last name"
@@ -141,7 +145,6 @@ export default function ManageUserRoute() {
               </button>
             </div>
           </Form>
-          <button onClick={() => console.log("button clicked")}>Hello</button>
         </div>
       </main>
     );

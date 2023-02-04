@@ -94,12 +94,12 @@ export default function LoginRoute() {
             ref={emailInputRef}
           />
           <FormField label="Password" name="password" type="password" />
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col">
             <button className="rounded bg-violet-700 px-3 py-2 text-lg font-semibold text-white hover:bg-violet-900">
               {transition.state !== "idle" ? <Spinner /> : "Log in"}
             </button>
             <Link
-              className="px-0 py-2 font-semibold text-blue-700 hover:text-slate-500"
+              className="px-0 pb-2 font-semibold text-blue-700 hover:text-slate-500"
               to="/user/forgot-password"
             >
               Forgot your password?
@@ -107,7 +107,7 @@ export default function LoginRoute() {
           </div>
         </Form>
         <button
-          className="w-full rounded bg-green-700 px-3 py-2 text-lg font-semibold text-white hover:bg-violet-900"
+          className="my-1 w-full rounded bg-green-700 px-3 py-2 text-lg font-semibold text-white hover:bg-violet-900"
           onClick={handleMagicLinkClick}
         >
           {transition.state !== "idle" ? <Spinner /> : "Send Magic Link"}
