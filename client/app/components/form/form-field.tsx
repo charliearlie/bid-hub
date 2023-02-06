@@ -44,7 +44,7 @@ const FormField = forwardRef<HTMLInputElement, Props>(
         <label className="block font-bold" htmlFor={name}>
           {label}
         </label>
-        <div className="contents">
+        <div className="flex flex-col">
           <input
             className="focus:shadow-outline rounded border border-solid border-gray-300 bg-white bg-clip-padding px-3
         py-2 text-lg autofill:first-line:text-lg"
