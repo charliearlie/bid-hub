@@ -1,8 +1,9 @@
 version: 2.1
 
-workflows:
-  sample:
-    jobs:
+jobs:
+  run:
+    executor: default
+    steps:
       - run:
           name: client-test
           command: yarn test --cwd client
@@ -12,3 +13,8 @@ workflows:
       - run:
           name: server-build
           command: yarn build --cwd server
+
+workflows:
+  sample:
+    jobs:
+      - run
