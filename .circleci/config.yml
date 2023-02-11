@@ -1,16 +1,14 @@
 version: 2.1
-orbs:
-  exec: circleci/exec@0.0.10
 
 workflows:
   sample:
     jobs:
-      - exec/run:
+      - run:
           name: client-test
           command: yarn test --cwd client
-      - exec/run:
+      - run:
           name: client-build
           command: yarn build --cwd client
-      - exec/run:
+      - run:
           name: server-build
           command: yarn build --cwd server
