@@ -7,6 +7,7 @@ import {
   Property,
   Unique,
 } from '@mikro-orm/core';
+import formatPrice from '../utils/format-price';
 import { Field, ID, ObjectType } from 'type-graphql';
 import { Bid } from './Bid';
 import { Category } from './Category';
@@ -39,17 +40,32 @@ export class Item {
   @Property({ nullable: true })
   imageUrl?: string;
 
-  @Field()
+  @Field({ nullable: true })
   @Property({ nullable: true })
   buyItNowPrice?: number;
+
+  @Field(() => String)
+  formattedBuyItNowPrice() {
+    return formatPrice(this.buyItNowPrice);
+  }
 
   @Field({ nullable: true })
   @Property({ nullable: true })
   startingPrice?: number;
 
+  @Field(() => String)
+  formattedStartingPrice() {
+    return formatPrice(this.startingPrice);
+  }
+
   @Field({ nullable: true })
   @Property({ nullable: true })
   winningBid?: number;
+
+  @Field(() => String)
+  formattedWinningBid() {
+    return formatPrice(this.winningBid);
+  }
 
   @Field(() => String)
   @Property({ type: 'date', nullable: true })

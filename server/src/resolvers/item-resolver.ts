@@ -30,7 +30,7 @@ class ItemResolver {
   }
 
   // Get item by ID
-  @Query(() => Item)
+  @Query(() => ItemResponse)
   async getItemById(
     @Ctx() { em }: MyContext,
     @Arg('id') id: number
@@ -38,6 +38,7 @@ class ItemResolver {
     let item;
     try {
       item = await em.findOneOrFail(Item, { id });
+      console.log('item', item);
     } catch (error) {
       if (error instanceof NotFoundError) {
         return {

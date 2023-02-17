@@ -14,7 +14,6 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  */
 const documents = {
     "\n  query Categories {\n    categories {\n      id\n      title\n      description\n      createdAt\n      updatedAt\n    }\n  }\n": types.CategoriesDocument,
-    "\n  query Items {\n    items {\n      id\n      name\n      description\n      imageUrl\n      seller {\n        username\n      }\n      condition\n      categories {\n        title\n      }\n      slug\n    }\n  }\n": types.ItemsDocument,
     "\n  mutation Register($email: String!, $password: String!, $username: String!) {\n    register(\n      userInput: { email: $email, password: $password, username: $username }\n    ) {\n      user {\n        id\n        username\n        email\n        createdAt\n      }\n      errors {\n        field\n        message\n      }\n      success\n      token\n    }\n  }\n": types.RegisterDocument,
     "\n  mutation ForgotPassword($email: String!) {\n    forgotPassword(email: $email)\n  }\n": types.ForgotPasswordDocument,
     "\n  mutation ResetPassword($newPassword: String!, $token: String!) {\n    resetPassword(newPassword: $newPassword, token: $token) {\n      success\n      user {\n        id\n      }\n      token\n    }\n  }\n": types.ResetPasswordDocument,
@@ -38,10 +37,6 @@ export function graphql(source: string): unknown;
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n  query Categories {\n    categories {\n      id\n      title\n      description\n      createdAt\n      updatedAt\n    }\n  }\n"): (typeof documents)["\n  query Categories {\n    categories {\n      id\n      title\n      description\n      createdAt\n      updatedAt\n    }\n  }\n"];
-/**
- * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
- */
-export function graphql(source: "\n  query Items {\n    items {\n      id\n      name\n      description\n      imageUrl\n      seller {\n        username\n      }\n      condition\n      categories {\n        title\n      }\n      slug\n    }\n  }\n"): (typeof documents)["\n  query Items {\n    items {\n      id\n      name\n      description\n      imageUrl\n      seller {\n        username\n      }\n      condition\n      categories {\n        title\n      }\n      slug\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

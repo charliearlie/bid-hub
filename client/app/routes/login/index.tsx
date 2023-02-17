@@ -65,8 +65,6 @@ export default function LoginRoute() {
         email: userEmail,
       });
     }
-
-    console.log("Magic link button clicked", emailInputRef.current?.value);
   };
 
   return (
