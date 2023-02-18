@@ -67,6 +67,11 @@ export class Item {
     return formatPrice(this.winningBid);
   }
 
+  @Field(() => Boolean)
+  hasBiddingEnabled() {
+    return !!this.startingPrice;
+  }
+
   @Field(() => String)
   @Property({ type: 'date', nullable: true })
   createdAt? = new Date();

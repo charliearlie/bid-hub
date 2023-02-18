@@ -1,7 +1,7 @@
 import { useLoaderData } from "@remix-run/react";
 import type { ItemsLoaderData } from "~/types/loader-data";
-import Divider from "../divider";
-import ItemPreview from "./item-preview";
+import Divider from "../../divider";
+import ItemPreview from "../item-preview/item-preview";
 
 export default function Items() {
   const { items } = useLoaderData<ItemsLoaderData>();

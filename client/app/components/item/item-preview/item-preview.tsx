@@ -12,12 +12,13 @@ export default function ItemPreview({ item }: ItemPreviewProps) {
     formattedBuyItNowPrice,
     formattedWinningBid,
     condition,
+    hasBiddingEnabled,
     slug,
   } = item;
 
   const Price = () => {
     // todo: This needs to take startingBid into consideration
-    if (!formattedBuyItNowPrice && !formattedWinningBid) return null;
+    if (!formattedBuyItNowPrice && !hasBiddingEnabled) return null;
 
     return (
       <>

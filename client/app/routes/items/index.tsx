@@ -1,5 +1,5 @@
 import { json, LoaderFunction, MetaFunction } from "@remix-run/node";
-import Items from "~/components/item/items";
+import Items from "~/components/item/items/items";
 import { ITEMS_QUERY } from "~/gql/queries/items.query";
 import { requestClient } from "~/gql/util/gql-request";
 import { ItemsLoaderData } from "~/types/loader-data";
