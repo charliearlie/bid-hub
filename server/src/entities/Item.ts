@@ -93,7 +93,12 @@ export class Item {
   seller: User;
 
   @Field(() => [Category])
-  @ManyToMany(() => Category)
+  @ManyToMany({
+    entity: () => Category,
+    joinColumn: 'item_id',
+    pivotTable: 'item_categories',
+    inverseJoinColumn: 'category_id',
+  })
   categories?: Category[];
 
   @Field(() => [Bid])
