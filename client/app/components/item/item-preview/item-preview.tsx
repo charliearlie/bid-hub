@@ -8,6 +8,7 @@ type ItemPreviewProps = {
 export default function ItemPreview({ item }: ItemPreviewProps) {
   const {
     id,
+    bidCount,
     name,
     formattedBuyItNowPrice,
     formattedWinningBid,
@@ -17,7 +18,6 @@ export default function ItemPreview({ item }: ItemPreviewProps) {
   } = item;
 
   const Price = () => {
-    // todo: This needs to take startingBid into consideration
     if (!formattedBuyItNowPrice && !hasBiddingEnabled) return null;
 
     return (
@@ -27,7 +27,11 @@ export default function ItemPreview({ item }: ItemPreviewProps) {
         )}
         <span className="flex justify-between">
           <p className="text-xs font-bold text-green-600">Buy it now</p>
-          {formattedWinningBid && <p className="text-xs">2 bids (4d, 13h)</p>}
+          {bidCount > 0 && (
+            <p className="text-xs">
+              {bidCount} bids ({formattedWinningBid})
+            </p>
+          )}
         </span>
       </>
     );

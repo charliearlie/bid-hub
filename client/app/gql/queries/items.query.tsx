@@ -20,6 +20,7 @@ export const ITEMS_QUERY = gql`
       formattedBuyItNowPrice
       formattedWinningBid
       hasBiddingEnabled
+      bidCount
     }
   }
 `;

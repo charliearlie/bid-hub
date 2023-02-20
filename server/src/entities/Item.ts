@@ -1,4 +1,5 @@
 import {
+  Collection,
   Entity,
   ManyToMany,
   ManyToOne,
@@ -103,5 +104,15 @@ export class Item {
 
   @Field(() => [Bid])
   @OneToMany(() => Bid, (bid) => bid.item)
-  bids?: Bid[];
+  bids? = new Collection<Bid>(this);
+
+  @Field(() => Number)
+  bidCount() {
+    console.log(this.bids?.isInitialized());
+    if (this.bids?.isInitialized()) {
+      console.log(this?.bids?.count());
+      return this.bids.count();
+    }
+    return 0;
+  }
 }

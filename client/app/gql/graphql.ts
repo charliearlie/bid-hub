@@ -68,6 +68,7 @@ export type EditUserValidator = {
 
 export type Item = {
   __typename?: 'Item';
+  bidCount: Scalars['Float'];
   bids: Array<Bid>;
   buyItNowPrice?: Maybe<Scalars['Float']>;
   categories: Array<Category>;
@@ -194,6 +195,7 @@ export type MutationLoginArgs = {
 export type MutationPlaceBidArgs = {
   amount: Scalars['Float'];
   itemId: Scalars['Float'];
+  userId: Scalars['Float'];
 };
 
 

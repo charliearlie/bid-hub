@@ -26,7 +26,11 @@ class ItemResolver {
   // Get all items
   @Query(() => [Item])
   async items(@Ctx() { em }: MyContext): Promise<Item[]> {
-    return em.find(Item, {});
+    const items = await em.find(Item, {});
+    items.forEach(async (item) => {
+      await wrap(item.bids).init();
+    });
+    return items;
   }
 
   // Get item by ID
@@ -38,7 +42,8 @@ class ItemResolver {
     let item;
     try {
       item = await em.findOneOrFail(Item, { id });
-      console.log('item', item);
+      await wrap(item.bids).init();
+      await wrap(item.bidCount).init();
     } catch (error) {
       if (error instanceof NotFoundError) {
         return {
@@ -52,6 +57,8 @@ class ItemResolver {
         };
       }
     }
+
+    await item?.bids?.init();
 
     return { item, success: true };
   }
