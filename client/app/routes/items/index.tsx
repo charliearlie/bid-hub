@@ -1,8 +1,8 @@
 import { json, LoaderFunction, MetaFunction } from "@remix-run/node";
 import Items from "~/components/item/items/items";
+import { Item } from "~/gql/graphql";
 import { ITEMS_QUERY } from "~/gql/queries/items.query";
 import { requestClient } from "~/gql/util/gql-request";
-import { ItemsLoaderData } from "~/types/loader-data";
 
 export const meta: MetaFunction = () => {
   return {
@@ -12,8 +12,8 @@ export const meta: MetaFunction = () => {
 };
 
 export const loader: LoaderFunction = async () => {
-  const response = await requestClient.request<ItemsLoaderData>(ITEMS_QUERY);
-  return json<ItemsLoaderData>({ items: response.items, success: true });
+  const response = await requestClient.request<Item[]>(ITEMS_QUERY);
+  return json<Item[]>(response);
 };
 
 export default function ItemsIndexRoute() {
