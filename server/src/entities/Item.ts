@@ -96,9 +96,7 @@ export class Item {
   @Field(() => [Category])
   @ManyToMany({
     entity: () => Category,
-    joinColumn: 'item_id',
     pivotTable: 'item_categories',
-    inverseJoinColumn: 'category_id',
   })
   categories?: Category[];
 
@@ -108,9 +106,7 @@ export class Item {
 
   @Field(() => Number)
   bidCount() {
-    console.log(this.bids?.isInitialized());
     if (this.bids?.isInitialized()) {
-      console.log(this?.bids?.count());
       return this.bids.count();
     }
     return 0;
