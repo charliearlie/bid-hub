@@ -5,6 +5,7 @@ import Form from "~/components/form/form";
 import FormField from "~/components/form/form-field";
 import { gql, requestClient } from "~/gql/util/gql-request";
 import Spinner from "~/components/spinner";
+import Button from "~/components/button";
 
 const FORGOT_PASSWORD = gql`
   mutation ForgotPassword($email: String!) {
@@ -59,9 +60,9 @@ export default function ForgotPasswordRoute() {
           )}
           <FormField label="Email" name="email" type="text" />
           <div className="flex justify-center">
-            <button className="w-25 rounded bg-violet-700 px-3 py-2 text-lg font-semibold text-white hover:bg-violet-900">
+            <Button className="w-25">
               {transition.state !== "idle" ? <Spinner /> : "Send me a link"}
-            </button>
+            </Button>
           </div>
         </Form>
       </div>

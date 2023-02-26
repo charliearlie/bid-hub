@@ -9,6 +9,7 @@ import { requestClient } from "~/gql/util/gql-request";
 import { LOGIN_USER } from "~/gql/mutations/login-user";
 import Spinner from "~/components/spinner";
 import { SEND_MAGIC_LINK } from "~/gql/mutations/send-magic-link";
+import Button from "~/components/button";
 
 type ActionData =
   | { emailOrUsername: null | string; password: null | string }
@@ -54,7 +55,6 @@ export default function LoginRoute() {
   const handleMagicLinkClick = async (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
-    // We'll do this for now but it makes more sense to move the magic link button out of the form
     e.stopPropagation();
     e.preventDefault();
 
@@ -93,9 +93,9 @@ export default function LoginRoute() {
           />
           <FormField label="Password" name="password" type="password" />
           <div className="flex flex-col">
-            <button className="rounded bg-violet-700 px-3 py-2 text-lg font-semibold text-white hover:bg-violet-900">
+            <Button variant="primary">
               {transition.state !== "idle" ? <Spinner /> : "Log in"}
-            </button>
+            </Button>
             <Link
               className="px-0 pb-2 font-semibold text-blue-700 hover:text-slate-500"
               to="/user/forgot-password"
@@ -104,12 +104,14 @@ export default function LoginRoute() {
             </Link>
           </div>
         </Form>
-        <button
-          className="my-1 w-full rounded bg-green-700 px-3 py-2 text-lg font-semibold text-white hover:bg-violet-900"
+        <Button
+          className="my-1 w-full"
           onClick={handleMagicLinkClick}
+          type="button"
+          variant="secondary"
         >
           {transition.state !== "idle" ? <Spinner /> : "Send Magic Link"}
-        </button>
+        </Button>
       </div>
     </main>
   );

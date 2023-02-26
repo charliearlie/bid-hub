@@ -7,6 +7,7 @@ import { requestClient } from "~/gql/util/gql-request.server";
 import Spinner from "~/components/spinner";
 import { createUserSession } from "~/session.server";
 import { HANDLE_MAGIC_EMAIL_LOGIN } from "~/gql/mutations";
+import Button from "~/components/button";
 
 export const loader: LoaderFunction = async ({
   params,
@@ -51,9 +52,9 @@ export default function LoginTokenRoute() {
             type="text"
           />
           <div className="flex justify-center">
-            <button className="w-25 rounded bg-violet-700 px-3 py-2 text-lg font-semibold text-white hover:bg-violet-900">
+            <Button className="w-25">
               {transition.state !== "idle" ? <Spinner /> : "Reset password"}
-            </button>
+            </Button>
           </div>
         </Form>
       </div>

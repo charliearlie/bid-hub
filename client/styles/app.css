@@ -1,3 +1,17 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+  .button {
+    @apply rounded px-3 py-2 text-lg font-semibold;
+  }
+
+  .button-primary {
+    @apply bg-violet-600 text-white hover:bg-violet-800;
+  }
+
+  .button-secondary {
+    @apply bg-emerald-600 text-white hover:bg-emerald-800;
+  }
+}
