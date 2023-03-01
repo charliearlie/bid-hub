@@ -67,7 +67,7 @@ export default function Bid({ item }: BidProps) {
       <Button name="intent" value="bid" variant="secondary" onClick={placeBid}>
         Bid now
       </Button>
-      {success?.success && <p>Bid placed successfully</p>}
+      {success && <p>Bid placed successfully</p>}
     </div>
   );
 }

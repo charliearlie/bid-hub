@@ -29,12 +29,8 @@ export const loader: LoaderFunction = async ({ params }: DataFunctionArgs) => {
   }
 };
 
-export const action: ActionFunction = async ({
-  params,
-  request,
-}: ActionArgs) => {
+export const action: ActionFunction = async ({ request }: ActionArgs) => {
   const formData = await request.formData();
-  console.log(formData);
   const intent = formData.get("intent");
 
   if (intent === "bid") {
@@ -50,7 +46,7 @@ export const action: ActionFunction = async ({
       ...variables,
     });
     if (response.placeBid) {
-      return json(response.placeBid.success, response.placeBid);
+      return json(response.placeBid.success);
     }
   }
   return null;
