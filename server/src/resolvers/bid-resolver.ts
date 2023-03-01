@@ -9,8 +9,9 @@ import {
 } from 'type-graphql';
 import { Bid, Item, User } from '../entities';
 import { MyContext } from '../../types';
-import { NotFoundError } from '@mikro-orm/core';
+import { NotFoundError, wrap } from '@mikro-orm/core';
 import BidHubResponse from './helpers/Response';
+import isBidAWinningBid from '../utils/is-bid-a-winning-bid';
 
 @ObjectType()
 class BidResponse extends BidHubResponse {
@@ -31,10 +32,9 @@ class BidResolver {
   @Mutation(() => BidResponse)
   async placeBid(
     @Ctx() { em, req }: MyContext,
-    @Arg('amount') amount: number,
-    @Arg('itemId') itemId: number
+    @Arg('itemId') itemId: number,
+    @Arg('amount') amount: number
   ): Promise<BidResponse> {
-    console.log(req.session);
     if (req.session.userId) {
       try {
         const item = await em.findOneOrFail(Item, { id: itemId });
@@ -45,10 +45,17 @@ class BidResolver {
           user,
         });
 
-        await em.persistAndFlush(bid);
-        return { bid, success: true };
+        if (isBidAWinningBid(bid, item)) {
+          const toSave = wrap(item).assign({
+            winningBid: amount,
+          });
+          await em.persistAndFlush(bid);
+          await em.persistAndFlush(toSave);
+
+          return { bid, success: true };
+        }
+        return { bid, success: false };
       } catch (error) {
-        console.error(error);
         if (error instanceof NotFoundError) {
           return {
             errors: [

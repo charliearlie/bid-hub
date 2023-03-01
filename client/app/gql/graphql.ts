@@ -195,7 +195,6 @@ export type MutationLoginArgs = {
 export type MutationPlaceBidArgs = {
   amount: Scalars['Float'];
   itemId: Scalars['Float'];
-  userId: Scalars['Float'];
 };
 
 
@@ -261,6 +260,7 @@ export type ResolverError = {
   __typename?: 'ResolverError';
   field: Scalars['String'];
   message: Scalars['String'];
+  resolver: Scalars['String'];
 };
 
 export type User = {
