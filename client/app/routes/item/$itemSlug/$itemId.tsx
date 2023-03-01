@@ -45,8 +45,6 @@ export const action: ActionFunction = async ({
       amount: Number(bidAmount),
       itemId: Number(itemId),
     };
-    console.log("itemId", itemId);
-    console.log("bidAmount", bidAmount);
 
     const response = await requestWithCredentials(PLACE_BID, request, {
       ...variables,
