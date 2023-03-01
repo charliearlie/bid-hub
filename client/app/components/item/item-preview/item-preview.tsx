@@ -7,13 +7,14 @@ type ItemPreviewProps = {
 
 export default function ItemPreview({ item }: ItemPreviewProps) {
   const {
-    id,
     bidCount,
-    name,
+    condition,
     formattedBuyItNowPrice,
     formattedWinningBid,
-    condition,
     hasBiddingEnabled,
+    id,
+    imageUrl,
+    name,
     slug,
   } = item;
 
@@ -40,7 +41,7 @@ export default function ItemPreview({ item }: ItemPreviewProps) {
   return (
     <Link to={`/item/${slug}/${id}`} className="flex gap-4 py-4 px-4">
       <div className="h-24 w-24 flex-none">
-        <img src="https://ih1.redbubble.net/image.1003426384.0291/st,small,507x507-pad,600x600,f8f8f8.jpg" />
+        <img src={imageUrl as string} />
       </div>
       <div className="flex-auto">
         <h3 className="h-9 overflow-hidden font-black leading-none">{name}</h3>
