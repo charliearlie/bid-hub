@@ -113,6 +113,11 @@ const main = async () => {
     })
   );
 
+  app.get('/items', async (_req, res) => {
+    const items = await orm.em.find(Item, {});
+    res.send(items);
+  });
+
   await new Promise<void>((resolve) =>
     httpServer.listen({ port: 4000 }, resolve)
   );

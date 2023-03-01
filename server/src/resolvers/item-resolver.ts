@@ -57,7 +57,6 @@ class ItemResolver {
         };
       }
     }
-    console.log(item?.categories);
 
     return { item, success: true };
   }
