@@ -3,15 +3,9 @@ import { ActionArgs, ActionFunction, json } from "@remix-run/node";
 import Alert, { AlertType } from "~/components/alert";
 import Form from "~/components/form/form";
 import FormField from "~/components/form/form-field";
-import { gql, requestClient } from "~/gql/util/gql-request";
 import Spinner from "~/components/spinner";
 import Button from "~/components/button";
-
-const FORGOT_PASSWORD = gql`
-  mutation ForgotPassword($email: String!) {
-    forgotPassword(email: $email)
-  }
-`;
+import { forgotPassword } from "~/services/user.server";
 
 type ActionData = { email: null | string } | undefined;
 
@@ -20,18 +14,11 @@ export const action: ActionFunction = async ({ request }: ActionArgs) => {
 
   const email = formData.get("email");
 
-  const errors: ActionData = {
-    email: email ? null : "Email is required",
-  };
-
-  const hasErrors = Object.values(errors).some((errorMessage) => errorMessage);
-  if (hasErrors) {
-    return json<ActionData>(errors);
+  if (typeof email !== "string") {
+    return json<ActionData>({ email: "Email is required" });
   }
 
-  const response = await requestClient.request(FORGOT_PASSWORD, { email });
-
-  return json({ success: response.forgotPassword });
+  return forgotPassword(email);
 };
 
 export default function ForgotPasswordRoute() {

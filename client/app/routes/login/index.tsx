@@ -1,50 +1,42 @@
 import React, { useRef } from "react";
 import { Link, useActionData, useTransition } from "@remix-run/react";
-import { ActionArgs, ActionFunction, json } from "@remix-run/node";
+import {
+  ActionArgs,
+  ActionFunction,
+  json,
+  LoaderFunction,
+  redirect,
+} from "@remix-run/node";
 import Alert, { AlertType } from "~/components/alert";
 import Form from "~/components/form/form";
 import FormField from "~/components/form/form-field";
-import { createUserSession } from "~/session.server";
 import { requestClient } from "~/gql/util/gql-request";
-import { LOGIN_USER } from "~/gql/mutations/login-user";
 import Spinner from "~/components/spinner";
 import { SEND_MAGIC_LINK } from "~/gql/mutations/send-magic-link";
 import Button from "~/components/button";
+import { login } from "~/services/user.server";
+import { getUser } from "~/session.server";
 
-type ActionData =
-  | { emailOrUsername: null | string; password: null | string }
-  | undefined;
+export const loader: LoaderFunction = async ({ request }) => {
+  const user = await getUser(request);
+  // If there's already a user in the session, redirect to the home page
+  return user ? redirect("/") : null;
+};
 
 export const action: ActionFunction = async ({ request }: ActionArgs) => {
   const formData = await request.formData();
 
-  const emailOrUsername = formData.get("emailOrUsername");
   const password = formData.get("password");
+  const emailOrUsername = formData.get("emailOrUsername");
 
-  const errors: ActionData = {
-    emailOrUsername: emailOrUsername ? null : "Email or username is required",
-    password: password ? null : "Password is required",
-  };
-
-  const hasErrors = Object.values(errors).some((errorMessage) => errorMessage);
-  if (hasErrors) {
-    return json<ActionData>(errors);
+  if (typeof password !== "string" || typeof emailOrUsername !== "string") {
+    return json(
+      { success: false, error: `Invalid Form Data`, form: action },
+      { status: 400 }
+    );
   }
 
-  const response = await requestClient.request(LOGIN_USER, {
-    emailOrUsername,
-    password,
-  });
-
-  if (!response.login.success) {
-    return json(response.login);
-  }
-
-  return createUserSession({
-    request,
-    userId: response.login.user.id,
-    jwt: response.login.token,
-  });
+  return await login({ email: emailOrUsername, password });
 };
 
 export default function LoginRoute() {

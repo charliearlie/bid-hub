@@ -7,6 +7,7 @@ import { gql, requestClient } from "~/gql/util/gql-request";
 import Spinner from "~/components/spinner";
 import { createUserSession } from "~/session.server";
 import Button from "~/components/button";
+import { resetPassword } from "~/services/user.server";
 
 const RESET_PASSWORD = gql`
   mutation ResetPassword($newPassword: String!, $token: String!) {
@@ -33,6 +34,10 @@ export const action: ActionFunction = async ({
   const password = formData.get("password");
   const confirmPassword = formData.get("confirmPassword");
 
+  if (typeof password !== "string" || typeof params.token !== "string") {
+    return json({ success: false });
+  }
+
   const errors: ActionData = {
     password: password ? null : "Password is required",
     confirmPassword: confirmPassword ? null : "Please confirm your password",
@@ -43,20 +48,7 @@ export const action: ActionFunction = async ({
     return json<ActionData>(errors);
   }
 
-  const response = await requestClient.request(RESET_PASSWORD, {
-    newPassword: password,
-    token: params.token,
-  });
-
-  if (!response.resetPassword.success) {
-    return json(response.resetPassword.success);
-  }
-
-  return createUserSession({
-    request,
-    userId: response.resetPassword.user.id,
-    jwt: response.resetPassword.token,
-  });
+  return resetPassword(password, params.token);
 };
 
 export default function ForgotPasswordRoute() {

@@ -1,37 +1,28 @@
 import { Link, useActionData, useTransition } from "@remix-run/react";
-import { ActionArgs, ActionFunction, json } from "@remix-run/node";
+import {
+  ActionArgs,
+  ActionFunction,
+  json,
+  LoaderFunction,
+  redirect,
+} from "@remix-run/node";
 import Alert, { AlertType } from "~/components/alert";
 import Form from "~/components/form/form";
 import FormField from "~/components/form/form-field";
-import { createUserSession } from "~/session.server";
-import { gql, requestClient } from "~/gql/util/gql-request";
+import { getUser } from "~/session.server";
 import Spinner from "~/components/spinner";
 import Button from "~/components/button";
+import {
+  validateEmail,
+  validatePassword,
+  validateUsername,
+} from "~/services/validators.server";
+import { register } from "~/services/user.server";
 
-const REGISTER_USER = gql`
-  mutation Register($email: String!, $password: String!, $username: String!) {
-    register(
-      userInput: { email: $email, password: $password, username: $username }
-    ) {
-      user {
-        id
-        username
-        email
-        createdAt
-      }
-      errors {
-        field
-        message
-      }
-      success
-      token
-    }
-  }
-`;
-
-type ActionData =
-  | { email: null | string; password: null | string; username: null | string }
-  | undefined;
+export const loader: LoaderFunction = async ({ request }) => {
+  // If there's already a user in the session, redirect to the home page
+  return (await getUser(request)) ? redirect("/") : null;
+};
 
 export const action: ActionFunction = async ({ request }: ActionArgs) => {
   const formData = await request.formData();
@@ -40,37 +31,40 @@ export const action: ActionFunction = async ({ request }: ActionArgs) => {
   const password = formData.get("password");
   const username = formData.get("username");
 
-  const errors: ActionData = {
-    email: email ? null : "Email is required",
-    password: password ? null : "Password is required",
-    username: username ? null : "Username is required",
+  if (
+    typeof email !== "string" ||
+    typeof password !== "string" ||
+    typeof username !== "string"
+  ) {
+    return json(
+      { success: false, error: `Invalid Form Data`, form: action },
+      { status: 400 }
+    );
+  }
+
+  const errors = {
+    email: validateEmail(email),
+    password: validatePassword(password),
+    username: validateUsername(username),
   };
 
-  const hasErrors = Object.values(errors).some((errorMessage) => errorMessage);
-  if (hasErrors) {
-    return json<ActionData>(errors);
-  }
+  if (Object.values(errors).some(Boolean))
+    return json(
+      {
+        success: false,
+        errors,
+        fields: { email, password, username },
+        form: action,
+      },
+      { status: 400 }
+    );
 
-  const response = await requestClient.request(REGISTER_USER, {
-    email,
-    password,
-    username,
-  });
-
-  console.log("response.register", response.register);
-  if (!response.register.success) {
-    return json(response.register);
-  }
-
-  return createUserSession({
-    request,
-    userId: response.register.user.id,
-    jwt: response.register.token,
-  });
+  return await register({ email, password, username });
 };
 
 export default function RegisterRoute() {
   const actionData = useActionData();
+  console.log(actionData);
   const transition = useTransition();
   return (
     <main>
@@ -88,9 +82,24 @@ export default function RegisterRoute() {
           {actionData?.success === false && (
             <Alert message="All fields are required" type={AlertType.ERROR} />
           )}
-          <FormField label="Username" name="username" type="text" />
-          <FormField label="Email" name="email" type="text" />
-          <FormField label="Password" name="password" type="password" />
+          <FormField
+            label="Username"
+            name="username"
+            type="text"
+            errorMessage={actionData?.errors?.username}
+          />
+          <FormField
+            label="Email"
+            name="email"
+            type="text"
+            errorMessage={actionData?.errors?.email}
+          />
+          <FormField
+            label="Password"
+            name="password"
+            type="password"
+            errorMessage={actionData?.errors?.password}
+          />
           <div className="flex justify-between">
             <Button className="w-25" variant="primary">
               {transition.state !== "idle" ? <Spinner /> : "Sign up"}
