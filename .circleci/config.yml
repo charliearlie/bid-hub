@@ -1,26 +1,23 @@
 version: 2.1
+
 jobs:
   build:
     docker:
       - image: circleci/node:latest
-    working_directory: ~/repo
     steps:
       - checkout
-      - run: yarn install
+      - run:
+          name: Install dependencies
+          command: yarn install
       - run:
           name: Build
           command: yarn build
+
 workflows:
   version: 2
   build:
     jobs:
-      - build-master:
+      - build:
           filters:
             branches:
-              only: master
-      - build-pr:
-          filters:
-            branches:
-              ignore: master
-            pull_requests:
-              only: /^.*$/
+              only: /.*/
