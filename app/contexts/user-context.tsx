@@ -1,7 +1,7 @@
 import { json, LoaderFunction } from "@remix-run/node";
 import { createContext, ReactNode, useContext } from "react";
 
-import { getUserIdFromSession } from "~/session.server";
+import { getUser } from "~/session.server";
 import { useLoaderData } from "@remix-run/react";
 
 type UserContextType = {
@@ -16,9 +16,9 @@ const UserContext = createContext<UserContextType | null>(null);
 
 // Maybe we'll consider calling the me query and get the users username, email, etc.
 export const loader: LoaderFunction = async ({ request }) => {
-  const userId = await getUserIdFromSession(request);
-  if (userId) {
-    return json<number>(userId);
+  const user = await getUser(request);
+  if (user) {
+    return json<string>(user.id);
   }
 };
 
