@@ -4,9 +4,8 @@ import {
   FormProps as RemixFormProps,
 } from "@remix-run/react";
 import FormField, { FormFieldProps } from "./form-field";
-import { InputMaybe } from "~/gql/graphql";
 
-export type FormData = Record<string, string | number | InputMaybe<string>>;
+export type FormData = Record<string, string | number>;
 
 type Props = {
   children: ReactNode;
@@ -44,7 +43,8 @@ export default function Form({
           const props: Partial<FormFieldProps> = {
             ...child.props,
             onChange: handleChange,
-            defaultValue: formState[child.props.name],
+            defaultValue:
+              child.props.defaultValue || formState[child.props.name],
           };
           return React.cloneElement(child, props);
         }

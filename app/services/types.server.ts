@@ -9,6 +9,12 @@ export type LoginForm = {
   password: string;
 };
 
+export type EditUserForm = {
+  firstName?: string;
+  lastName?: string;
+  avatarUrl?: string;
+};
+
 export type ManufacturerForm = {
   name: string;
   country: string;

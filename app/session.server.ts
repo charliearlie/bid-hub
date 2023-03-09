@@ -1,3 +1,4 @@
+import { User } from "@prisma/client";
 import { createCookieSessionStorage, Headers, redirect } from "@remix-run/node";
 import { prisma } from "./services/prisma.server";
 

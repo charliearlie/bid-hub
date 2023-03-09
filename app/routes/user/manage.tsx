@@ -5,8 +5,15 @@ import Form from "~/components/form/form";
 import FormField from "~/components/form/form-field";
 import Spinner from "~/components/spinner";
 import { formValidationRegexes } from "~/services/form-validation-regexes";
-import { getUser } from "~/session.server";
-import { redirect, typedjson, useTypedLoaderData } from "remix-typedjson";
+import { getUser, getUserId } from "~/session.server";
+import {
+  redirect,
+  typedjson,
+  useTypedActionData,
+  useTypedLoaderData,
+} from "remix-typedjson";
+import { editUser } from "~/services/user.server";
+import { EditUserForm } from "~/services/types.server";
 
 // todo: Move this into own file or make more generic and just look for a key value pair of strings
 type ActionData = {
@@ -16,14 +23,14 @@ type ActionData = {
   lastName: null | string;
 };
 
-export const action: ActionFunction = async ({ request }: ActionArgs) => {
+export const action = async ({ request }: ActionArgs) => {
   let image = null;
   const formData = await request.formData();
 
-  const avatarImage = formData.get("avatarImage");
-  const firstName = formData.get("firstName");
-  const lastName = formData.get("lastName");
-  const username = formData.get("username");
+  const avatarImage = formData.get("avatarImage") as string;
+  const firstName = formData.get("firstName") as string;
+  const lastName = formData.get("lastName") as string;
+  const username = formData.get("username") as string;
 
   const errors: ActionData = {
     firstName: null, // todo: Do some validation to ensure this is a valid first name
@@ -34,7 +41,10 @@ export const action: ActionFunction = async ({ request }: ActionArgs) => {
 
   const hasErrors = Object.values(errors).some((errorMessage) => errorMessage);
   if (hasErrors) {
-    return json<ActionData>(errors);
+    return typedjson({
+      user: null,
+      error: "Got some validation tings you need to fix lad",
+    });
   }
 
   if (avatarImage) {
@@ -55,12 +65,9 @@ export const action: ActionFunction = async ({ request }: ActionArgs) => {
     username,
   };
 
-  //todo: update this to use Prisma
-  //   await requestWithCredentials(EDIT_USER, request, {
-  //     editedUserDetails,
-  //   });
+  const userId = await getUserId(request);
 
-  return json(true);
+  return await editUser(userId!, editedUserDetails);
 };
 
 export const loader = async ({ request }: LoaderArgs) => {
@@ -69,12 +76,19 @@ export const loader = async ({ request }: LoaderArgs) => {
   if (!user) {
     return redirect("/");
   }
+  user.password = "";
   return typedjson({ user });
 };
 
 export default function ManageUserRoute() {
   const { user } = useTypedLoaderData<typeof loader>();
-  const actionData = useActionData();
+  const actionData = useTypedActionData<typeof action>();
+
+  const initialFormState = {
+    username: user.username,
+    firstName: user.personalDetails?.firstName || "",
+    lastName: user.personalDetails?.lastName || "",
+  };
   const transition = useTransition();
   if (user) {
     return (
@@ -83,28 +97,16 @@ export default function ManageUserRoute() {
           <h1 className="text-center text-3xl font-bold">Edit user</h1>
           <p className="text-center">Edit the things about you</p>
           {/* We should add a link to go back to requesting a reset link */}
-          {actionData && (
-            <Alert type={AlertType.ERROR} message="Something went wrong" />
+          {actionData?.error && (
+            <Alert type={AlertType.ERROR} message={actionData.error} />
           )}
           <Form
             className="mb-4 w-full rounded bg-white px-8 pt-6 pb-8 sm:shadow-md"
             encType="multipart/form-data"
-            initialFormValues={user}
+            initialFormValues={initialFormState}
             method="post"
           >
             <FormField label="Username" labelLeft name="username" type="text" />
-            <FormField
-              label="Password"
-              labelLeft
-              name="password"
-              type="password"
-            />
-            <FormField
-              label="Confirm password"
-              labelLeft
-              name="confirmPassword"
-              type="password"
-            />
             <FormField
               label="First name"
               labelLeft
@@ -113,7 +115,7 @@ export default function ManageUserRoute() {
               validateFunc={(string) => {
                 return formValidationRegexes.textOnly.test(string);
               }}
-              errorMessage="Name must be letters only"
+              errorMessage=""
             />
             <FormField
               label="Last name"

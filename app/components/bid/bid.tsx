@@ -1,12 +1,12 @@
+import { Car } from "@prisma/client";
 import { useActionData, useSubmit } from "@remix-run/react";
 import React, { MouseEvent, useState } from "react";
-import { Item } from "~/gql/graphql";
 import Button from "../button";
 import BidButton from "./bid-button";
 import BidInput from "./bid-input";
 
 type BidProps = {
-  item: Item;
+  car: Car;
 };
 
 const calculateNextBid = (startingBid: number, winningBid?: number | null) => {
@@ -16,7 +16,7 @@ const calculateNextBid = (startingBid: number, winningBid?: number | null) => {
   return startingBid;
 };
 
-export default function Bid({ item }: BidProps) {
+export default function Bid({ car }: BidProps) {
   const { id, startingPrice, winningBid } = item;
   const success = useActionData();
   const submit = useSubmit();
