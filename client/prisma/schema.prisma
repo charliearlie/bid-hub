@@ -58,6 +58,7 @@ model Manufacturer {
 
 model Car {
   id               String       @id @default(auto()) @map("_id") @db.ObjectId
+  slug             String       @unique
   model            String
   variation        String?
   year             Int

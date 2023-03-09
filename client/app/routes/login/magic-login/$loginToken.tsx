@@ -1,27 +1,16 @@
 import { useActionData, useTransition } from "@remix-run/react";
-import { DataFunctionArgs, LoaderFunction } from "@remix-run/node";
+import { DataFunctionArgs, json, LoaderFunction } from "@remix-run/node";
 import Alert, { AlertType } from "~/components/alert";
 import Form from "~/components/form/form";
 import FormField from "~/components/form/form-field";
-import { requestClient } from "~/gql/util/gql-request.server";
 import Spinner from "~/components/spinner";
-import { createUserSession } from "~/session.server";
-import { HANDLE_MAGIC_EMAIL_LOGIN } from "~/gql/mutations";
 import Button from "~/components/button";
 
 export const loader: LoaderFunction = async ({
   params,
   request,
 }: DataFunctionArgs) => {
-  const response = await requestClient.request(HANDLE_MAGIC_EMAIL_LOGIN, {
-    loginToken: params.loginToken,
-  });
-
-  return createUserSession({
-    request,
-    userId: response.handleMagicEmailLogin.user.id,
-    jwt: response.handleMagicEmailLogin.token,
-  });
+  return json(true);
 };
 
 export default function LoginTokenRoute() {

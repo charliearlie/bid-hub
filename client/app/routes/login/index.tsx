@@ -10,9 +10,7 @@ import {
 import Alert, { AlertType } from "~/components/alert";
 import Form from "~/components/form/form";
 import FormField from "~/components/form/form-field";
-import { requestClient } from "~/gql/util/gql-request";
 import Spinner from "~/components/spinner";
-import { SEND_MAGIC_LINK } from "~/gql/mutations/send-magic-link";
 import Button from "~/components/button";
 import { login } from "~/services/user.server";
 import { getUser } from "~/session.server";
@@ -51,12 +49,12 @@ export default function LoginRoute() {
     e.preventDefault();
 
     const userEmail = emailInputRef.current?.value;
-
-    if (userEmail) {
-      await requestClient.request(SEND_MAGIC_LINK, {
-        email: userEmail,
-      });
-    }
+    //todo: magic link functionality
+    // if (userEmail) {
+    //   await requestClient.request(SEND_MAGIC_LINK, {
+    //     email: userEmail,
+    //   });
+    // }
   };
 
   return (

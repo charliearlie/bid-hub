@@ -53,7 +53,7 @@ const FormField = forwardRef<HTMLInputElement, Props>(
             ref={ref}
             onBlur={validateInput}
           />
-          {!isValidField && <ErrorMessage />}
+          {errorMessage && <ErrorMessage />}
         </div>
       </div>
     );

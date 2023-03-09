@@ -3,23 +3,9 @@ import { ActionArgs, ActionFunction, json } from "@remix-run/node";
 import Alert, { AlertType } from "~/components/alert";
 import Form from "~/components/form/form";
 import FormField from "~/components/form/form-field";
-import { gql, requestClient } from "~/gql/util/gql-request";
 import Spinner from "~/components/spinner";
-import { createUserSession } from "~/session.server";
 import Button from "~/components/button";
 import { resetPassword } from "~/services/user.server";
-
-const RESET_PASSWORD = gql`
-  mutation ResetPassword($newPassword: String!, $token: String!) {
-    resetPassword(newPassword: $newPassword, token: $token) {
-      success
-      user {
-        id
-      }
-      token
-    }
-  }
-`;
 
 type ActionData =
   | { password: null | string; confirmPassword: null | string }
