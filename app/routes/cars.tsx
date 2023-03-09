@@ -12,10 +12,6 @@ export const meta: MetaFunction = () => {
   };
 };
 
-type LoaderData = {
-  cars: Car[];
-};
-
 export const loader = async () => {
   return await getAllCars();
 };

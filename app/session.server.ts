@@ -67,13 +67,10 @@ export async function getUser(request: Request) {
   try {
     const user = await prisma.user.findUnique({
       where: { id: userId },
-      select: { id: true, email: true, username: true },
     });
-    console.log("we have a user", user);
     return user;
   } catch {
-    console.log("in dee catch of get user");
-    throw logout(request);
+    return null;
   }
 }
 
