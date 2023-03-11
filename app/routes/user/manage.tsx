@@ -5,7 +5,7 @@ import Form from "~/components/form/form";
 import FormField from "~/components/form/form-field";
 import Spinner from "~/components/spinner";
 import { formValidationRegexes } from "~/services/form-validation-regexes";
-import { getUser, getUserId } from "~/session.server";
+import { getUser, getUserId } from "~/services/session.server";
 import {
   redirect,
   typedjson,
@@ -101,7 +101,7 @@ export default function ManageUserRoute() {
             <Alert type={AlertType.ERROR} message={actionData.error} />
           )}
           <Form
-            className="mb-4 w-full rounded bg-white px-8 pt-6 pb-8 sm:shadow-md"
+            className="mb-4 w-full rounded px-8 pt-6 pb-8 sm:shadow-md"
             encType="multipart/form-data"
             initialFormValues={initialFormState}
             method="post"

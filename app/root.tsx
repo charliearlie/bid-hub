@@ -40,10 +40,7 @@ export default function App() {
         <Meta />
         <Links />
       </head>
-      <body>
-        <p className="flex justify-center">
-          Design has not been considered as of yet
-        </p>
+      <body className="bg-gray-700 text-gray-300">
         <Outlet />
         <script
           dangerouslySetInnerHTML={{

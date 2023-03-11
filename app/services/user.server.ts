@@ -5,12 +5,15 @@ import { json } from "@remix-run/node";
 
 import { prisma } from "./prisma.server";
 import { EditUserForm, LoginForm, RegisterForm } from "~/services/types.server";
-import { createUserSession } from "~/session.server";
+import { createUserSession } from "~/services/session.server";
 import sendEmail from "~/services/email.server";
 
 import resetPasswordEmailTemplate from "~/util/helpers/email/reset-password-email";
-import { User } from "@prisma/client";
 import { redirect, typedjson } from "remix-typedjson";
+import magicLinkEmailTemplate from "~/util/helpers/email/magic-link-email";
+
+// Important note: these functions are mapped one to one to their old mutations/queries
+// I can better structure them soon - such as magic link and forgot password sharing lots of code
 
 export const register = async (user: RegisterForm) => {
   const exists = await prisma.user.count({ where: { email: user.email } });
@@ -42,7 +45,7 @@ export const login = async ({ email, password }: LoginForm) => {
   });
 
   if (!user || !(await bcrypt.compare(password, user.password)))
-    return json({ error: `Incorrect login` }, { status: 400 });
+    return typedjson({ error: `Incorrect login` }, { status: 400 });
 
   return createUserSession(user.id);
 };
@@ -96,6 +99,41 @@ export const resetPassword = async (password: string, token: string) => {
   });
 
   return createUserSession(updatedUser.id);
+};
+
+export const generateMagicLink = async (email: string) => {
+  const exists = await prisma.user.count({ where: { email } });
+  if (!exists) {
+    return json({ error: `No user with that email exists` }, { status: 400 });
+  }
+
+  const token = uuidv4();
+  const expiration = new Date();
+  expiration.setDate(expiration.getDate() + 1);
+  await prisma.magicLogin.create({
+    data: {
+      email,
+      token,
+      expiration,
+    },
+  });
+
+  const html = magicLinkEmailTemplate(token);
+  await sendEmail(email, "Here's your login link", html);
+
+  return json({ success: true });
+};
+
+export const handleMagicLinkLogin = async (token: string) => {
+  const userLogin = await prisma.magicLogin.findUnique({ where: { token } });
+  if (userLogin) {
+    const user = await prisma.user.findUnique({
+      where: { email: userLogin.email },
+    });
+
+    // Non-null expression as a user with the magicLogin email has to exist for a magicLogin to be created
+    return createUserSession(user!.id!);
+  }
 };
 
 export const createUser = async (user: RegisterForm) => {

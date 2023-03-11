@@ -46,8 +46,8 @@ const FormField = forwardRef<HTMLInputElement, Props>(
         </label>
         <div className="flex flex-col">
           <input
-            className="focus:shadow-outline rounded border border-solid border-gray-300 bg-white bg-clip-padding px-3
-        py-2 text-lg autofill:first-line:text-lg"
+            className="rounded bg-clip-padding px-3 py-2
+        text-lg autofill:first-line:text-lg focus:outline-none focus:outline-2 focus:outline-violet-400"
             name={name}
             {...props}
             ref={ref}

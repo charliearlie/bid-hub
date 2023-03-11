@@ -26,14 +26,14 @@ export default function ForgotPasswordRoute() {
   const transition = useTransition();
 
   return (
-    <main>
-      <div className="flex flex-col flex-wrap content-center">
-        <h1 className="text-center text-3xl font-bold">Reset password</h1>
-        <p className="text-center">
+    <main className="flex h-screen flex-col flex-wrap content-center justify-center bg-gray-800 sm:bg-gray-700">
+      <div className="mb-4 w-full max-w-md px-8 pt-6 pb-10 sm:border-2 sm:border-solid sm:border-gray-700 sm:bg-gray-800">
+        <h1 className="pt-4 text-center text-3xl font-bold">Reset password</h1>
+        <p className="pb-8 text-center">
           Enter your email address to be sent a reset token
         </p>
         <Form
-          className="mb-4 w-full max-w-sm rounded bg-white px-8 pt-6 pb-8 sm:shadow-md"
+          className="mb-4 pt-6"
           initialFormValues={{
             email: "",
           }}
@@ -47,7 +47,7 @@ export default function ForgotPasswordRoute() {
           )}
           <FormField label="Email" name="email" type="text" />
           <div className="flex justify-center">
-            <Button className="w-25">
+            <Button className="w-full">
               {transition.state !== "idle" ? <Spinner /> : "Send me a link"}
             </Button>
           </div>

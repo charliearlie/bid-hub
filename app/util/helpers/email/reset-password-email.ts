@@ -9,7 +9,7 @@ const resetPasswordEmailTemplate = (
       <h2>Password reset</h2>
       <p>It looks like you forgot your password \n\n 
       <a href="${process.env.FRONTEND_URL}/user/reset-password/${token}">Click here to change it</a></p>
-      <p>😘, Apex</p>
+      <p>😘, Brake Neck</p>
 </div>`;
 
 export default resetPasswordEmailTemplate;

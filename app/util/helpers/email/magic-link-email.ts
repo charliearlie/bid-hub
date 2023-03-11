@@ -7,8 +7,8 @@ const magicLinkEmailTemplate = (token: string) =>
     >
         <h2>Magic Link</h2>
         <p>Here is your link to log in \n\n 
-        <a href="${process.env.FRONTEND_URL}/magiclogin?loginToken=${token}">Click here to log in</a></p>
-        <p>😘, Apex</p>
+        <a href="${process.env.FRONTEND_URL}/magic-login/${token}">Click here to log in</a></p>
+        <p>😘, Brake Neck</p>
     </div>`;
 
 export default magicLinkEmailTemplate;

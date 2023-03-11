@@ -30,7 +30,14 @@ model User {
   personalDetails PersonalDetails?
 }
 
+// Both these models match. Maybe I need tp think of a name which matches both their jobs
 model ForgotPassword {
+  email      String  
+  token      String @id @map("_id")
+  expiration DateTime
+}
+
+model MagicLogin {
   email      String  
   token      String @id @map("_id")
   expiration DateTime

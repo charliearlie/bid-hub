@@ -9,7 +9,7 @@ import {
 import Alert, { AlertType } from "~/components/alert";
 import Form from "~/components/form/form";
 import FormField from "~/components/form/form-field";
-import { getUser } from "~/session.server";
+import { getUser } from "~/services/session.server";
 import Spinner from "~/components/spinner";
 import Button from "~/components/button";
 import {
@@ -67,11 +67,13 @@ export default function RegisterRoute() {
   console.log(actionData);
   const transition = useTransition();
   return (
-    <main>
-      <div className="flex flex-col flex-wrap content-center">
-        <h1 className="text-center text-3xl font-bold">Join Bidhub</h1>
+    <main className="flex h-screen flex-col flex-wrap content-center justify-center bg-gray-800 sm:bg-gray-700">
+      <div className="mb-4 w-full max-w-md px-8 pt-6 pb-10 sm:border-2 sm:border-solid sm:border-gray-700 sm:bg-gray-800">
+        <h1 className="pt-4 pb-8 text-center text-3xl font-bold">
+          Join Brake Neck
+        </h1>
         <Form
-          className="mb-4 w-full max-w-sm rounded bg-white px-8 pt-6 pb-8 sm:shadow-md"
+          className=""
           initialFormValues={{
             email: "",
             password: "",
@@ -105,7 +107,7 @@ export default function RegisterRoute() {
               {transition.state !== "idle" ? <Spinner /> : "Sign up"}
             </Button>
             <Link
-              className="px-0 py-2 font-semibold text-blue-700 hover:text-slate-500"
+              className="px-0 py-2 font-semibold text-blue-500 hover:text-slate-500"
               to="/login"
             >
               Already registered?
