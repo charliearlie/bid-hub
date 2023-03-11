@@ -131,6 +131,12 @@ export const handleMagicLinkLogin = async (token: string) => {
       where: { email: userLogin.email },
     });
 
+    await prisma.magicLogin.delete({
+      where: {
+        token,
+      },
+    });
+
     // Non-null expression as a user with the magicLogin email has to exist for a magicLogin to be created
     return createUserSession(user!.id!);
   }
