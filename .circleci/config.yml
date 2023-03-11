@@ -1,5 +1,4 @@
 version: 2.1
-
 jobs:
   build:
     docker:
@@ -12,12 +11,26 @@ jobs:
       - run:
           name: Build
           command: yarn build
+  lint:
+    docker:
+      - image: node:16.17.0
+    steps:
+      - checkout
+      - run:
+          name: Install dependencies
+          command: yarn install
+      - run:
+          name: Lint
+          command: yarn lint
 
 workflows:
   version: 2
-  build:
+  build-and-lint:
     jobs:
-      - build:
+      - build
+      - lint:
+          requires:
+            - build
           filters:
             branches:
               only: /.*/

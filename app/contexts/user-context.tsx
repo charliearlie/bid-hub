@@ -1,7 +1,7 @@
 import { json, LoaderFunction } from "@remix-run/node";
 import { createContext, ReactNode, useContext } from "react";
 
-import { getUser } from "~/session.server";
+import { getUser } from "~/services/session.server";
 import { useLoaderData } from "@remix-run/react";
 
 type UserContextType = {
