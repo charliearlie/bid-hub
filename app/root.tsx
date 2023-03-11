@@ -8,6 +8,7 @@ import {
   ScrollRestoration,
   useLoaderData,
 } from "@remix-run/react";
+import SharedHeader from "./components/header/shared-header";
 import styles from "./styles/app.css";
 
 export function links() {
@@ -41,6 +42,7 @@ export default function App() {
         <Links />
       </head>
       <body className="bg-gray-700 text-gray-300">
+        {/* <SharedHeader /> */}
         <Outlet />
         <script
           dangerouslySetInnerHTML={{
