@@ -14,7 +14,6 @@ export const loader = async ({ params, request }: LoaderArgs) => {
 };
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
-  console.log("meta data", data);
   return {
     charset: "utf-8",
     title: data.error || "Brake Neck - Cars at break neck speed",

@@ -54,7 +54,7 @@ export default function App() {
         <Links />
       </head>
       <body className="bg-gray-700 text-gray-300">
-        {/* <SharedHeader user={user} /> */}
+        <SharedHeader user={user} />
         <Outlet />
         <script
           dangerouslySetInnerHTML={{
