@@ -126,7 +126,6 @@ export const generateMagicLink = async (email: string) => {
 
 export const handleMagicLinkLogin = async (token: string) => {
   const userLogin = await prisma.magicLogin.findUnique({ where: { token } });
-  console.log("userlogin", userLogin);
   if (userLogin) {
     const user = await prisma.user.findUnique({
       where: { email: userLogin.email },
