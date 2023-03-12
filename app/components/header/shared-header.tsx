@@ -19,7 +19,7 @@ export default function SharedHeader({ user }: Props) {
     { title: "Racing cars", path: "/racing" },
   ];
   return (
-    <nav className="sticky top-0 z-50 mb-10 bg-gray-800">
+    <nav className="sticky top-0 z-50 bg-gray-800">
       <div className="mx-auto flex max-w-screen-xl items-center space-x-8 py-3 px-4 md:px-8">
         <div className="flex-none lg:flex-initial">
           <Link to="/">

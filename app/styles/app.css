@@ -664,6 +664,14 @@ input[type="number"]::-webkit-outer-spin-button,
   margin-top: 1.25rem;
 }
 
+.mb-8 {
+  margin-bottom: 2rem;
+}
+
+.mb-6 {
+  margin-bottom: 1.5rem;
+}
+
 .block {
   display: block;
 }
@@ -714,6 +722,14 @@ input[type="number"]::-webkit-outer-spin-button,
 
 .h-9 {
   height: 2.25rem;
+}
+
+.h-96 {
+  height: 24rem;
+}
+
+.h-\[32rem\] {
+  height: 32rem;
 }
 
 .w-full {
@@ -950,6 +966,21 @@ input[type="number"]::-webkit-outer-spin-button,
 
 .fill-purple-600 {
   fill: #9333ea;
+}
+
+.object-contain {
+  -o-object-fit: contain;
+     object-fit: contain;
+}
+
+.object-cover {
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+
+.object-scale-down {
+  -o-object-fit: scale-down;
+     object-fit: scale-down;
 }
 
 .p-4 {
