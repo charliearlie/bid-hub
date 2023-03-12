@@ -18,7 +18,7 @@ const sendEmail = async (
   await transporter.sendMail({
     to,
     subject,
-    sender: "Apex cars <info@apexcars.com>",
+    sender: "BrakeNeck <info@BrakeNeck.com>",
     html,
   });
 };

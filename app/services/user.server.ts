@@ -126,6 +126,7 @@ export const generateMagicLink = async (email: string) => {
 
 export const handleMagicLinkLogin = async (token: string) => {
   const userLogin = await prisma.magicLogin.findUnique({ where: { token } });
+  console.log("userlogin", userLogin);
   if (userLogin) {
     const user = await prisma.user.findUnique({
       where: { email: userLogin.email },
@@ -140,6 +141,8 @@ export const handleMagicLinkLogin = async (token: string) => {
     // Non-null expression as a user with the magicLogin email has to exist for a magicLogin to be created
     return createUserSession(user!.id!);
   }
+
+  return typedjson({ error: "Token not found" });
 };
 
 export const createUser = async (user: RegisterForm) => {
