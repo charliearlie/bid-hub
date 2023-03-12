@@ -15,7 +15,7 @@ export default function Index() {
     <main>
       <img
         className="h-[32rem] w-full object-cover"
-        src="https://amsc-prod-cd.azureedge.net/-/media/aston-martin/images/default-source/models/valkyrie/new/valkyrie-amr-pro_01_169.jpg?mw=1080&rev=f37a903f4262431b9f10de6856c54e7e&hash=D8AC1ACA8BD5C7AA1DA79678F4803581"
+        src="https://amsc-prod-cd.azureedge.net/-/media/aston-martin/images/default-source/models/valkyrie/new/valkyrie-amr-pro_08_169.jpg?mw=1920&rev=80d4e84324974e87b721dc51509e9634&hash=0A925977E6EB8E1F2CE9131047F1CF70"
         alt="Aston Martin Valkyrie"
       />
       {JSON.stringify(loaderData)}
