@@ -1,4 +1,10 @@
-import { json, MetaFunction } from "@remix-run/node";
+import {
+  ActionArgs,
+  json,
+  LoaderArgs,
+  MetaFunction,
+  redirect,
+} from "@remix-run/node";
 import {
   Links,
   LiveReload,
@@ -8,6 +14,9 @@ import {
   ScrollRestoration,
   useLoaderData,
 } from "@remix-run/react";
+import { typedjson, useTypedLoaderData } from "remix-typedjson";
+import SharedHeader from "./components/header/shared-header";
+import { getUser, logout } from "./services/session.server";
 import styles from "./styles/app.css";
 
 export function links() {
@@ -22,18 +31,22 @@ export function links() {
   ];
 }
 
-export async function loader() {
-  return json({ ENV: process.env });
-}
+export const action = async ({ request }: ActionArgs) => {
+  return await logout(request);
+};
+
+export const loader = async ({ request }: LoaderArgs) => {
+  return typedjson({ user: await getUser(request), ENV: process.env });
+};
 
 export const meta: MetaFunction = () => ({
   charset: "utf-8",
-  title: "BidHub (Bid on shit you want)",
+  title: "Brake Neck - Cars at break neck speed",
   viewport: "width=device-width,initial-scale=1",
 });
 
 export default function App() {
-  const data = useLoaderData();
+  const { ENV, user } = useTypedLoaderData<typeof loader>();
   return (
     <html lang="en">
       <head>
@@ -41,11 +54,12 @@ export default function App() {
         <Links />
       </head>
       <body className="bg-gray-700 text-gray-300">
+        {/* <SharedHeader user={user} /> */}
         <Outlet />
         <script
           dangerouslySetInnerHTML={{
             __html: `window.process = ${JSON.stringify({
-              env: data.ENV,
+              env: ENV,
             })}`,
           }}
         />

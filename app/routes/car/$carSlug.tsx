@@ -14,7 +14,7 @@ export const loader: LoaderFunction = async ({ params }: DataFunctionArgs) => {
   }
 };
 
-export default function ItemRoute() {
+export default function CarSlugRoute() {
   const car = useLoaderData<Car>();
   if (car) {
     const {
