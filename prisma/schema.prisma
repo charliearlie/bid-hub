@@ -76,6 +76,7 @@ model Car {
   tyres            String?
   brakes           String?
   images           String[]
+  previewImage     String?
   manufacturerName String
   manufacturer     Manufacturer @relation(fields: [manufacturerName], references: [name])
   createdAt        DateTime     @default(now())

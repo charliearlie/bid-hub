@@ -1,27 +1,25 @@
-import { ActionArgs, json, LoaderFunction } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
-import Button from "~/components/button";
+import { LoaderArgs } from "@remix-run/node";
+import { useTypedLoaderData } from "remix-typedjson";
+import { Previews } from "~/components/cars";
 import { getAllCars } from "~/services/cars.server";
-import { logout } from "~/services/session.server";
 
-export const loader: LoaderFunction = async ({ request }) => {
+export const loader = async ({ request }: LoaderArgs) => {
   return getAllCars();
 };
 
 export default function Index() {
-  const loaderData = useLoaderData();
+  const loaderData = useTypedLoaderData<typeof loader>();
 
   return (
     <main>
       <img
-        className="h-[32rem] w-full object-cover"
-        src="https://amsc-prod-cd.azureedge.net/-/media/aston-martin/images/default-source/models/valkyrie/new/valkyrie-amr-pro_08_169.jpg?mw=1920&rev=80d4e84324974e87b721dc51509e9634&hash=0A925977E6EB8E1F2CE9131047F1CF70"
+        className="h-48 w-full object-cover md:h-96 lg:h-[32rem]"
+        src="https://res.cloudinary.com/bidhub/image/upload/v1678720975/bidhub/Valkyrie-AMR-Pro_08_169.jpg"
         alt="Aston Martin Valkyrie"
       />
-      {JSON.stringify(loaderData)}
-      <form method="post">
-        <Button variant="danger">Log out lad</Button>
-      </form>
+      <div className="px-4 py-4">
+        <Previews cars={loaderData.cars} />
+      </div>
     </main>
   );
 }

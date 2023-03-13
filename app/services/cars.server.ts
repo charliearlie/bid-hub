@@ -1,7 +1,7 @@
-import { prisma } from "./prisma.server";
 import { json } from "@remix-run/node";
-import { Car, Manufacturer } from "@prisma/client";
+import { Car, Prisma } from "@prisma/client";
 import { typedjson } from "remix-typedjson";
+import { prisma } from "./prisma.server";
 
 export async function getAllCars() {
   return typedjson({ cars: await prisma.car.findMany() });
@@ -11,7 +11,7 @@ export async function addManufacturer({
   name,
   country,
   discipline,
-}: Manufacturer) {
+}: Prisma.ManufacturerCreateInput) {
   const newManufacturer = await prisma.manufacturer.create({
     data: {
       name,
@@ -23,7 +23,7 @@ export async function addManufacturer({
   return json(newManufacturer);
 }
 
-export async function addCar(car: Car) {
+export async function addCar(car: Omit<Car, "id" | "createdAt" | "updatedAt">) {
   const newCar = await prisma.car.create({
     data: {
       ...car,
