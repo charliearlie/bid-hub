@@ -22,6 +22,7 @@ export default function CarSlugRoute() {
       variation,
       images,
       powertrain,
+      previewImage,
       topSpeed,
       zeroTo60,
       manufacturerName,
@@ -30,7 +31,7 @@ export default function CarSlugRoute() {
     return (
       <main className="p-4 md:p-12">
         <div className="flex flex-col gap-8 md:flex-row">
-          <img src="https://ih1.redbubble.net/image.1003426384.0291/st,small,507x507-pad,600x600,f8f8f8.jpg" />
+          <img src={previewImage || ""} alt={`${manufacturerName} ${model}`} />
           <div>
             <h1 className="text-2xl font-black md:text-4xl">
               {manufacturerName} {model}
