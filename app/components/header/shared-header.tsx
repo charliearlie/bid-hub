@@ -23,7 +23,7 @@ export default function SharedHeader({ user }: Props) {
       <div className="mx-auto flex max-w-screen-xl items-center space-x-8 py-3 px-4 md:px-8">
         <div className="flex-none lg:flex-initial">
           <Link to="/">
-            <span className="text-4xl font-black text-purple-200">
+            <span className="text-2xl font-black text-purple-200 md:text-4xl">
               BrakeNeck
             </span>
           </Link>

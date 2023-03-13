@@ -49,12 +49,12 @@ export default function UserDropDown({ className, user }: Props) {
       >
         {navigation.map((item, idx) => (
           <li key={idx}>
-            <a
-              className="block text-gray-300 lg:p-2.5 lg:hover:bg-gray-50"
-              href={item.path}
+            <Link
+              className="block text-gray-300 lg:p-2.5 lg:text-gray-700 lg:hover:bg-gray-50"
+              to={item.path}
             >
               {item.title}
-            </a>
+            </Link>
           </li>
         ))}
       </ul>
