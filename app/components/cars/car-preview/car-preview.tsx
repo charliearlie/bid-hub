@@ -8,6 +8,8 @@ type CarPreviewProps = {
 export default function CarPreview({ car }: CarPreviewProps) {
   const { manufacturerName, model, previewImage, slug, variation, year } = car;
 
+  console.log("previewImage", previewImage);
+
   return (
     <Link
       to={`/car/${slug}`}
