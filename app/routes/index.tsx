@@ -9,6 +9,7 @@ export const loader = async ({ request }: LoaderArgs) => {
 
 export default function Index() {
   const loaderData = useTypedLoaderData<typeof loader>();
+  console.log(loaderData.cars);
 
   return (
     <main>
