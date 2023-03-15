@@ -1,4 +1,4 @@
-import { LoaderArgs } from "@remix-run/node";
+import type { LoaderArgs } from "@remix-run/node";
 import { useTypedLoaderData } from "remix-typedjson";
 import { Previews } from "~/components/cars";
 import { getAllCars } from "~/services/cars.server";
@@ -18,8 +18,13 @@ export default function Index() {
         src="https://res.cloudinary.com/bidhub/image/upload/v1678720975/bidhub/Valkyrie-AMR-Pro_08_169.jpg"
         alt="Aston Martin Valkyrie"
       />
-      <div className="px-4 py-4">
-        <Previews cars={loaderData.cars} />
+      <div>
+        <h2 className="flex h-16 w-full items-center justify-center rounded bg-gray-900 text-center text-3xl font-black">
+          Hottest hypercars
+        </h2>
+        <div className="py-4 px-2 lg:px-4">
+          <Previews cars={loaderData.cars} />
+        </div>
       </div>
     </main>
   );

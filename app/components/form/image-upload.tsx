@@ -1,4 +1,5 @@
-import { ChangeEvent, useState } from "react";
+import type { ChangeEvent} from "react";
+import { useState } from "react";
 
 enum UPLOAD_PRESET_ENUM {
   bidhubAvatar = "bidhub_avatar",
