@@ -1,21 +1,18 @@
 import React, { useRef } from "react";
 import { Link, useActionData, useTransition } from "@remix-run/react";
+import type { ActionArgs } from "@remix-run/node";
 import {
-  ActionArgs,
   ActionFunction,
   json,
   LoaderFunction,
   redirect,
 } from "@remix-run/node";
-import Button from "~/components/button";
-import { addCar, addManufacturer } from "~/services/cars.server";
-
-export const action: ActionFunction = async ({ request }: ActionArgs) => {
-  const formData = await request.formData();
-};
+import Button from "~/components/common/button";
+import { addCar, addManufacturer, editCar } from "~/services/cars.server";
+import { typedjson, useTypedActionData } from "remix-typedjson";
 
 export default function CarRoute() {
-  const actionData = useActionData();
+  const actionData = useTypedActionData<typeof action>();
   return (
     <main>
       <form method="post">
