@@ -1,4 +1,4 @@
-import { LoaderArgs, MetaFunction } from "@remix-run/node";
+import type { LoaderArgs, MetaFunction } from "@remix-run/node";
 import { handleMagicLinkLogin } from "~/services/user.server";
 import invariant from "tiny-invariant";
 import { typedjson, useTypedLoaderData } from "remix-typedjson";

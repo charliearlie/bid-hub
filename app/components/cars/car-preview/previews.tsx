@@ -1,5 +1,5 @@
-import { Car } from "@prisma/client";
-import Divider from "../../divider";
+import type { Car } from "@prisma/client";
+import Divider from "../../common/divider";
 import CarPreview from "../car-preview/car-preview";
 
 export default function Previews({ cars }: { cars: Car[] }) {
@@ -8,7 +8,6 @@ export default function Previews({ cars }: { cars: Car[] }) {
       {cars.map((car, idx) => (
         <li className="rounded" key={car.slug}>
           <CarPreview car={car} />
-          <Divider />
         </li>
       ))}
     </ul>
