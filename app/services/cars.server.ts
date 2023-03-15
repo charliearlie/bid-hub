@@ -1,5 +1,5 @@
 import { json } from "@remix-run/node";
-import { Car, Prisma } from "@prisma/client";
+import type { Car, Prisma } from "@prisma/client";
 import { typedjson } from "remix-typedjson";
 import { prisma } from "./prisma.server";
 
@@ -23,6 +23,7 @@ export async function addManufacturer({
   return json(newManufacturer);
 }
 
+// There must be a better type to use for car here
 export async function addCar(car: Omit<Car, "id" | "createdAt" | "updatedAt">) {
   const newCar = await prisma.car.create({
     data: {
@@ -39,7 +40,13 @@ export const editCar = async (carId: string) => {
       id: carId,
     },
     data: {
-      slug: "aston-martin-valkyrie-amr-pro",
+      images: [
+        {
+          imageUrl:
+            "https://res.cloudinary.com/bidhub/image/upload/v1678784825/brakeneck/a4qk0kwisopj2l38add1.jpg",
+          credit: "Mark Sutton - Motorsport Images",
+        },
+      ],
     },
   });
 
