@@ -1,10 +1,11 @@
 import { useActionData, useTransition } from "@remix-run/react";
-import { ActionArgs, ActionFunction, json } from "@remix-run/node";
-import Alert, { AlertType } from "~/components/alert";
+import type { ActionArgs, ActionFunction} from "@remix-run/node";
+import { json } from "@remix-run/node";
+import Alert, { AlertType } from "~/components/common/alert";
 import Form from "~/components/form/form";
 import FormField from "~/components/form/form-field";
 import Spinner from "~/components/spinner";
-import Button from "~/components/button";
+import Button from "~/components/common/button";
 import { resetPassword } from "~/services/user.server";
 
 type ActionData =

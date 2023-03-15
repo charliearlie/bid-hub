@@ -1,5 +1,6 @@
 import { Car } from "@prisma/client";
-import { LoaderArgs, LoaderFunction, MetaFunction } from "@remix-run/node";
+import type { MetaFunction } from "@remix-run/node";
+import { LoaderArgs, LoaderFunction } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { useTypedLoaderData } from "remix-typedjson";
 import Previews from "~/components/cars/car-preview/previews";

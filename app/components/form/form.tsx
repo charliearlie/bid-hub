@@ -1,9 +1,12 @@
-import React, { ChangeEvent, ReactNode, useState } from "react";
+import type { ChangeEvent, ReactNode} from "react";
+import React, { useState } from "react";
+import type {
+  FormProps as RemixFormProps} from "@remix-run/react";
 import {
-  Form as RemixForm,
-  FormProps as RemixFormProps,
+  Form as RemixForm
 } from "@remix-run/react";
-import FormField, { FormFieldProps } from "./form-field";
+import type { FormFieldProps } from "./form-field";
+import FormField from "./form-field";
 
 export type FormData = Record<string, string | number>;
 

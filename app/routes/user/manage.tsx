@@ -1,6 +1,7 @@
 import { useActionData, useTransition } from "@remix-run/react";
-import { ActionArgs, ActionFunction, json, LoaderArgs } from "@remix-run/node";
-import Alert, { AlertType } from "~/components/alert";
+import type { ActionArgs, LoaderArgs } from "@remix-run/node";
+import { ActionFunction, json } from "@remix-run/node";
+import Alert, { AlertType } from "~/components/common/alert";
 import Form from "~/components/form/form";
 import FormField from "~/components/form/form-field";
 import Spinner from "~/components/spinner";
@@ -50,12 +51,14 @@ export const action = async ({ request }: ActionArgs) => {
   if (avatarImage) {
     const data = new FormData();
     data.append("file", avatarImage);
-    data.append("upload_preset", "bidhub_user_avatar");
+    data.append("upload_preset", "BrakeNeck_car");
     const res = await fetch(process.env.CLOUDINARY_URL, {
       method: "POST",
       body: data,
     });
     image = await res.json();
+
+    console.log(image);
   }
 
   const editedUserDetails = {

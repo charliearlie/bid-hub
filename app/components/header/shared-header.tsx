@@ -1,4 +1,4 @@
-import { User } from "@prisma/client";
+import type { User } from "@prisma/client";
 import { Link } from "@remix-run/react";
 import { useState } from "react";
 import BurgerSVG from "~/styles/svg/burger";

@@ -32,14 +32,14 @@ model User {
 
 // Both these models match. Maybe I need tp think of a name which matches both their jobs
 model ForgotPassword {
-  email      String  
-  token      String @id @map("_id")
+  email      String
+  token      String   @id @map("_id")
   expiration DateTime
 }
 
 model MagicLogin {
-  email      String  
-  token      String @id @map("_id")
+  email      String
+  token      String   @id @map("_id")
   expiration DateTime
 }
 
@@ -75,7 +75,7 @@ model Car {
   zeroTo100        Float?
   tyres            String?
   brakes           String?
-  images           String[]
+  images           CarImage[]
   previewImage     String?
   manufacturerName String
   manufacturer     Manufacturer @relation(fields: [manufacturerName], references: [name])
@@ -84,6 +84,11 @@ model Car {
   comments         Comment[]
   likes            Like[]
   auctions         Auction[]
+}
+
+type CarImage {
+  imageUrl String
+  credit   String
 }
 
 type Powertrain {

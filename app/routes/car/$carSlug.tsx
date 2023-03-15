@@ -1,9 +1,10 @@
 import { useLoaderData } from "@remix-run/react";
-import { DataFunctionArgs, LoaderFunction, redirect } from "@remix-run/node";
+import type { DataFunctionArgs, LoaderFunction} from "@remix-run/node";
+import { redirect } from "@remix-run/node";
 import invariant from "tiny-invariant";
-import Button from "~/components/button";
+import Button from "~/components/common/button";
 import { getCarBySlug } from "~/services/cars.server";
-import { Car } from "@prisma/client";
+import type { Car } from "@prisma/client";
 
 export const loader: LoaderFunction = async ({ params }: DataFunctionArgs) => {
   invariant(params.carSlug, "Expected params.carSlug");
@@ -28,10 +29,15 @@ export default function CarSlugRoute() {
       manufacturerName,
     } = car;
 
+    const image = images[0];
     return (
-      <main className="p-4 md:p-12">
-        <div className="flex flex-col gap-8 md:flex-row">
-          <img src={previewImage || ""} alt={`${manufacturerName} ${model}`} />
+      <main className="">
+        <img
+          className="h-[32rem] w-full object-cover"
+          src={image.imageUrl || ""}
+          alt={`${manufacturerName} ${model}`}
+        />
+        <div className="flex flex-col gap-8 p-4 md:flex-row md:p-12">
           <div>
             <h1 className="text-2xl font-black md:text-4xl">
               {manufacturerName} {model}
