@@ -10,8 +10,9 @@ import { redirect, useTypedLoaderData } from "remix-typedjson";
 import CardHeader from "~/components/common/card/card-header";
 import CardSubHeader from "~/components/common/card/card-subheader";
 import PowerTrainInfoRows from "~/components/cars/info/powertrain-info-rows";
-import EngineInfoRows from "~/components/cars/info/engine-info-row";
-import BodyAndChassisInfoRows from "~/components/cars/info/body-and-chassis-info-row";
+import EngineInfoRows from "~/components/cars/info/engine-info-rows";
+import BodyAndChassisInfoRows from "~/components/cars/info/body-and-chassis-info-rows";
+import DimensionInfoRows from "~/components/cars/info/dimensions-info-rows";
 
 export const loader: LoaderFunction = async ({ params }: DataFunctionArgs) => {
   invariant(params.carSlug, "Expected params.carSlug");
@@ -44,7 +45,7 @@ export default function CarSlugRoute() {
     return (
       <main className="">
         <img
-          className=" h-72w-full object-cover lg:h-[32rem]"
+          className=" h-72 w-full object-cover lg:h-[32rem]"
           src={image?.imageUrl || ""}
           alt={`${manufacturerName} ${model}`}
         />
@@ -66,28 +67,36 @@ export default function CarSlugRoute() {
                 </div>
               </CardContent>
             </Card>
-            {powertrain && (
-              <Card>
-                <CardHeader>Powertrain</CardHeader>
-                <CardContent>
-                  <PowerTrainInfoRows powertrain={powertrain} />
-                  {powertrain.engine && (
-                    <>
-                      <CardSubHeader>Engine</CardSubHeader>
-                      <EngineInfoRows engine={powertrain.engine} />
-                    </>
-                  )}
-                </CardContent>
-              </Card>
-            )}
-            {bodyAndChassis && (
-              <Card>
-                <CardHeader>Body & chassis</CardHeader>
-                <CardContent>
-                  <BodyAndChassisInfoRows bodyAndChassis={bodyAndChassis} />
-                </CardContent>
-              </Card>
-            )}
+            <div className="grid grid-cols-1 gap-2 lg:grid-cols-2">
+              {powertrain && (
+                <Card>
+                  <CardHeader>Powertrain</CardHeader>
+                  <CardContent noPadding>
+                    <PowerTrainInfoRows powertrain={powertrain} />
+                    {powertrain.engine && (
+                      <>
+                        <CardSubHeader>Engine</CardSubHeader>
+                        <EngineInfoRows engine={powertrain.engine} />
+                      </>
+                    )}
+                  </CardContent>
+                </Card>
+              )}
+              {bodyAndChassis && (
+                <Card>
+                  <CardHeader>Body & chassis</CardHeader>
+                  <CardContent noPadding>
+                    <BodyAndChassisInfoRows bodyAndChassis={bodyAndChassis} />
+                    {dimensions && (
+                      <>
+                        <CardSubHeader>Dimensions</CardSubHeader>
+                        <DimensionInfoRows dimensions={dimensions} />
+                      </>
+                    )}
+                  </CardContent>
+                </Card>
+              )}
+            </div>
             <Button variant="primary">Like</Button>
           </div>
         </div>

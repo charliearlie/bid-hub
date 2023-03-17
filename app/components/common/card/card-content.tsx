@@ -1,5 +1,11 @@
 import { PropsWithChildren } from "react";
 
-export default function CardContent({ children }: PropsWithChildren) {
-  return <div className="py-2">{children}</div>;
+type CardContentProps = {
+  noPadding?: boolean;
+};
+
+type Props = PropsWithChildren<CardContentProps>;
+
+export default function CardContent({ children, noPadding = false }: Props) {
+  return <div className={`py-2 ${noPadding ? "" : "px-2"}`}>{children}</div>;
 }
