@@ -42,9 +42,9 @@ export const editCar = async (carId: string) => {
     data: {
       images: [
         {
+          credit: "",
           imageUrl:
-            "https://res.cloudinary.com/bidhub/image/upload/v1678784825/brakeneck/a4qk0kwisopj2l38add1.jpg",
-          credit: "Mark Sutton - Motorsport Images",
+            "https://res.cloudinary.com/bidhub/image/upload/v1679007623/brakeneck/hmw0bxgh0rgw9tzijnfe.webp",
         },
       ],
     },
@@ -55,5 +55,5 @@ export const editCar = async (carId: string) => {
 
 export const getCarBySlug = async (slug: string) => {
   const car = await prisma.car.findUnique({ where: { slug } });
-  return car ? json<Car>(car) : null;
+  return typedjson(car);
 };

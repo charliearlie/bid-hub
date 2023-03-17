@@ -64,26 +64,34 @@ model Manufacturer {
 }
 
 model Car {
-  id               String       @id @default(auto()) @map("_id") @db.ObjectId
-  slug             String       @unique
-  model            String
-  variation        String?
-  year             Int
-  powertrain       Powertrain
-  topSpeed         Float?
-  zeroTo60         Float?
-  zeroTo100        Float?
-  tyres            String?
-  brakes           String?
-  images           CarImage[]
-  previewImage     String?
-  manufacturerName String
-  manufacturer     Manufacturer @relation(fields: [manufacturerName], references: [name])
-  createdAt        DateTime     @default(now())
-  updatedAt        DateTime     @updatedAt
-  comments         Comment[]
-  likes            Like[]
-  auctions         Auction[]
+  id                 String              @id @default(auto()) @map("_id") @db.ObjectId
+  slug               String              @unique
+  model              String
+  variation          String?
+  year               Int
+  powertrain         Powertrain
+  bodyAndChassis     BodyAndChassis?
+  dimensions         Dimensions?
+  topSpeed           Float?
+  zeroTo60           Float?
+  zeroTo100          Float?
+  images             CarImage[]
+  previewImage       String?
+  manufacturerName   String
+  manufacturer       Manufacturer        @relation(fields: [manufacturerName], references: [name])
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+  comments           Comment[]
+  likes              Like[]
+  auctions           Auction[]
+  drivetrain         String?
+  infotainmentSystem InfotainmentSystem?
+  safetyFeatures     SafetyFeatures?
+  marketPrice        Int?
+  carType            String
+  codeNames          String[]
+  technologyPartner  String?
+  production         ProductionDetails?
 }
 
 type CarImage {
@@ -92,7 +100,7 @@ type CarImage {
 }
 
 type Powertrain {
-  engine           String
+  engine           Engine?
   electricPower    Int?
   horsepower       Int
   transmission     String
@@ -100,6 +108,79 @@ type Powertrain {
   hybridDrivetrain String?
   fullPowerOutput  Int
   lbsOfTorque      Int?
+  supplier         String?
+}
+
+type Engine {
+  layout        String?
+  displacement  String?
+  supplier      String?
+  name          String?
+  configuration String?
+  induction     String?
+  cylinders     Int?
+}
+
+type BodyAndChassis {
+  bodyMaterial String?
+  bodyStyle String?
+  brakes String?
+  doorType  String?
+  layout  String?
+  steering String?
+  suspension Suspension?
+  seats Int?
+  tyres String?
+}
+
+type Dimensions {
+  wheelBase Float?
+  height  Float?
+  width   Float?
+  length  Float?
+  weight  Float?
+}
+
+type InfotainmentSystem {
+  touchscreenDisplay    Boolean
+  speakers              Int
+  bluetoothConnectivity Boolean
+  appleCarplay          Boolean
+  androidAuto           Boolean
+}
+
+type SafetyFeatures {
+  airbags                    Int?
+  antilockBrakes             Boolean?
+  tractionControl            Boolean?
+  electronicStabilityControl Boolean?
+  backupCamera               Boolean?
+}
+
+type Suspension {
+  front String
+  rear  String
+}
+
+enum CarType {
+  RACING
+  SPORTS
+  LUXURY
+  SUPERCAR
+  HYPERCAR
+}
+
+type RacingInformation {
+  racesEntered Int
+  raceWins     Int
+  podiums      Int
+  series       String
+}
+
+type ProductionDetails {
+  start Int?
+  end   Int?
+  units Int?
 }
 
 model Comment {
@@ -172,4 +253,17 @@ model Payment {
   userId         String   @db.ObjectId
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
+}
+
+model Person {
+  id          String        @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  Contributor Contributor[]
+}
+
+model Contributor {
+  id           String @id @default(auto()) @map("_id") @db.ObjectId
+  contribution String
+  person       Person @relation(fields: [personId], references: [id])
+  personId     String @db.ObjectId
 }
