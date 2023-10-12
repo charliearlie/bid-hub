@@ -5,5 +5,6 @@ declare namespace NodeJS {
     CLOUDINARY_SECRET: string;
     CLOUDINARY_URL: string;
     SESSION_SECRET: string;
+    RESEND_API_KEY: string;
   }
 }

@@ -1,26 +1,21 @@
-import nodemailer from "nodemailer";
-
-const transporter = nodemailer.createTransport({
-  host: "smtp.mailtrap.io",
-  port: 587,
-  secure: false, // true for 465, false for other ports
-  auth: {
-    user: "d6d0b5cfc1d9d1", // generated ethereal user
-    pass: "5a97e63231aa43", // generated ethereal password
-  },
-});
+import { Resend } from "resend";
+import { CreateEmailResponse } from "resend/build/src/emails/interfaces";
 
 const sendEmail = async (
   to: string,
   subject: string,
   html: string
-): Promise<void> => {
-  await transporter.sendMail({
+): Promise<CreateEmailResponse> => {
+  const resend = new Resend(process.env.RESEND_API_KEY);
+
+  const data = await resend.emails.send({
+    from: "BrakeNeck <onboarding@resend.dev>",
     to,
     subject,
-    sender: "BrakeNeck <info@BrakeNeck.com>",
     html,
   });
+
+  return data;
 };
 
 export default sendEmail;

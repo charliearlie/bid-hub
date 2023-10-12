@@ -4,7 +4,11 @@ import { v4 as uuidv4 } from "uuid";
 import { json } from "@remix-run/node";
 
 import { prisma } from "./prisma.server";
-import type { EditUserForm, LoginForm, RegisterForm } from "~/services/types.server";
+import type {
+  EditUserForm,
+  LoginForm,
+  RegisterForm,
+} from "~/services/types.server";
 import { createUserSession } from "~/services/session.server";
 import sendEmail from "~/services/email.server";
 
@@ -45,7 +49,10 @@ export const login = async ({ email, password }: LoginForm) => {
   });
 
   if (!user || !(await bcrypt.compare(password, user.password)))
-    return typedjson({ error: `Incorrect login` }, { status: 400 });
+    return typedjson(
+      { error: `Incorrect login`, success: false },
+      { status: 400 }
+    );
 
   return createUserSession(user.id);
 };
@@ -53,7 +60,10 @@ export const login = async ({ email, password }: LoginForm) => {
 export const forgotPassword = async (email: string) => {
   const exists = await prisma.user.count({ where: { email } });
   if (!exists) {
-    return json({ error: `No user with that email exists` }, { status: 400 });
+    return json(
+      { error: `No user with that email exists`, success: false },
+      { status: 400 }
+    );
   }
 
   const token = uuidv4();
@@ -104,7 +114,10 @@ export const resetPassword = async (password: string, token: string) => {
 export const generateMagicLink = async (email: string) => {
   const exists = await prisma.user.count({ where: { email } });
   if (!exists) {
-    return json({ error: `No user with that email exists` }, { status: 400 });
+    return typedjson(
+      { error: `No user with that email exists`, success: false },
+      { status: 400 }
+    );
   }
 
   const token = uuidv4();
@@ -119,9 +132,9 @@ export const generateMagicLink = async (email: string) => {
   });
 
   const html = magicLinkEmailTemplate(token);
-  await sendEmail(email, "Here's your login link", html);
+  const emailData = await sendEmail(email, "Here's your login link", html);
 
-  return json({ success: true });
+  return typedjson({ success: !!emailData.id, error: "" });
 };
 
 export const handleMagicLinkLogin = async (token: string) => {

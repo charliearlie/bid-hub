@@ -2,11 +2,9 @@ import { Link, useActionData, useTransition } from "@remix-run/react";
 import type {
   ActionArgs,
   ActionFunction,
-  LoaderFunction} from "@remix-run/node";
-import {
-  json,
-  redirect,
+  LoaderFunction,
 } from "@remix-run/node";
+import { json, redirect } from "@remix-run/node";
 import Alert, { AlertType } from "~/components/common/alert";
 import Form from "~/components/form/form";
 import FormField from "~/components/form/form-field";
@@ -64,8 +62,8 @@ export const action: ActionFunction = async ({ request }: ActionArgs) => {
 };
 
 export default function RegisterRoute() {
+  // todo: fix actionData type
   const actionData = useActionData();
-  console.log(actionData);
   const transition = useTransition();
   return (
     <main className="flex h-screen flex-col flex-wrap content-center justify-center bg-gray-800 sm:bg-gray-700">

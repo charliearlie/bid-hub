@@ -1,7 +1,12 @@
 import React, { useRef } from "react";
-import { Link, useSubmit, useTransition } from "@remix-run/react";
-import type { ActionArgs, LoaderFunction} from "@remix-run/node";
-import { redirect } from "@remix-run/node";
+import {
+  Link,
+  useActionData,
+  useSubmit,
+  useTransition,
+} from "@remix-run/react";
+import type { ActionArgs, LoaderFunction } from "@remix-run/node";
+import { json } from "@remix-run/node";
 import Alert, { AlertType } from "~/components/common/alert";
 import Form from "~/components/form/form";
 import FormField from "~/components/form/form-field";
@@ -9,7 +14,12 @@ import Spinner from "~/components/spinner";
 import Button from "~/components/common/button";
 import { generateMagicLink, login } from "~/services/user.server";
 import { getUser } from "~/services/session.server";
-import { typedjson, useTypedActionData } from "remix-typedjson";
+import { redirect, typedjson, useTypedActionData } from "remix-typedjson";
+
+type ActionData = {
+  success: boolean;
+  error: boolean;
+};
 
 export const loader: LoaderFunction = async ({ request }) => {
   const user = await getUser(request);
@@ -17,7 +27,7 @@ export const loader: LoaderFunction = async ({ request }) => {
   return user ? redirect("/") : null;
 };
 
-export const action = async ({ request }: ActionArgs) => {
+export async function action({ request, params }: ActionArgs) {
   const formData = await request.formData();
 
   const intent = formData.get("intent");
@@ -27,28 +37,38 @@ export const action = async ({ request }: ActionArgs) => {
 
   if (typeof emailOrUsername !== "string") {
     return typedjson(
-      { success: false, error: `Invalid Form Data`, form: action },
-      { status: 400 }
+      {
+        success: false,
+        error: `Invalid Form Data`,
+      },
+      { status: 200 }
     );
   }
 
   if (intent === "magic") {
-    return await generateMagicLink(emailOrUsername);
+    return await generateMagicLink(emailOrUsername as string);
   }
 
   // todo: not happy repeating this for both password and email. Sort it
-  if (typeof password !== "string") {
+  if (typeof password !== "string" || typeof emailOrUsername !== "string") {
     return typedjson(
-      { success: false, error: `Invalid Form Data`, form: action },
-      { status: 400 }
+      {
+        success: false,
+        error: `Invalid Form Data`,
+      },
+      { status: 200 }
     );
   }
-  return await login({ email: emailOrUsername, password });
-};
+  return await login({
+    email: emailOrUsername,
+    password,
+  });
+}
 
 export default function LoginRoute() {
   const emailInputRef = useRef<HTMLInputElement>(null);
-  const actionData = useTypedActionData<typeof action>();
+
+  const inferredActionData = useTypedActionData<typeof action>();
   const transition = useTransition();
 
   const submit = useSubmit();
@@ -79,10 +99,16 @@ export default function LoginRoute() {
           }}
           method="post"
         >
-          {actionData && (
+          {inferredActionData?.error && (
             <Alert
               message="Invalid email, username or password"
               type={AlertType.ERROR}
+            />
+          )}
+          {inferredActionData?.success && (
+            <Alert
+              message={`A link has been sent to ${emailInputRef.current?.value}`}
+              type={AlertType.INFO}
             />
           )}
           <FormField

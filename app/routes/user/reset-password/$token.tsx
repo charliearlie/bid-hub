@@ -1,5 +1,5 @@
 import { useActionData, useTransition } from "@remix-run/react";
-import type { ActionArgs, ActionFunction} from "@remix-run/node";
+import type { ActionArgs, ActionFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import Alert, { AlertType } from "~/components/common/alert";
 import Form from "~/components/form/form";
@@ -35,11 +35,11 @@ export const action: ActionFunction = async ({
     return json<ActionData>(errors);
   }
 
-  return resetPassword(password, params.token);
+  resetPassword(password, params.token);
 };
 
 export default function ForgotPasswordRoute() {
-  const actionData = useActionData();
+  const actionData = useActionData<typeof action>();
   const transition = useTransition();
 
   return (
