@@ -1,6 +1,5 @@
-import { useActionData, useTransition } from "@remix-run/react";
+import { useTransition } from "@remix-run/react";
 import type { ActionArgs, LoaderArgs } from "@remix-run/node";
-import { ActionFunction, json } from "@remix-run/node";
 import Alert, { AlertType } from "~/components/common/alert";
 import Form from "~/components/form/form";
 import FormField from "~/components/form/form-field";
@@ -14,7 +13,6 @@ import {
   useTypedLoaderData,
 } from "remix-typedjson";
 import { editUser } from "~/services/user.server";
-import { EditUserForm } from "~/services/types.server";
 
 // todo: Move this into own file or make more generic and just look for a key value pair of strings
 type ActionData = {
@@ -57,8 +55,6 @@ export const action = async ({ request }: ActionArgs) => {
       body: data,
     });
     image = await res.json();
-
-    console.log(image);
   }
 
   const editedUserDetails = {

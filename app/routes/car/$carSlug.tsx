@@ -1,4 +1,3 @@
-import { useLoaderData } from "@remix-run/react";
 import type { DataFunctionArgs, LoaderFunction } from "@remix-run/node";
 import invariant from "tiny-invariant";
 import Button from "~/components/common/button";
@@ -50,12 +49,11 @@ export default function CarSlugRoute() {
           alt={`${manufacturerName} ${model}`}
         />
         <div className="flex flex-col gap-8 p-4 md:flex-row md:p-12">
-          <div>
+          <div className="w-full">
             <h1 className="text-2xl font-black md:text-4xl">
-              {manufacturerName} {model}
+              {manufacturerName} {model} {variation}
             </h1>
-            <h2 className="text-2xl font-black md:text-4xl">{variation}</h2>I
-            could easily make the cards below tabs but they may vary in height
+            I could easily make the cards below tabs but they may vary in height
             which will cause a disgusting content shift
             <Card>
               <CardHeader>Key figures</CardHeader>
