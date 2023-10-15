@@ -1,6 +1,6 @@
 version: 2.1
 jobs:
-  build:
+  common:
     docker:
       - image: node:16.17.0
     steps:
@@ -13,7 +13,7 @@ jobs:
           name: Install pnpm package manager
           command: |
             corepack enable
-            corepack prepare pnpm@latest-8 --activate
+            corepack prepare pnpm@^6 --activate
       - run:
           name: Install Dependencies
           command: |
@@ -23,44 +23,38 @@ jobs:
           key: pnpm-packages-{{ checksum "pnpm-lock.yaml" }}
           paths:
             - node_modules
+
+  build:
+    steps:
+      - attach_workspace:
+          at: /common
       - run:
           name: Build
-          command: pnpm build
+          command: |
+            cd /common
+            pnpm build
+
   lint:
-    docker:
-      - image: node:16.17.0
     steps:
-      - checkout
-      - restore_cache:
-          name: Restore pnpm Package Cache
-          keys:
-            - pnpm-packages-{{ checksum "pnpm-lock.yaml" }}
-      - run:
-          name: Install pnpm package manager
-          command: |
-            corepack enable
-            corepack prepare pnpm@latest-8 --activate
-      - run:
-          name: Install Dependencies
-          command: |
-            pnpm install
-      - save_cache:
-          name: Save pnpm Package Cache
-          key: pnpm-packages-{{ checksum "pnpm-lock.yaml" }}
-          paths:
-            - node_modules
+      - attach_workspace:
+          at: /common
       - run:
           name: Lint
-          command: pnpm lint
+          command: |
+            cd /common
+            pnpm lint
 
 workflows:
   version: 2
   build-and-lint:
     jobs:
-      - build
+      - common
+      - build:
+          requires:
+            - common
       - lint:
           requires:
-            - build
+            - common
           filters:
             branches:
               only: /.*/
