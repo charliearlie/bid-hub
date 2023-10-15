@@ -17,7 +17,7 @@ const FormField = forwardRef<HTMLInputElement, Props>(
     { errorMessage, label, labelLeft, name, validateFunc, ...props },
     ref
   ): ReactElement => {
-    const [_, setIsValidField] = useState<boolean>(true);
+    const [, setIsValidField] = useState<boolean>(true);
 
     const validateInput = (e: FocusEvent<HTMLInputElement>) => {
       if (!validateFunc) return;
