@@ -13,7 +13,7 @@ jobs:
           name: Install pnpm package manager
           command: |
             corepack enable
-            corepack prepare pnpm@^6 --activate
+            corepack prepare pnpm@6.16.0 --activate
       - run:
           name: Install Dependencies
           command: |
