@@ -1,8 +1,6 @@
 version: 2.1
 jobs:
-  build:
-    docker:
-      - image: node:16.17.0
+  common_steps:
     steps:
       - checkout
       - restore_cache:
@@ -23,6 +21,12 @@ jobs:
           key: pnpm-packages-{{ checksum "pnpm-lock.yaml" }}
           paths:
             - node_modules
+
+  build:
+    docker:
+      - image: node:16.17.0
+    steps:
+      - <<: *common_steps
       - run:
           name: Build
           command: pnpm build
@@ -31,25 +35,7 @@ jobs:
     docker:
       - image: node:16.17.0
     steps:
-      - checkout
-      - restore_cache:
-          name: Restore pnpm Package Cache
-          keys:
-            - pnpm-packages-{{ checksum "pnpm-lock.yaml" }}
-      - run:
-          name: Install pnpm package manager
-          command: |
-            corepack enable
-            corepack prepare pnpm@6.16.0 --activate
-      - run:
-          name: Install Dependencies
-          command: |
-            pnpm install
-      - save_cache:
-          name: Save pnpm Package Cache
-          key: pnpm-packages-{{ checksum "pnpm-lock.yaml" }}
-          paths:
-            - node_modules
+      - <<: *common_steps
       - run:
           name: Lint
           command: pnpm lint
