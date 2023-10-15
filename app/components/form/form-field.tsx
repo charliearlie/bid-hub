@@ -1,4 +1,4 @@
-import type { FocusEvent, ReactElement} from "react";
+import type { FocusEvent, ReactElement } from "react";
 import { forwardRef, useState } from "react";
 
 export type FormFieldErrorProps = {};
@@ -17,7 +17,7 @@ const FormField = forwardRef<HTMLInputElement, Props>(
     { errorMessage, label, labelLeft, name, validateFunc, ...props },
     ref
   ): ReactElement => {
-    const [isValidField, setIsValidField] = useState<boolean>(true);
+    const [_, setIsValidField] = useState<boolean>(true);
 
     const validateInput = (e: FocusEvent<HTMLInputElement>) => {
       if (!validateFunc) return;
@@ -60,5 +60,7 @@ const FormField = forwardRef<HTMLInputElement, Props>(
     );
   }
 );
+
+FormField.displayName = "FormField";
 
 export default FormField;

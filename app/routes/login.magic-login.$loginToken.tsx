@@ -1,8 +1,8 @@
-import type { LoaderArgs, MetaFunction } from "@remix-run/node";
+import type { LoaderArgs } from "@remix-run/node";
+import type { V2_MetaFunction } from "@remix-run/react/dist/routeModules";
 import { handleMagicLinkLogin } from "~/services/user.server";
 import invariant from "tiny-invariant";
 import { typedjson, useTypedLoaderData } from "remix-typedjson";
-import { V2_MetaFunction } from "@remix-run/react/dist/routeModules";
 
 export const loader = async ({ params, request }: LoaderArgs) => {
   if (request.headers.get("user-agent")?.includes("WhatsApp")) {

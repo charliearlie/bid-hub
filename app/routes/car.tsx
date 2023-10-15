@@ -1,18 +1,10 @@
-import React, { useRef } from "react";
-import { Link, useActionData, useTransition } from "@remix-run/react";
-import {
-  ActionArgs,
-  ActionFunction,
-  json,
-  LoaderFunction,
-  redirect,
-} from "@remix-run/node";
+import { ActionArgs } from "@remix-run/node";
 import Button from "~/components/common/button";
-import { addCar, addManufacturer, editCar } from "~/services/cars.server";
+import { addCar } from "~/services/cars.server";
 import { typedjson, useTypedActionData } from "remix-typedjson";
 
-export const action = async ({ request }: ActionArgs) => {
-  const formData = await request.formData();
+export const action = async ({}: ActionArgs) => {
+  // const formData = await request.formData();
   const newCar = await addCar({
     slug: "porsche-carrera-gt",
     model: "Carrera GT",

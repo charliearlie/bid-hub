@@ -1,5 +1,5 @@
 import { Resend } from "resend";
-import { CreateEmailResponse } from "resend/build/src/emails/interfaces";
+import type { CreateEmailResponse } from "resend/build/src/emails/interfaces";
 
 const sendEmail = async (
   to: string,

@@ -1,4 +1,4 @@
-import { BodyAndChassis, Engine, Powertrain } from "@prisma/client";
+import type { BodyAndChassis } from "@prisma/client";
 import CarInfoRow from "./car-info-row";
 
 type Props = {
@@ -6,16 +6,8 @@ type Props = {
 };
 // todo: We could maybe map the key to a value to make this usable across all info rows
 export default function BodyAndChassisInfoRows({ bodyAndChassis }: Props) {
-  const {
-    bodyMaterial,
-    brakes,
-    doorType,
-    layout,
-    seats,
-    steering,
-    suspension,
-    tyres,
-  } = bodyAndChassis;
+  const { bodyMaterial, brakes, doorType, layout, seats, steering, tyres } =
+    bodyAndChassis;
   return (
     <ul>
       {layout && <CarInfoRow label="Layout" value={layout} />}
