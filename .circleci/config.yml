@@ -7,10 +7,10 @@ jobs:
       - checkout
       - run:
           name: Install dependencies
-          command: yarn install
+          command: pnpm install
       - run:
           name: Build
-          command: yarn build
+          command: pnpm build
   lint:
     docker:
       - image: node:16.17.0
@@ -18,10 +18,10 @@ jobs:
       - checkout
       - run:
           name: Install dependencies
-          command: yarn install
+          command: pnpm install
       - run:
           name: Lint
-          command: yarn lint
+          command: pnpm lint
 
 workflows:
   version: 2

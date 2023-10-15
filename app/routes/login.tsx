@@ -1,12 +1,8 @@
 import React, { useRef } from "react";
-import {
-  Link,
-  useActionData,
-  useSubmit,
-  useTransition,
-} from "@remix-run/react";
+import { Link, useSubmit, useTransition } from "@remix-run/react";
 import type { ActionArgs, LoaderFunction } from "@remix-run/node";
-import { json } from "@remix-run/node";
+import { redirect, typedjson, useTypedActionData } from "remix-typedjson";
+
 import Alert, { AlertType } from "~/components/common/alert";
 import Form from "~/components/form/form";
 import FormField from "~/components/form/form-field";
@@ -14,12 +10,6 @@ import Spinner from "~/components/spinner";
 import Button from "~/components/common/button";
 import { generateMagicLink, login } from "~/services/user.server";
 import { getUser } from "~/services/session.server";
-import { redirect, typedjson, useTypedActionData } from "remix-typedjson";
-
-type ActionData = {
-  success: boolean;
-  error: boolean;
-};
 
 export const loader: LoaderFunction = async ({ request }) => {
   const user = await getUser(request);
@@ -68,7 +58,7 @@ export async function action({ request, params }: ActionArgs) {
 export default function LoginRoute() {
   const emailInputRef = useRef<HTMLInputElement>(null);
 
-  const inferredActionData = useTypedActionData<typeof action>();
+  const actionData = useTypedActionData<typeof action>();
   const transition = useTransition();
 
   const submit = useSubmit();
@@ -99,13 +89,13 @@ export default function LoginRoute() {
           }}
           method="post"
         >
-          {inferredActionData?.error && (
+          {actionData?.error && (
             <Alert
               message="Invalid email, username or password"
               type={AlertType.ERROR}
             />
           )}
-          {inferredActionData?.success && (
+          {actionData?.success && (
             <Alert
               message={`A link has been sent to ${emailInputRef.current?.value}`}
               type={AlertType.INFO}
