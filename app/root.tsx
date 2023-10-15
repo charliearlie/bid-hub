@@ -18,6 +18,7 @@ import { typedjson, useTypedLoaderData } from "remix-typedjson";
 import SharedHeader from "./components/header/shared-header";
 import { getUser, logout } from "./services/session.server";
 import styles from "./styles/app.css";
+import { V2_MetaFunction } from "@remix-run/react/dist/routeModules";
 
 export function links() {
   return [
@@ -39,11 +40,12 @@ export const loader = async ({ request }: LoaderArgs) => {
   return typedjson({ user: await getUser(request), ENV: process.env });
 };
 
-export const meta: MetaFunction = () => ({
-  charset: "utf-8",
-  title: "Brake Neck - Cars at break neck speed",
-  viewport: "width=device-width,initial-scale=1",
-});
+export const meta: V2_MetaFunction = () => {
+  return [
+    { title: "Brake Neck - Cars at break neck speed" },
+    { name: "description", content: "" },
+  ];
+};
 
 export default function App() {
   const { ENV, user } = useTypedLoaderData<typeof loader>();

@@ -1,5 +1,4 @@
 import type { Car } from "@prisma/client";
-import Divider from "../../common/divider";
 import CarPreview from "../car-preview/car-preview";
 
 export default function Previews({ cars }: { cars: Car[] }) {

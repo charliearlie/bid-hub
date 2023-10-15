@@ -1,4 +1,4 @@
-import { Engine, Powertrain } from "@prisma/client";
+import type { Engine } from "@prisma/client";
 import CarInfoRow from "./car-info-row";
 
 type Props = {

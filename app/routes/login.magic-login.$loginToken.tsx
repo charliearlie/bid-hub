@@ -1,4 +1,5 @@
-import type { LoaderArgs, MetaFunction } from "@remix-run/node";
+import type { LoaderArgs } from "@remix-run/node";
+import type { V2_MetaFunction } from "@remix-run/react/dist/routeModules";
 import { handleMagicLinkLogin } from "~/services/user.server";
 import invariant from "tiny-invariant";
 import { typedjson, useTypedLoaderData } from "remix-typedjson";
@@ -6,19 +7,15 @@ import { typedjson, useTypedLoaderData } from "remix-typedjson";
 export const loader = async ({ params, request }: LoaderArgs) => {
   if (request.headers.get("user-agent")?.includes("WhatsApp")) {
     return typedjson({
-      error: "Fuck off WhatsApp preview, lad",
+      error: "Block whatsapp preview",
     });
   }
   invariant(params.loginToken, "Token required");
   return await handleMagicLinkLogin(params.loginToken);
 };
 
-export const meta: MetaFunction<typeof loader> = ({ data }) => {
-  return {
-    charset: "utf-8",
-    title: data.error || "Brake Neck - Cars at break neck speed",
-    viewport: "width=device-width,initial-scale=1",
-  };
+export const meta: V2_MetaFunction = () => {
+  return [{ title: "Logging you in" }, { name: "description", content: "" }];
 };
 
 export default function LoginTokenRoute() {

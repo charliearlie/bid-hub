@@ -1,28 +1,25 @@
-import { useActionData, useTransition } from "@remix-run/react";
-import type { ActionArgs, ActionFunction } from "@remix-run/node";
-import { json } from "@remix-run/node";
+import type { ActionArgs } from "@remix-run/node";
+import { useTransition } from "@remix-run/react";
 import Alert, { AlertType } from "~/components/common/alert";
 import Form from "~/components/form/form";
 import FormField from "~/components/form/form-field";
 import Spinner from "~/components/spinner";
 import Button from "~/components/common/button";
 import { resetPassword } from "~/services/user.server";
+import { typedjson, useTypedActionData } from "remix-typedjson";
 
 type ActionData =
   | { password: null | string; confirmPassword: null | string }
   | undefined;
 
-export const action: ActionFunction = async ({
-  params,
-  request,
-}: ActionArgs) => {
+export async function action({ request, params }: ActionArgs) {
   const formData = await request.formData();
 
   const password = formData.get("password");
   const confirmPassword = formData.get("confirmPassword");
 
   if (typeof password !== "string" || typeof params.token !== "string") {
-    return json({ success: false });
+    return typedjson({ success: false, errors: null });
   }
 
   const errors: ActionData = {
@@ -32,14 +29,14 @@ export const action: ActionFunction = async ({
 
   const hasErrors = Object.values(errors).some((errorMessage) => errorMessage);
   if (hasErrors) {
-    return json<ActionData>(errors);
+    return typedjson({ errors, success: false });
   }
 
-  resetPassword(password, params.token);
-};
+  return resetPassword(password, params.token);
+}
 
 export default function ForgotPasswordRoute() {
-  const actionData = useActionData<typeof action>();
+  const actionData = useTypedActionData<typeof action>();
   const transition = useTransition();
 
   return (

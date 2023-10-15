@@ -13,7 +13,7 @@ import { createUserSession } from "~/services/session.server";
 import sendEmail from "~/services/email.server";
 
 import resetPasswordEmailTemplate from "~/util/helpers/email/reset-password-email";
-import { redirect, typedjson } from "remix-typedjson";
+import { typedjson } from "remix-typedjson";
 import magicLinkEmailTemplate from "~/util/helpers/email/magic-link-email";
 
 // Important note: these functions are mapped one to one to their old mutations/queries
@@ -91,7 +91,7 @@ export const resetPassword = async (password: string, token: string) => {
   });
 
   if (!forgotPassword || forgotPassword.expiration < new Date()) {
-    return json({ false: true, error: "Token is invalid" });
+    return typedjson({ success: false, errors: ["Token is invalid"] });
   }
 
   const updatedUser = await prisma.user.update({
