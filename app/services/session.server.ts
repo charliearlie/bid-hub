@@ -1,4 +1,4 @@
-import { createCookieSessionStorage, Headers } from "@remix-run/node";
+import { createCookieSessionStorage } from "@remix-run/node";
 import { prisma } from "./prisma.server";
 import { redirect } from "remix-typedjson";
 
@@ -22,16 +22,12 @@ export async function createUserSession(
   const session = await sessionStorage.getSession();
   session.set(USER_SESSION_KEY, userId);
 
-  const headers = new Headers();
-  headers.append(
-    "Set-Cookie",
-    await sessionStorage.commitSession(session, {
-      maxAge: 60 * 60 * 24 * 7, // 7 days,
-    })
-  );
-
   return redirect(redirectTo, {
-    headers,
+    headers: {
+      "Set-Cookie": await sessionStorage.commitSession(session, {
+        maxAge: 60 * 60 * 24 * 7, // 7 days,
+      }),
+    },
   });
 }
 
