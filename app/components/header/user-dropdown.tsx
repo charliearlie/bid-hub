@@ -1,14 +1,21 @@
 import type { User } from "@prisma/client";
 import { Link } from "@remix-run/react";
 import { useState } from "react";
+import { Popover, PopoverContent, PopoverTrigger } from "../common/popover";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "../common/dropdown-menu";
 
 type Props = {
   className: string;
   user: User | null;
 };
 export default function UserDropDown({ className, user }: Props) {
-  const [state, setState] = useState<boolean>(false);
-
   if (!user) {
     return (
       <div className={className}>
@@ -28,36 +35,37 @@ export default function UserDropDown({ className, user }: Props) {
   return (
     <div className={`relative ${className}`}>
       <div className="flex items-center space-x-4">
-        <button
-          className="h-10 w-10 rounded-full outline-none ring-2 ring-white ring-offset-2 lg:focus:ring-violet-500"
-          onClick={() => setState(!state)}
-        >
-          <img
-            src="https://ih1.redbubble.net/image.1003426384.0291/st,small,507x507-pad,600x600,f8f8f8.jpg"
-            className="h-full w-full rounded-full"
-          />
-        </button>
-        <div className="lg:hidden">
-          <span className="block">{user.username}</span>
-          <span className="block text-sm text-gray-500">{user.email}</span>
-        </div>
+        <DropdownMenu>
+          <DropdownMenuTrigger>
+            <button className="h-10 w-10 rounded-full outline-none ring-2 ring-white ring-offset-2 lg:focus:ring-violet-500">
+              <img
+                src="https://ih1.redbubble.net/image.1003426384.0291/st,small,507x507-pad,600x600,f8f8f8.jpg"
+                className="h-full w-full rounded-full"
+              />
+            </button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuLabel>{user.username}'s account</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <ul>
+              {navigation.map((item, idx) => (
+                <DropdownMenuItem
+                  className="cursor-pointer p-4"
+                  asChild
+                  key={idx}
+                >
+                  <Link
+                    className="block cursor-pointer text-gray-700 hover:bg-gray-50"
+                    to={item.path}
+                  >
+                    {item.title}
+                  </Link>
+                </DropdownMenuItem>
+              ))}
+            </ul>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
-      <ul
-        className={`top-12 right-0 mt-5 space-y-5 bg-gray-800 lg:absolute lg:mt-0 lg:w-52 lg:space-y-0 lg:rounded-md lg:border lg:bg-white lg:text-sm lg:shadow-md ${
-          state ? "" : "lg:hidden"
-        }`}
-      >
-        {navigation.map((item, idx) => (
-          <li key={idx}>
-            <Link
-              className="block text-gray-300 lg:p-2.5 lg:text-gray-700 lg:hover:bg-gray-50"
-              to={item.path}
-            >
-              {item.title}
-            </Link>
-          </li>
-        ))}
-      </ul>
     </div>
   );
 }
