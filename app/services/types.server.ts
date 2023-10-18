@@ -20,3 +20,15 @@ export type ManufacturerForm = {
   country: string;
   discipline?: string;
 };
+
+type RegisterErrors = {
+  email?: string;
+  password?: string;
+  username?: string;
+  server?: string;
+};
+
+export type RegisterResponse = {
+  errors: RegisterErrors;
+  success: boolean;
+};
