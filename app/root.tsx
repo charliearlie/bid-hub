@@ -1,10 +1,4 @@
-import {
-  ActionArgs,
-  json,
-  LoaderArgs,
-  MetaFunction,
-  redirect,
-} from "@remix-run/node";
+import { ActionArgs, LoaderArgs } from "@remix-run/node";
 import {
   Links,
   LiveReload,
@@ -12,13 +6,12 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
-  useLoaderData,
 } from "@remix-run/react";
 import { typedjson, useTypedLoaderData } from "remix-typedjson";
+
 import SharedHeader from "./components/header/shared-header";
 import { getUser, logout } from "./services/session.server";
 import styles from "./styles/app.css";
-import { V2_MetaFunction } from "@remix-run/react/dist/routeModules";
 
 export function links() {
   return [
@@ -40,19 +33,16 @@ export const loader = async ({ request }: LoaderArgs) => {
   return typedjson({ user: await getUser(request), ENV: process.env });
 };
 
-export const meta: V2_MetaFunction = () => {
-  return [
-    { title: "Brake Neck - Cars at break neck speed" },
-    { name: "description", content: "" },
-  ];
-};
-
 export default function App() {
   const { ENV, user } = useTypedLoaderData<typeof loader>();
   return (
     <html lang="en">
       <head>
         <Meta />
+        <meta
+          name="viewport"
+          content="width=device-width,initial-scale=1"
+        ></meta>
         <Links />
       </head>
       <body className="bg-gray-700 text-gray-300">
