@@ -2,18 +2,19 @@
 import bcrypt from "bcryptjs";
 import { v4 as uuidv4 } from "uuid";
 import { json } from "@remix-run/node";
+import { typedjson } from "remix-typedjson";
 
 import { prisma } from "./prisma.server";
 import type {
   EditUserForm,
   LoginForm,
   RegisterForm,
+  RegisterResponse,
 } from "~/services/types.server";
 import { createUserSession } from "~/services/session.server";
 import sendEmail from "~/services/email.server";
 
 import resetPasswordEmailTemplate from "~/util/helpers/email/reset-password-email";
-import { typedjson } from "remix-typedjson";
 import magicLinkEmailTemplate from "~/util/helpers/email/magic-link-email";
 
 // Important note: these functions are mapped one to one to their old mutations/queries
@@ -22,22 +23,19 @@ import magicLinkEmailTemplate from "~/util/helpers/email/magic-link-email";
 export const register = async (user: RegisterForm) => {
   const exists = await prisma.user.count({ where: { email: user.email } });
   if (exists) {
-    return json(
-      { error: `User already exists with that email` },
-      { status: 400 }
-    );
+    return typedjson<RegisterResponse>({
+      success: false,
+      errors: { server: `User already exists with that email` },
+    });
   }
 
   const newUser = await createUser(user);
 
   if (!newUser) {
-    return json(
-      {
-        error: `Something went wrong trying to create a new user.`,
-        fields: { email: user.email, password: user.password },
-      },
-      { status: 400 }
-    );
+    return typedjson<RegisterResponse>({
+      success: false,
+      errors: { server: `Something went wrong trying to create a new user.` },
+    });
   }
 
   return createUserSession(newUser.id);

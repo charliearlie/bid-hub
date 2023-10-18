@@ -17,13 +17,15 @@ import {
   validateUsername,
 } from "~/services/validators.server";
 import { register } from "~/services/user.server";
+import { typedjson, useTypedActionData } from "remix-typedjson";
+import { RegisterResponse } from "~/services/types.server";
 
 export const loader: LoaderFunction = async ({ request }) => {
   // If there's already a user in the session, redirect to the home page
   return (await getUser(request)) ? redirect("/") : null;
 };
 
-export const action: ActionFunction = async ({ request }: ActionArgs) => {
+export async function action({ request, params }: ActionArgs) {
   const formData = await request.formData();
 
   const email = formData.get("email");
@@ -35,10 +37,10 @@ export const action: ActionFunction = async ({ request }: ActionArgs) => {
     typeof password !== "string" ||
     typeof username !== "string"
   ) {
-    return json(
-      { success: false, error: `Invalid Form Data`, form: action },
-      { status: 400 }
-    );
+    return typedjson<RegisterResponse>({
+      success: false,
+      errors: { server: `Invalid Form Data` },
+    });
   }
 
   const errors = {
@@ -48,22 +50,17 @@ export const action: ActionFunction = async ({ request }: ActionArgs) => {
   };
 
   if (Object.values(errors).some(Boolean))
-    return json(
-      {
-        success: false,
-        errors,
-        fields: { email, password, username },
-        form: action,
-      },
-      { status: 400 }
-    );
+    return typedjson<RegisterResponse>({
+      success: false,
+      errors,
+    });
 
   return await register({ email, password, username });
-};
+}
 
 export default function RegisterRoute() {
   // todo: fix actionData type
-  const actionData = useActionData();
+  const actionData = useTypedActionData<typeof action>();
   const transition = useTransition();
   return (
     <main className="flex h-screen flex-col flex-wrap content-center justify-center bg-gray-800 sm:bg-gray-700">
@@ -80,8 +77,11 @@ export default function RegisterRoute() {
           }}
           method="post"
         >
-          {actionData?.success === false && (
-            <Alert message="All fields are required" type={AlertType.ERROR} />
+          {actionData?.success === false && actionData?.errors?.server && (
+            <Alert
+              message={actionData?.errors?.server}
+              type={AlertType.ERROR}
+            />
           )}
           <FormField
             label="Username"
