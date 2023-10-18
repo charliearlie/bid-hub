@@ -1,4 +1,5 @@
 import type { Car } from "@prisma/client";
+import { Link } from "@remix-run/react";
 import Card from "~/components/common/card/card";
 import CardContent from "~/components/common/card/card-content";
 import CardImage from "~/components/common/card/card-image";
@@ -19,12 +20,14 @@ export default function CarPreview({ car }: CarPreviewProps) {
       />
       <CardContent>
         <div className="h-24">
-          <h3 className="text-3xl font-black leading-none">
-            {manufacturerName}
-          </h3>
-          <p className="text-2xl font-semibold">
-            {model} {variation}
-          </p>
+          <Link to={`/car/${slug}`} className="hover:opacity-80">
+            <h3 className="block font-black leading-none">
+              <span className="block text-3xl">{manufacturerName}</span>
+              <span className="block text-xl">
+                {model} {variation}
+              </span>
+            </h3>
+          </Link>
         </div>
         <p className="font-semi-bold text-xl">{year}</p>
       </CardContent>
