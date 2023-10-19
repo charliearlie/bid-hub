@@ -1,7 +1,5 @@
 import type { User } from "@prisma/client";
 import { Link } from "@remix-run/react";
-import { useState } from "react";
-import { Popover, PopoverContent, PopoverTrigger } from "../common/popover";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -9,7 +7,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "../common/dropdown-menu";
+} from "~/components/common/dropdown-menu";
 
 type Props = {
   className: string;
