@@ -1,4 +1,4 @@
-import { ActionArgs, LoaderArgs } from "@remix-run/node";
+import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import {
   Links,
   LiveReload,
@@ -25,11 +25,11 @@ export function links() {
   ];
 }
 
-export const action = async ({ request }: ActionArgs) => {
+export const action = async ({ request }: ActionFunctionArgs) => {
   return await logout(request);
 };
 
-export const loader = async ({ request }: LoaderArgs) => {
+export const loader = async ({ request }: LoaderFunctionArgs) => {
   return typedjson({ user: await getUser(request), ENV: process.env });
 };
 

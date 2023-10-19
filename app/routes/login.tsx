@@ -1,6 +1,6 @@
 import React, { useRef } from "react";
-import { Link, useSubmit, useTransition } from "@remix-run/react";
-import type { ActionArgs, LoaderFunction } from "@remix-run/node";
+import { Link, useNavigation, useSubmit } from "@remix-run/react";
+import type { ActionFunctionArgs, LoaderFunction } from "@remix-run/node";
 import { redirect, typedjson, useTypedActionData } from "remix-typedjson";
 
 import Alert, { AlertType } from "~/components/common/alert";
@@ -17,7 +17,7 @@ export const loader: LoaderFunction = async ({ request }) => {
   return user ? redirect("/") : null;
 };
 
-export async function action({ request, params }: ActionArgs) {
+export async function action({ request }: ActionFunctionArgs) {
   const formData = await request.formData();
 
   const intent = formData.get("intent");
@@ -59,7 +59,7 @@ export default function LoginRoute() {
   const emailInputRef = useRef<HTMLInputElement>(null);
 
   const actionData = useTypedActionData<typeof action>();
-  const transition = useTransition();
+  const navigation = useNavigation();
 
   const submit = useSubmit();
 
@@ -116,7 +116,7 @@ export default function LoginRoute() {
           />
           <div className="flex flex-col">
             <Button name="login" variant="primary">
-              {transition.state !== "idle" ? <Spinner /> : "Log in"}
+              {navigation.state !== "idle" ? <Spinner /> : "Log in"}
             </Button>
             <Link
               className="px-0 pb-2 font-semibold text-blue-500 hover:text-slate-500"
@@ -133,7 +133,7 @@ export default function LoginRoute() {
           type="button"
           variant="secondary"
         >
-          {transition.state !== "idle" ? <Spinner /> : "Send Magic Link"}
+          {navigation.state !== "idle" ? <Spinner /> : "Send Magic Link"}
         </Button>
       </div>
     </main>

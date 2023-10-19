@@ -1,18 +1,19 @@
-import type { ActionArgs } from "@remix-run/node";
-import { useTransition } from "@remix-run/react";
+import type { ActionFunctionArgs } from "@remix-run/node";
+import { useNavigation } from "@remix-run/react";
+import { typedjson, useTypedActionData } from "remix-typedjson";
+
 import Alert, { AlertType } from "~/components/common/alert";
 import Form from "~/components/form/form";
 import FormField from "~/components/form/form-field";
 import Spinner from "~/components/spinner";
 import Button from "~/components/common/button";
 import { resetPassword } from "~/services/user.server";
-import { typedjson, useTypedActionData } from "remix-typedjson";
 
 type ActionData =
   | { password: null | string; confirmPassword: null | string }
   | undefined;
 
-export async function action({ request, params }: ActionArgs) {
+export async function action({ request, params }: ActionFunctionArgs) {
   const formData = await request.formData();
 
   const password = formData.get("password");
@@ -37,7 +38,7 @@ export async function action({ request, params }: ActionArgs) {
 
 export default function ForgotPasswordRoute() {
   const actionData = useTypedActionData<typeof action>();
-  const transition = useTransition();
+  const navigation = useNavigation();
 
   return (
     <main className="flex h-screen flex-col flex-wrap content-center justify-center bg-gray-800 sm:bg-gray-700">
@@ -64,7 +65,7 @@ export default function ForgotPasswordRoute() {
           />
           <div className="flex justify-center">
             <Button className="w-full">
-              {transition.state !== "idle" ? <Spinner /> : "Reset password"}
+              {navigation.state !== "idle" ? <Spinner /> : "Reset password"}
             </Button>
           </div>
         </Form>

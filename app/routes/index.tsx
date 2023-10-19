@@ -1,9 +1,8 @@
-import { V2_MetaFunction } from "@remix-run/react/dist/routeModules";
 import { useTypedLoaderData } from "remix-typedjson";
 import { Previews } from "~/components/cars";
 import { getAllCars } from "~/services/cars.server";
 
-export const meta: V2_MetaFunction = () => {
+export const meta = () => {
   return [{ title: "Brake Neck - Cars at break neck speed" }];
 };
 

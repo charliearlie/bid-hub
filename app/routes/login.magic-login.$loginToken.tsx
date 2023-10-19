@@ -1,10 +1,9 @@
-import type { LoaderArgs } from "@remix-run/node";
-import type { V2_MetaFunction } from "@remix-run/react/dist/routeModules";
+import type { LoaderFunctionArgs } from "@remix-run/node";
 import { handleMagicLinkLogin } from "~/services/user.server";
 import invariant from "tiny-invariant";
 import { typedjson, useTypedLoaderData } from "remix-typedjson";
 
-export const loader = async ({ params, request }: LoaderArgs) => {
+export const loader = async ({ params, request }: LoaderFunctionArgs) => {
   if (request.headers.get("user-agent")?.includes("WhatsApp")) {
     return typedjson({
       error: "Block whatsapp preview",
@@ -14,7 +13,7 @@ export const loader = async ({ params, request }: LoaderArgs) => {
   return await handleMagicLinkLogin(params.loginToken);
 };
 
-export const meta: V2_MetaFunction = () => {
+export const meta = () => {
   return [{ title: "Logging you in" }, { name: "description", content: "" }];
 };
 
