@@ -1,10 +1,7 @@
-import { Link, useActionData, useTransition } from "@remix-run/react";
-import type {
-  ActionArgs,
-  ActionFunction,
-  LoaderFunction,
-} from "@remix-run/node";
-import { json, redirect } from "@remix-run/node";
+import { Link, useNavigation } from "@remix-run/react";
+import type { ActionFunctionArgs, LoaderFunction } from "@remix-run/node";
+import { typedjson, useTypedActionData, redirect } from "remix-typedjson";
+
 import Alert, { AlertType } from "~/components/common/alert";
 import Form from "~/components/form/form";
 import FormField from "~/components/form/form-field";
@@ -17,7 +14,6 @@ import {
   validateUsername,
 } from "~/services/validators.server";
 import { register } from "~/services/user.server";
-import { typedjson, useTypedActionData } from "remix-typedjson";
 import { RegisterResponse } from "~/services/types.server";
 
 export const loader: LoaderFunction = async ({ request }) => {
@@ -25,7 +21,7 @@ export const loader: LoaderFunction = async ({ request }) => {
   return (await getUser(request)) ? redirect("/") : null;
 };
 
-export async function action({ request, params }: ActionArgs) {
+export async function action({ request, params }: ActionFunctionArgs) {
   const formData = await request.formData();
 
   const email = formData.get("email");
@@ -59,9 +55,8 @@ export async function action({ request, params }: ActionArgs) {
 }
 
 export default function RegisterRoute() {
-  // todo: fix actionData type
   const actionData = useTypedActionData<typeof action>();
-  const transition = useTransition();
+  const navigation = useNavigation();
   return (
     <main className="flex h-screen flex-col flex-wrap content-center justify-center bg-gray-800 sm:bg-gray-700">
       <div className="mb-4 w-full max-w-md px-8 pt-6 pb-10 sm:border-2 sm:border-solid sm:border-gray-700 sm:bg-gray-800">
@@ -103,7 +98,7 @@ export default function RegisterRoute() {
           />
           <div className="flex justify-between">
             <Button className="w-25" variant="primary">
-              {transition.state !== "idle" ? <Spinner /> : "Sign up"}
+              {navigation.state !== "idle" ? <Spinner /> : "Sign up"}
             </Button>
             <Link
               className="px-0 py-2 font-semibold text-blue-500 hover:text-slate-500"

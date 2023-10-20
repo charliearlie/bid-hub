@@ -1,5 +1,4 @@
-import { useTransition } from "@remix-run/react";
-import type { ActionArgs, LoaderArgs } from "@remix-run/node";
+import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import Alert, { AlertType } from "~/components/common/alert";
 import Form from "~/components/form/form";
 import FormField from "~/components/form/form-field";
@@ -13,6 +12,7 @@ import {
   useTypedLoaderData,
 } from "remix-typedjson";
 import { editUser } from "~/services/user.server";
+import { useNavigation } from "@remix-run/react";
 
 // todo: Move this into own file or make more generic and just look for a key value pair of strings
 type ActionData = {
@@ -22,7 +22,7 @@ type ActionData = {
   lastName: null | string;
 };
 
-export const action = async ({ request }: ActionArgs) => {
+export const action = async ({ request }: ActionFunctionArgs) => {
   let image = null;
   const formData = await request.formData();
 
@@ -69,7 +69,7 @@ export const action = async ({ request }: ActionArgs) => {
   return await editUser(userId!, editedUserDetails);
 };
 
-export const loader = async ({ request }: LoaderArgs) => {
+export const loader = async ({ request }: LoaderFunctionArgs) => {
   const user = await getUser(request);
 
   if (!user) {
@@ -88,7 +88,7 @@ export default function ManageUserRoute() {
     firstName: user.personalDetails?.firstName || "",
     lastName: user.personalDetails?.lastName || "",
   };
-  const transition = useTransition();
+  const navigation = useNavigation();
   if (user) {
     return (
       <main>
@@ -125,7 +125,7 @@ export default function ManageUserRoute() {
             <input type="file" name="avatarImage" />
             <div className="flex justify-center">
               <button className="w-25 rounded bg-violet-700 px-3 py-2 text-lg font-semibold text-white hover:bg-violet-900">
-                {transition.state !== "idle" ? <Spinner /> : "Update"}
+                {navigation.state !== "idle" ? <Spinner /> : "Update"}
               </button>
             </div>
           </Form>
