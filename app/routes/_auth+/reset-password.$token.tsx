@@ -41,35 +41,33 @@ export default function ForgotPasswordRoute() {
   const navigation = useNavigation();
 
   return (
-    <main className="flex h-screen flex-col flex-wrap content-center justify-center bg-gray-800 sm:bg-gray-700">
-      <div className="mb-4 w-full max-w-md px-8 pt-6 pb-10 sm:border-2 sm:border-solid sm:border-gray-700 sm:bg-gray-800">
-        <h1 className="pt-4 text-center text-3xl font-bold">Reset password</h1>
-        <p className="pb-8 text-center">Enter your new password</p>
-        {/* We should add a link to go back to requesting a reset link */}
-        {actionData?.success && (
-          <Alert type={AlertType.ERROR} message="Something went wrong" />
-        )}
-        <Form
-          className=""
-          initialFormValues={{
-            password: "",
-            confirmPassword: "",
-          }}
-          method="post"
-        >
-          <FormField label="Password" name="password" type="text" />
-          <FormField
-            label="Confirm Password"
-            name="confirmPassword"
-            type="text"
-          />
-          <div className="flex justify-center">
-            <Button className="w-full">
-              {navigation.state !== "idle" ? <Spinner /> : "Reset password"}
-            </Button>
-          </div>
-        </Form>
-      </div>
-    </main>
+    <div>
+      <h2 className="pt-4 text-center text-3xl font-bold">Reset password</h2>
+      <p className="pb-8 text-center">Enter your new password</p>
+      {/* We should add a link to go back to requesting a reset link */}
+      {actionData?.success && (
+        <Alert type={AlertType.ERROR} message="Something went wrong" />
+      )}
+      <Form
+        className=""
+        initialFormValues={{
+          password: "",
+          confirmPassword: "",
+        }}
+        method="post"
+      >
+        <FormField label="Password" name="password" type="text" />
+        <FormField
+          label="Confirm Password"
+          name="confirmPassword"
+          type="text"
+        />
+        <div className="flex justify-center">
+          <Button className="w-full">
+            {navigation.state !== "idle" ? <Spinner /> : "Reset password"}
+          </Button>
+        </div>
+      </Form>
+    </div>
   );
 }

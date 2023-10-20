@@ -12,6 +12,14 @@ import { typedjson, useTypedLoaderData } from "remix-typedjson";
 import SharedHeader from "./components/header/shared-header";
 import { getUser, logout } from "./services/session.server";
 import styles from "./styles/app.css";
+import favicon from "./assets/img/favicon.svg";
+
+export const meta = () => {
+  return [
+    { title: "Brake Neck" },
+    { rel: "icon", type: "image/svg+xml", href: favicon },
+  ];
+};
 
 export function links() {
   return [

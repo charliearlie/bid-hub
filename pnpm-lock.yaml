@@ -151,6 +151,9 @@ devDependencies:
   prisma:
     specifier: ^5.4.2
     version: 5.4.2
+  remix-flat-routes:
+    specifier: ^0.6.1
+    version: 0.6.1(@remix-run/dev@2.1.0)
   tailwindcss:
     specifier: ^3.2.4
     version: 3.2.4(postcss@8.4.20)
@@ -3279,6 +3282,15 @@ packages:
       set-cookie-parser: 2.6.0
       source-map: 0.7.4
       typescript: 4.8.4
+
+  /@remix-run/v1-route-convention@0.1.4(@remix-run/dev@2.1.0):
+    resolution: {integrity: sha512-fVTr9YlNLWfaiM/6Y56sOtcY8x1bBJQHY0sDWO5+Z/vjJ2Ni7fe2fwrzs1jUFciMPXqBQdFGePnkuiYLz3cuUA==}
+    peerDependencies:
+      '@remix-run/dev': ^1.15.0 || ^2.0.0
+    dependencies:
+      '@remix-run/dev': 2.1.0(@remix-run/serve@2.1.0)(typescript@4.8.4)
+      minimatch: 7.4.6
+    dev: true
 
   /@remix-run/web-blob@3.1.0:
     resolution: {integrity: sha512-owGzFLbqPH9PlKb8KvpNJ0NO74HWE2euAn61eEiyCXX/oteoVzTVSN8mpLgDjaxBf2btj5/nUllSUgpyd6IH6g==}
@@ -8059,7 +8071,13 @@ packages:
     engines: {node: '>=10'}
     dependencies:
       brace-expansion: 2.0.1
-    dev: false
+
+  /minimatch@7.4.6:
+    resolution: {integrity: sha512-sBz8G/YjVniEz6lKPNpKxXwazJe4c19fEfV2GDMX6AjFz+MX9uDWIZW8XreVhkFW3fkIdTv/gxWr/Kks5FFAVw==}
+    engines: {node: '>=10'}
+    dependencies:
+      brace-expansion: 2.0.1
+    dev: true
 
   /minimatch@9.0.1:
     resolution: {integrity: sha512-0jWhJpD/MdhPXwPuiRkCbfYfSKp2qnn2eOc279qI7f+osl/l+prKSrvhg157zSYvx/1nmgn2NqdT6k2Z7zSH9w==}
@@ -9193,6 +9211,17 @@ packages:
       '@types/mdast': 3.0.14
       mdast-util-to-hast: 12.3.0
       unified: 10.1.2
+    dev: true
+
+  /remix-flat-routes@0.6.1(@remix-run/dev@2.1.0):
+    resolution: {integrity: sha512-7QlTjezVCSD1JCONRaEjINVfrkvl29gb9CXzSe6mvUsVvNmVNZ+nJMNTQaUYdDyEtnH9UGUq7NhafK2CHg3RrQ==}
+    hasBin: true
+    peerDependencies:
+      '@remix-run/dev': ^1.15.0 || ^2
+    dependencies:
+      '@remix-run/dev': 2.1.0(@remix-run/serve@2.1.0)(typescript@4.8.4)
+      '@remix-run/v1-route-convention': 0.1.4(@remix-run/dev@2.1.0)
+      minimatch: 5.1.6
     dev: true
 
   /remix-typedjson@0.1.7(@remix-run/react@2.1.0)(@remix-run/server-runtime@1.19.3)(react@18.2.0):
