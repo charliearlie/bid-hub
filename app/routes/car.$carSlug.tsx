@@ -39,7 +39,6 @@ export default function CarSlugRoute() {
       manufacturerName,
     } = car;
 
-    console.log("car", car);
     const image = images?.[0];
     return (
       <main className="">

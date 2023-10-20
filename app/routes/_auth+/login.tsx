@@ -76,66 +76,59 @@ export default function LoginRoute() {
   };
 
   return (
-    <main className="flex h-screen flex-col flex-wrap content-center justify-center bg-gray-800 sm:bg-gray-700">
-      <div className="mb-4 w-full max-w-md px-8 pt-6 pb-10 sm:border-2 sm:border-solid sm:border-gray-700 sm:bg-gray-800">
-        <h1 className="pt-4 pb-8 text-center text-3xl font-bold">
-          Log in to Brake Neck
-        </h1>
-        <Form
-          className=""
-          initialFormValues={{
-            emailOrUsername: "",
-            password: "",
-          }}
-          method="post"
-        >
-          {actionData?.error && (
-            <Alert
-              message="Invalid email, username or password"
-              type={AlertType.ERROR}
-            />
-          )}
-          {actionData?.success && (
-            <Alert
-              message={`A link has been sent to ${emailInputRef.current?.value}`}
-              type={AlertType.INFO}
-            />
-          )}
-          <FormField
-            label="Email or username" // Could default label to input name with a capital letter?
-            name="emailOrUsername"
-            type="text"
-            ref={emailInputRef}
-            required
+    <div>
+      <h2 className="pt-4 pb-8 text-center text-3xl font-bold">
+        Log in to Brake Neck
+      </h2>
+      <Form
+        className=""
+        initialFormValues={{
+          emailOrUsername: "",
+          password: "",
+        }}
+        method="post"
+      >
+        {actionData?.error && (
+          <Alert
+            message="Invalid email, username or password"
+            type={AlertType.ERROR}
           />
-          <FormField
-            label="Password"
-            name="password"
-            type="password"
-            required
+        )}
+        {actionData?.success && (
+          <Alert
+            message={`A link has been sent to ${emailInputRef.current?.value}`}
+            type={AlertType.INFO}
           />
-          <div className="flex flex-col">
-            <Button name="login" variant="primary">
-              {navigation.state !== "idle" ? <Spinner /> : "Log in"}
-            </Button>
-            <Link
-              className="px-0 pb-2 font-semibold text-blue-500 hover:text-slate-500"
-              to="/user/forgot-password"
-            >
-              Forgot your password?
-            </Link>
-          </div>
-        </Form>
-        <Button
-          className="my-1 w-full"
-          name="magic"
-          onClick={handleMagicLinkClick}
-          type="button"
-          variant="secondary"
-        >
-          {navigation.state !== "idle" ? <Spinner /> : "Send Magic Link"}
-        </Button>
-      </div>
-    </main>
+        )}
+        <FormField
+          label="Email or username" // Could default label to input name with a capital letter?
+          name="emailOrUsername"
+          type="text"
+          ref={emailInputRef}
+          required
+        />
+        <FormField label="Password" name="password" type="password" required />
+        <div className="flex flex-col">
+          <Button name="login" variant="primary">
+            {navigation.state !== "idle" ? <Spinner /> : "Log in"}
+          </Button>
+          <Link
+            className="px-0 pb-2 font-semibold text-blue-500 hover:text-slate-500"
+            to="/forgot-password"
+          >
+            Forgot your password?
+          </Link>
+        </div>
+      </Form>
+      <Button
+        className="my-1 w-full"
+        name="magic"
+        onClick={handleMagicLinkClick}
+        type="button"
+        variant="secondary"
+      >
+        {navigation.state !== "idle" ? <Spinner /> : "Send Magic Link"}
+      </Button>
+    </div>
   );
 }

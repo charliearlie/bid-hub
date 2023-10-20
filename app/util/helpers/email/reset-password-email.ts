@@ -8,7 +8,7 @@ const resetPasswordEmailTemplate = (
     >
       <h2>Password reset</h2>
       <p>It looks like you forgot your password \n\n 
-      <a href="${process.env.FRONTEND_URL}/user/reset-password/${token}">Click here to change it</a></p>
+      <a href="${process.env.FRONTEND_URL}/reset-password/${token}">Click here to change it</a></p>
       <p>😘, Brake Neck</p>
 </div>`;
 
