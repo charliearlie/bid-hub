@@ -16,6 +16,10 @@ import {
 import { register } from "~/services/user.server";
 import { RegisterResponse } from "~/services/types.server";
 
+export const meta = () => {
+  return [{ title: "Register for Brake Neck" }];
+};
+
 export const loader: LoaderFunction = async ({ request }) => {
   // If there's already a user in the session, redirect to the home page
   return (await getUser(request)) ? redirect("/") : null;

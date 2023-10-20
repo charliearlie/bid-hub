@@ -11,6 +11,10 @@ import { forgotPassword } from "~/services/user.server";
 
 type ActionData = { email: null | string; success: boolean } | undefined;
 
+export const meta = () => {
+  return [{ title: "Forgot Password" }];
+};
+
 export const action: ActionFunction = async ({
   request,
 }: ActionFunctionArgs) => {

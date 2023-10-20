@@ -11,6 +11,10 @@ import Button from "~/components/common/button";
 import { generateMagicLink, login } from "~/services/user.server";
 import { getUser } from "~/services/session.server";
 
+export const meta = () => {
+  return [{ title: "Log in to Brake Neck" }];
+};
+
 export const loader: LoaderFunction = async ({ request }) => {
   const user = await getUser(request);
   // If there's already a user in the session, redirect to the home page
