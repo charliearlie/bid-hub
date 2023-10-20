@@ -8,8 +8,9 @@ import FormField from "~/components/form/form-field";
 import Spinner from "~/components/spinner";
 import Button from "~/components/common/button";
 import { forgotPassword } from "~/services/user.server";
+import { typedjson, useTypedActionData } from "remix-typedjson";
 
-type ActionData = { email: null | string } | undefined;
+type ActionData = { email: null | string; success: boolean } | undefined;
 
 export const action: ActionFunction = async ({
   request,
@@ -19,15 +20,18 @@ export const action: ActionFunction = async ({
   const email = formData.get("email");
 
   if (typeof email !== "string") {
-    return json<ActionData>({ email: "Email is required" });
+    return typedjson<ActionData>({
+      email: "Email is required",
+      success: false,
+    });
   }
 
-  return forgotPassword(email);
+  return await forgotPassword(email);
 };
 
 export default function ForgotPasswordRoute() {
   //todo: fix actiondata type
-  const actionData = useActionData();
+  const actionData = useTypedActionData<ActionData>();
   const navigation = useNavigation();
 
   return (
