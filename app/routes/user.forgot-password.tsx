@@ -1,6 +1,6 @@
-import { useActionData, useNavigation } from "@remix-run/react";
+import { useNavigation } from "@remix-run/react";
 import type { ActionFunctionArgs, ActionFunction } from "@remix-run/node";
-import { json } from "@remix-run/node";
+import { typedjson, useTypedActionData } from "remix-typedjson";
 
 import Alert, { AlertType } from "~/components/common/alert";
 import Form from "~/components/form/form";
@@ -8,7 +8,6 @@ import FormField from "~/components/form/form-field";
 import Spinner from "~/components/spinner";
 import Button from "~/components/common/button";
 import { forgotPassword } from "~/services/user.server";
-import { typedjson, useTypedActionData } from "remix-typedjson";
 
 type ActionData = { email: null | string; success: boolean } | undefined;
 
@@ -30,7 +29,6 @@ export const action: ActionFunction = async ({
 };
 
 export default function ForgotPasswordRoute() {
-  //todo: fix actiondata type
   const actionData = useTypedActionData<ActionData>();
   const navigation = useNavigation();
 
