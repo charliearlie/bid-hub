@@ -3,8 +3,7 @@ import type { Car, Prisma } from "@prisma/client";
 import { prisma } from "./prisma.server";
 
 export async function getAllCars() {
-  const cars = await prisma.car.findMany();
-  return json({ cars });
+  return await prisma.car.findMany();
 }
 
 export async function addManufacturer({
@@ -128,5 +127,6 @@ export const editCar = async (carId: string) => {
 
 export const getCarBySlug = async (slug: string) => {
   const car = await prisma.car.findUnique({ where: { slug } });
-  return json(car);
+
+  return car;
 };

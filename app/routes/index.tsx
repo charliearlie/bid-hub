@@ -1,4 +1,4 @@
-import { LoaderFunction } from "@remix-run/node";
+import { LoaderFunction, json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 
 import { Previews } from "~/components/cars";
@@ -8,8 +8,19 @@ export const meta = () => {
   return [{ title: "Brake Neck - Cars at break neck speed" }];
 };
 
-export const loader: LoaderFunction = async () => {
-  return getAllCars();
+export const loader = async () => {
+  const cars = await getAllCars();
+
+  if (!cars) {
+    throw new Response("Cars failed to load", { status: 500 });
+  }
+
+  const carPreviewData = cars.map((car) => {
+    const { manufacturerName, model, previewImage, slug, variation, year } =
+      car;
+    return { manufacturerName, model, previewImage, slug, variation, year };
+  });
+  return json({ cars: carPreviewData });
 };
 
 export default function Index() {

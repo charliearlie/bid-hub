@@ -1,7 +1,7 @@
 import CarPreview from "../car-preview/car-preview";
-import type { CarType as Car } from "~/util/types";
+import type { CarType as Car, CarPreviewType } from "~/util/types";
 
-export default function Previews({ cars }: { cars: Car[] }) {
+export default function Previews({ cars }: { cars: CarPreviewType[] }) {
   return (
     <ul className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
       {cars.map((car, idx) => (

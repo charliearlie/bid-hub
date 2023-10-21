@@ -2,10 +2,10 @@ import { Link } from "@remix-run/react";
 import Card from "~/components/common/card/card";
 import CardContent from "~/components/common/card/card-content";
 import CardImage from "~/components/common/card/card-image";
-import type { CarType as Car } from "~/util/types";
+import type { CarType as Car, CarPreviewType } from "~/util/types";
 
 type CarPreviewProps = {
-  car: Car;
+  car: CarPreviewType;
 };
 
 export default function CarPreview({ car }: CarPreviewProps) {
