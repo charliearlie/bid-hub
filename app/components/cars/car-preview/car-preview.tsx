@@ -1,8 +1,8 @@
-import type { Car } from "@prisma/client";
 import { Link } from "@remix-run/react";
 import Card from "~/components/common/card/card";
 import CardContent from "~/components/common/card/card-content";
 import CardImage from "~/components/common/card/card-image";
+import type { CarType as Car } from "~/util/types";
 
 type CarPreviewProps = {
   car: Car;
@@ -14,13 +14,13 @@ export default function CarPreview({ car }: CarPreviewProps) {
   return (
     <Card>
       <CardImage
-        to={`/car/${slug}`}
+        to={`/cars/${slug}`}
         src={previewImage || "defaultImage"}
         alt={`${manufacturerName} ${model}`}
       />
       <CardContent>
         <div className="h-24">
-          <Link to={`/car/${slug}`} className="hover:opacity-80">
+          <Link to={`/cars/${slug}`} className="hover:opacity-80">
             <h3 className="block font-black leading-none">
               <span className="block text-3xl">{manufacturerName}</span>
               <span className="block text-xl">

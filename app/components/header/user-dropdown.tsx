@@ -1,4 +1,3 @@
-import type { User } from "@prisma/client";
 import { Link } from "@remix-run/react";
 import {
   DropdownMenu,
@@ -8,6 +7,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "~/components/common/dropdown-menu";
+import type { UserType as User } from "~/util/types";
 
 type Props = {
   className: string;

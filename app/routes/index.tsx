@@ -1,4 +1,6 @@
-import { useTypedLoaderData } from "remix-typedjson";
+import { LoaderFunction } from "@remix-run/node";
+import { useLoaderData } from "@remix-run/react";
+
 import { Previews } from "~/components/cars";
 import { getAllCars } from "~/services/cars.server";
 
@@ -6,12 +8,12 @@ export const meta = () => {
   return [{ title: "Brake Neck - Cars at break neck speed" }];
 };
 
-export const loader = async () => {
+export const loader: LoaderFunction = async () => {
   return getAllCars();
 };
 
 export default function Index() {
-  const loaderData = useTypedLoaderData<typeof loader>();
+  const loaderData = useLoaderData<typeof loader>();
 
   return (
     <main>

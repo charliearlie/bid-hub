@@ -1,10 +1,10 @@
 import { json } from "@remix-run/node";
 import type { Car, Prisma } from "@prisma/client";
-import { typedjson } from "remix-typedjson";
 import { prisma } from "./prisma.server";
 
 export async function getAllCars() {
-  return typedjson({ cars: await prisma.car.findMany() });
+  const cars = await prisma.car.findMany();
+  return json({ cars });
 }
 
 export async function addManufacturer({
@@ -128,5 +128,5 @@ export const editCar = async (carId: string) => {
 
 export const getCarBySlug = async (slug: string) => {
   const car = await prisma.car.findUnique({ where: { slug } });
-  return typedjson(car);
+  return json(car);
 };

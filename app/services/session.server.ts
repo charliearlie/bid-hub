@@ -1,6 +1,5 @@
-import { createCookieSessionStorage } from "@remix-run/node";
+import { createCookieSessionStorage, redirect } from "@remix-run/node";
 import { prisma } from "./prisma.server";
-import { redirect } from "remix-typedjson";
 
 const sessionStorage = createCookieSessionStorage({
   cookie: {
