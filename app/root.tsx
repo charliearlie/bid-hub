@@ -14,13 +14,6 @@ import { getUser, logout } from "./services/session.server";
 import styles from "./styles/app.css";
 import favicon from "./assets/img/favicon.svg";
 
-export const meta = () => {
-  return [
-    { title: "Brake Neck" },
-    { rel: "icon", type: "image/svg+xml", href: favicon },
-  ];
-};
-
 export function links() {
   return [
     { rel: "stylesheet", href: styles },
@@ -30,6 +23,7 @@ export function links() {
       rel: "stylesheet",
       href: "https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&display=swap",
     },
+    { rel: "icon", type: "image/svg+xml", href: favicon },
   ];
 }
 
