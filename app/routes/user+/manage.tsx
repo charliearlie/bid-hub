@@ -3,7 +3,6 @@ import {
   type ActionFunctionArgs,
   type LoaderFunctionArgs,
   json,
-  ActionFunction,
 } from "@remix-run/node";
 import { useActionData, useLoaderData, useNavigation } from "@remix-run/react";
 import Alert, { AlertType } from "~/components/common/alert";

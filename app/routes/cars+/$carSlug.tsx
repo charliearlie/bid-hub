@@ -1,12 +1,11 @@
 import {
   redirect,
   type DataFunctionArgs,
-  type LoaderFunction,
 } from "@remix-run/node";
+import { useLoaderData } from "@remix-run/react";
 import invariant from "tiny-invariant";
 import Button from "~/components/common/button";
 import { getCarBySlug } from "~/services/cars.server";
-import type { Car } from "@prisma/client";
 import Card from "~/components/common/card/card";
 import CardContent from "~/components/common/card/card-content";
 import CardHeader from "~/components/common/card/card-header";
@@ -15,7 +14,6 @@ import PowerTrainInfoRows from "~/components/cars/info/powertrain-info-rows";
 import EngineInfoRows from "~/components/cars/info/engine-info-rows";
 import BodyAndChassisInfoRows from "~/components/cars/info/body-and-chassis-info-rows";
 import DimensionInfoRows from "~/components/cars/info/dimensions-info-rows";
-import { useLoaderData } from "@remix-run/react";
 
 export async function loader({ params }: DataFunctionArgs) {
   invariant(params.carSlug, "Expected params.carSlug");

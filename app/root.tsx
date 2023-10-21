@@ -1,9 +1,4 @@
-import {
-  ActionFunctionArgs,
-  LoaderFunction,
-  LoaderFunctionArgs,
-  json,
-} from "@remix-run/node";
+import { ActionFunctionArgs, LoaderFunctionArgs, json } from "@remix-run/node";
 import {
   Links,
   LiveReload,

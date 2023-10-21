@@ -1,9 +1,8 @@
 import { Link, useActionData, useNavigation } from "@remix-run/react";
 import {
   redirect,
-  type ActionFunctionArgs,
   type LoaderFunction,
-  DataFunctionArgs,
+  type DataFunctionArgs,
   json,
 } from "@remix-run/node";
 
@@ -19,7 +18,7 @@ import {
   validateUsername,
 } from "~/services/validators.server";
 import { register } from "~/services/user.server";
-import { RegisterResponse } from "~/services/types.server";
+import type { RegisterResponse } from "~/services/types.server";
 
 export const meta = () => {
   return [{ title: "Register for Brake Neck" }];

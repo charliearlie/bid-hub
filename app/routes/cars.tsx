@@ -1,4 +1,3 @@
-import { LoaderFunction } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import Previews from "~/components/cars/car-preview/previews";
 import { getAllCars } from "~/services/cars.server";
