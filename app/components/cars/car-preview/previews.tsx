@@ -1,5 +1,5 @@
-import type { Car } from "@prisma/client";
 import CarPreview from "../car-preview/car-preview";
+import type { CarType as Car } from "~/util/types";
 
 export default function Previews({ cars }: { cars: Car[] }) {
   return (

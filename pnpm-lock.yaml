@@ -47,9 +47,6 @@ dependencies:
   react-dom:
     specifier: ^18.2.0
     version: 18.2.0(react@18.2.0)
-  remix-typedjson:
-    specifier: ^0.1.7
-    version: 0.1.7(@remix-run/react@2.1.0)(@remix-run/server-runtime@1.19.3)(react@18.2.0)
   resend:
     specifier: ^1.1.0
     version: 1.1.0
@@ -3232,11 +3229,6 @@ packages:
     resolution: {integrity: sha512-Lm+fYpMfZoEucJ7cMxgt4dYt8jLfbpwRCzAjm9UgSLOkmlqo9gupxt6YX3DY0Fk155NT9l17d/ydi+964uS9Lw==}
     engines: {node: '>=14.0.0'}
 
-  /@remix-run/router@1.7.2:
-    resolution: {integrity: sha512-7Lcn7IqGMV+vizMPoEl5F0XDshcdDYtMI6uJLQdQz5CfZAwy3vvGKYSUk789qndt5dEC4HfSjviSYlSoHGL2+A==}
-    engines: {node: '>=14'}
-    dev: false
-
   /@remix-run/serve@2.1.0(typescript@4.8.4):
     resolution: {integrity: sha512-XHI+vPYz217qrg1QcV38TTPlEBTzMJzAt0SImPutyF0S2IBrZGZIFMEsspI0i0wNvdcdQz1IqmSx+mTghzW8eQ==}
     engines: {node: '>=18.0.0'}
@@ -3253,18 +3245,6 @@ packages:
     transitivePeerDependencies:
       - supports-color
       - typescript
-
-  /@remix-run/server-runtime@1.19.3:
-    resolution: {integrity: sha512-KzQ+htUsKqpBgKE2tWo7kIIGy3MyHP58Io/itUPvV+weDjApwr9tQr9PZDPA3yAY6rAzLax7BU0NMSYCXWFY5A==}
-    engines: {node: '>=14.0.0'}
-    dependencies:
-      '@remix-run/router': 1.7.2
-      '@types/cookie': 0.4.1
-      '@web3-storage/multipart-parser': 1.0.0
-      cookie: 0.4.2
-      set-cookie-parser: 2.6.0
-      source-map: 0.7.4
-    dev: false
 
   /@remix-run/server-runtime@2.1.0(typescript@4.8.4):
     resolution: {integrity: sha512-Uz69yF4Gu6F3VYQub3JgDo9godN8eDMeZclkadBTAWN7bYLonu0ChR/GlFxS35OLeF7BDgudxOSZob0nE1WHNg==}
@@ -9223,18 +9203,6 @@ packages:
       '@remix-run/v1-route-convention': 0.1.4(@remix-run/dev@2.1.0)
       minimatch: 5.1.6
     dev: true
-
-  /remix-typedjson@0.1.7(@remix-run/react@2.1.0)(@remix-run/server-runtime@1.19.3)(react@18.2.0):
-    resolution: {integrity: sha512-h7WoKbKBGsVdZZp3s79U5SDrMvQ3We7BjGaSIPxchnJOTS3GUDat0kBoy/gh9TVKRf5KYCee+K1UlFAYQmLQsA==}
-    peerDependencies:
-      '@remix-run/react': ^1.6.5
-      '@remix-run/server-runtime': ^1.6.5
-      react: ^17.0.2 || ^18.0.0
-    dependencies:
-      '@remix-run/react': 2.1.0(react-dom@18.2.0)(react@18.2.0)(typescript@4.8.4)
-      '@remix-run/server-runtime': 1.19.3
-      react: 18.2.0
-    dev: false
 
   /require-directory@2.1.1:
     resolution: {integrity: sha512-fGxEI7+wsG9xrvdjsrlmL22OMTTiHRwAMroiEeMgq8gzoLC/PQr7RsRDSTLUg/bZAZtF+TVIkHc6/4RIKrui+Q==}

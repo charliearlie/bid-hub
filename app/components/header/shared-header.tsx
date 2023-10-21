@@ -1,10 +1,10 @@
-import type { User } from "@prisma/client";
 import { Link } from "@remix-run/react";
 import { useState } from "react";
 import BurgerSVG from "~/styles/svg/burger";
 import CloseSVG from "~/styles/svg/close";
 import SearchSVG from "~/styles/svg/search";
 import UserDropDown from "./user-dropdown";
+import type { UserType as User } from "~/util/types";
 
 type Props = {
   user: User | null;

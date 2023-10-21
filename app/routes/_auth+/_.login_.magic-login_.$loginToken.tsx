@@ -1,11 +1,11 @@
-import type { LoaderFunctionArgs } from "@remix-run/node";
+import { DataFunctionArgs, json } from "@remix-run/node";
 import { handleMagicLinkLogin } from "~/services/user.server";
 import invariant from "tiny-invariant";
-import { typedjson, useTypedLoaderData } from "remix-typedjson";
+import { useLoaderData } from "@remix-run/react";
 
-export const loader = async ({ params, request }: LoaderFunctionArgs) => {
+export const loader = async ({ params, request }: DataFunctionArgs) => {
   if (request.headers.get("user-agent")?.includes("WhatsApp")) {
-    return typedjson({
+    return json({
       error: "Block whatsapp preview",
     });
   }
@@ -18,7 +18,7 @@ export const meta = () => {
 };
 
 export default function LoginTokenRoute() {
-  const loaderData = useTypedLoaderData<typeof loader>();
+  const loaderData = useLoaderData<typeof loader>();
   if (loaderData.error) {
     return (
       <main>

@@ -1,11 +1,13 @@
-import type { DataFunctionArgs, LoaderFunction } from "@remix-run/node";
+import {
+  redirect,
+  type DataFunctionArgs,
+} from "@remix-run/node";
+import { useLoaderData } from "@remix-run/react";
 import invariant from "tiny-invariant";
 import Button from "~/components/common/button";
 import { getCarBySlug } from "~/services/cars.server";
-import type { Car } from "@prisma/client";
 import Card from "~/components/common/card/card";
 import CardContent from "~/components/common/card/card-content";
-import { redirect, useTypedLoaderData } from "remix-typedjson";
 import CardHeader from "~/components/common/card/card-header";
 import CardSubHeader from "~/components/common/card/card-subheader";
 import PowerTrainInfoRows from "~/components/cars/info/powertrain-info-rows";
@@ -13,7 +15,7 @@ import EngineInfoRows from "~/components/cars/info/engine-info-rows";
 import BodyAndChassisInfoRows from "~/components/cars/info/body-and-chassis-info-rows";
 import DimensionInfoRows from "~/components/cars/info/dimensions-info-rows";
 
-export const loader: LoaderFunction = async ({ params }: DataFunctionArgs) => {
+export async function loader({ params }: DataFunctionArgs) {
   invariant(params.carSlug, "Expected params.carSlug");
 
   try {
@@ -21,10 +23,10 @@ export const loader: LoaderFunction = async ({ params }: DataFunctionArgs) => {
   } catch (error) {
     return redirect("/cars");
   }
-};
+}
 
 export default function CarSlugRoute() {
-  const car = useTypedLoaderData<Car>();
+  const car = useLoaderData<typeof loader>();
   if (car) {
     const {
       bodyAndChassis,

@@ -1,6 +1,10 @@
-import { Link, useNavigation } from "@remix-run/react";
-import type { ActionFunctionArgs, LoaderFunction } from "@remix-run/node";
-import { typedjson, useTypedActionData, redirect } from "remix-typedjson";
+import { Link, useActionData, useNavigation } from "@remix-run/react";
+import {
+  redirect,
+  type LoaderFunction,
+  type DataFunctionArgs,
+  json,
+} from "@remix-run/node";
 
 import Alert, { AlertType } from "~/components/common/alert";
 import Form from "~/components/form/form";
@@ -14,7 +18,7 @@ import {
   validateUsername,
 } from "~/services/validators.server";
 import { register } from "~/services/user.server";
-import { RegisterResponse } from "~/services/types.server";
+import type { RegisterResponse } from "~/services/types.server";
 
 export const meta = () => {
   return [{ title: "Register for Brake Neck" }];
@@ -25,7 +29,7 @@ export const loader: LoaderFunction = async ({ request }) => {
   return (await getUser(request)) ? redirect("/") : null;
 };
 
-export async function action({ request, params }: ActionFunctionArgs) {
+export async function action({ request }: DataFunctionArgs) {
   const formData = await request.formData();
 
   const email = formData.get("email");
@@ -37,7 +41,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
     typeof password !== "string" ||
     typeof username !== "string"
   ) {
-    return typedjson<RegisterResponse>({
+    return json<RegisterResponse>({
       success: false,
       errors: { server: `Invalid Form Data` },
     });
@@ -50,7 +54,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   };
 
   if (Object.values(errors).some(Boolean))
-    return typedjson<RegisterResponse>({
+    return json<RegisterResponse>({
       success: false,
       errors,
     });
@@ -59,7 +63,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
 }
 
 export default function RegisterRoute() {
-  const actionData = useTypedActionData<typeof action>();
+  const actionData = useActionData<typeof action>();
   const navigation = useNavigation();
   return (
     <div>

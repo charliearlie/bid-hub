@@ -1,4 +1,4 @@
-import { useTypedLoaderData } from "remix-typedjson";
+import { useLoaderData } from "@remix-run/react";
 import Previews from "~/components/cars/car-preview/previews";
 import { getAllCars } from "~/services/cars.server";
 
@@ -11,6 +11,6 @@ export const loader = async () => {
 };
 
 export default function ItemsIndexRoute() {
-  const { cars } = useTypedLoaderData<typeof loader>();
+  const { cars } = useLoaderData<typeof loader>();
   return <Previews cars={cars} />;
 }

@@ -2,7 +2,6 @@
 import bcrypt from "bcryptjs";
 import { v4 as uuidv4 } from "uuid";
 import { json } from "@remix-run/node";
-import { typedjson } from "remix-typedjson";
 
 import { prisma } from "./prisma.server";
 import type {
@@ -23,7 +22,7 @@ import magicLinkEmailTemplate from "~/util/helpers/email/magic-link-email";
 export const register = async (user: RegisterForm) => {
   const exists = await prisma.user.count({ where: { email: user.email } });
   if (exists) {
-    return typedjson<RegisterResponse>({
+    return json<RegisterResponse>({
       success: false,
       errors: { server: `User already exists with that email` },
     });
@@ -32,7 +31,7 @@ export const register = async (user: RegisterForm) => {
   const newUser = await createUser(user);
 
   if (!newUser) {
-    return typedjson<RegisterResponse>({
+    return json<RegisterResponse>({
       success: false,
       errors: { server: `Something went wrong trying to create a new user.` },
     });
@@ -47,10 +46,7 @@ export const login = async ({ email, password }: LoginForm) => {
   });
 
   if (!user || !(await bcrypt.compare(password, user.password)))
-    return typedjson(
-      { error: `Incorrect login`, success: false },
-      { status: 400 }
-    );
+    return json({ error: `Incorrect login`, success: false }, { status: 400 });
 
   return createUserSession(user.id);
 };
@@ -58,10 +54,7 @@ export const login = async ({ email, password }: LoginForm) => {
 export const forgotPassword = async (email: string) => {
   const exists = await prisma.user.count({ where: { email } });
   if (!exists) {
-    return json(
-      { error: `No user with that email exists`, success: false },
-      { status: 400 }
-    );
+    return json({ error: `No user with that email exists`, success: false });
   }
 
   const token = uuidv4();
@@ -78,7 +71,7 @@ export const forgotPassword = async (email: string) => {
   const html = resetPasswordEmailTemplate(token);
   await sendEmail(email, "Reset your password", html);
 
-  return json({ success: true });
+  return json({ success: true, error: null });
 };
 
 export const resetPassword = async (password: string, token: string) => {
@@ -89,7 +82,7 @@ export const resetPassword = async (password: string, token: string) => {
   });
 
   if (!forgotPassword || forgotPassword.expiration < new Date()) {
-    return typedjson({ success: false, errors: ["Token is invalid"] });
+    return json({ success: false, errors: ["Token is invalid"] });
   }
 
   const updatedUser = await prisma.user.update({
@@ -112,7 +105,7 @@ export const resetPassword = async (password: string, token: string) => {
 export const generateMagicLink = async (email: string) => {
   const exists = await prisma.user.count({ where: { email } });
   if (!exists) {
-    return typedjson(
+    return json(
       { error: `No user with that email exists`, success: false },
       { status: 400 }
     );
@@ -132,7 +125,7 @@ export const generateMagicLink = async (email: string) => {
   const html = magicLinkEmailTemplate(token);
   const emailData = await sendEmail(email, "Here's your login link", html);
 
-  return typedjson({ success: !!emailData.id, error: "" });
+  return json({ success: !!emailData.id, error: "" });
 };
 
 export const handleMagicLinkLogin = async (token: string) => {
@@ -152,7 +145,7 @@ export const handleMagicLinkLogin = async (token: string) => {
     return createUserSession(user!.id!);
   }
 
-  return typedjson({ error: "Token not found" });
+  return json({ error: "Token not found" });
 };
 
 export const createUser = async (user: RegisterForm) => {
@@ -189,8 +182,8 @@ export const editUser = async (userId: string, edited: EditUserForm) => {
         },
       },
     });
-    return typedjson({ error: null, updatedUser });
+    return json({ error: null, updatedUser });
   } catch (e) {
-    return typedjson({ updatedUser: null, error: "Couldn't update lad" });
+    return json({ updatedUser: null, error: "Couldn't update lad" });
   }
 };

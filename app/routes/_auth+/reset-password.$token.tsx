@@ -1,6 +1,5 @@
-import type { ActionFunctionArgs } from "@remix-run/node";
-import { useNavigation } from "@remix-run/react";
-import { typedjson, useTypedActionData } from "remix-typedjson";
+import { json, type ActionFunctionArgs } from "@remix-run/node";
+import { useActionData, useNavigation } from "@remix-run/react";
 
 import Alert, { AlertType } from "~/components/common/alert";
 import Form from "~/components/form/form";
@@ -20,7 +19,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   const confirmPassword = formData.get("confirmPassword");
 
   if (typeof password !== "string" || typeof params.token !== "string") {
-    return typedjson({ success: false, errors: null });
+    return json({ success: false, errors: null });
   }
 
   const errors: ActionData = {
@@ -30,21 +29,21 @@ export async function action({ request, params }: ActionFunctionArgs) {
 
   const hasErrors = Object.values(errors).some((errorMessage) => errorMessage);
   if (hasErrors) {
-    return typedjson({ errors, success: false });
+    return json({ errors, success: false });
   }
 
   return resetPassword(password, params.token);
 }
 
 export default function ForgotPasswordRoute() {
-  const actionData = useTypedActionData<typeof action>();
+  const actionData = useActionData<typeof action>();
   const navigation = useNavigation();
 
   return (
     <div>
       <h2 className="pt-4 text-center text-3xl font-bold">Reset password</h2>
       <p className="pb-8 text-center">Enter your new password</p>
-      {/* We should add a link to go back to requesting a reset link */}
+      {/* todo: We should add a link to go back to requesting a reset link */}
       {actionData?.success && (
         <Alert type={AlertType.ERROR} message="Something went wrong" />
       )}

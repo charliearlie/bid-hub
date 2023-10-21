@@ -1,18 +1,17 @@
-import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
+import {
+  redirect,
+  type ActionFunctionArgs,
+  type LoaderFunctionArgs,
+  json,
+} from "@remix-run/node";
+import { useActionData, useLoaderData, useNavigation } from "@remix-run/react";
 import Alert, { AlertType } from "~/components/common/alert";
 import Form from "~/components/form/form";
 import FormField from "~/components/form/form-field";
 import Spinner from "~/components/spinner";
 import { formValidationRegexes } from "~/services/form-validation-regexes";
 import { getUser, getUserId } from "~/services/session.server";
-import {
-  redirect,
-  typedjson,
-  useTypedActionData,
-  useTypedLoaderData,
-} from "remix-typedjson";
 import { editUser } from "~/services/user.server";
-import { useNavigation } from "@remix-run/react";
 
 // todo: Move this into own file or make more generic and just look for a key value pair of strings
 type ActionData = {
@@ -40,7 +39,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
   const hasErrors = Object.values(errors).some((errorMessage) => errorMessage);
   if (hasErrors) {
-    return typedjson({
+    return json({
       user: null,
       error: "Got some validation tings you need to fix lad",
     });
@@ -76,12 +75,12 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     return redirect("/");
   }
   user.password = "";
-  return typedjson({ user });
+  return json({ user });
 };
 
 export default function ManageUserRoute() {
-  const { user } = useTypedLoaderData<typeof loader>();
-  const actionData = useTypedActionData<typeof action>();
+  const { user } = useLoaderData<typeof loader>();
+  const actionData = useActionData<typeof action>();
 
   const initialFormState = {
     username: user.username,

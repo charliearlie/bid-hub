@@ -1,7 +1,16 @@
 import React, { useRef } from "react";
-import { Link, useNavigation, useSubmit } from "@remix-run/react";
-import type { ActionFunctionArgs, LoaderFunction } from "@remix-run/node";
-import { redirect, typedjson, useTypedActionData } from "remix-typedjson";
+import {
+  Link,
+  useActionData,
+  useNavigation,
+  useSubmit,
+} from "@remix-run/react";
+import {
+  redirect,
+  type LoaderFunction,
+  json,
+  DataFunctionArgs,
+} from "@remix-run/node";
 
 import Alert, { AlertType } from "~/components/common/alert";
 import Form from "~/components/form/form";
@@ -21,7 +30,7 @@ export const loader: LoaderFunction = async ({ request }) => {
   return user ? redirect("/") : null;
 };
 
-export async function action({ request }: ActionFunctionArgs) {
+export async function action({ request }: DataFunctionArgs) {
   const formData = await request.formData();
 
   const intent = formData.get("intent");
@@ -30,13 +39,10 @@ export async function action({ request }: ActionFunctionArgs) {
   const emailOrUsername = formData.get("emailOrUsername");
 
   if (typeof emailOrUsername !== "string") {
-    return typedjson(
-      {
-        success: false,
-        error: `Invalid Form Data`,
-      },
-      { status: 200 }
-    );
+    return json({
+      success: false,
+      error: `Invalid Form Data`,
+    });
   }
 
   if (intent === "magic") {
@@ -45,13 +51,10 @@ export async function action({ request }: ActionFunctionArgs) {
 
   // todo: not happy repeating this for both password and email. Sort it
   if (typeof password !== "string" || typeof emailOrUsername !== "string") {
-    return typedjson(
-      {
-        success: false,
-        error: `Invalid Form Data`,
-      },
-      { status: 200 }
-    );
+    return json({
+      success: false,
+      error: `Invalid Form Data`,
+    });
   }
   return await login({
     email: emailOrUsername,
@@ -62,7 +65,7 @@ export async function action({ request }: ActionFunctionArgs) {
 export default function LoginRoute() {
   const emailInputRef = useRef<HTMLInputElement>(null);
 
-  const actionData = useTypedActionData<typeof action>();
+  const actionData = useActionData<typeof action>();
   const navigation = useNavigation();
 
   const submit = useSubmit();

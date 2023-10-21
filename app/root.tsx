@@ -1,4 +1,4 @@
-import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
+import { ActionFunctionArgs, LoaderFunctionArgs, json } from "@remix-run/node";
 import {
   Links,
   LiveReload,
@@ -6,8 +6,8 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  useLoaderData,
 } from "@remix-run/react";
-import { typedjson, useTypedLoaderData } from "remix-typedjson";
 
 import SharedHeader from "./components/header/shared-header";
 import { getUser, logout } from "./services/session.server";
@@ -38,11 +38,11 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 };
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  return typedjson({ user: await getUser(request), ENV: process.env });
+  return json({ user: await getUser(request), ENV: process.env });
 };
 
 export default function App() {
-  const { ENV, user } = useTypedLoaderData<typeof loader>();
+  const { ENV, user } = useLoaderData<typeof loader>();
   return (
     <html lang="en">
       <head>

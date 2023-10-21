@@ -28,7 +28,6 @@
     "lucide-react": "^0.288.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "remix-typedjson": "^0.1.7",
     "resend": "^1.1.0",
     "tailwind-merge": "^1.14.0",
     "tailwindcss-animate": "^1.0.7",
