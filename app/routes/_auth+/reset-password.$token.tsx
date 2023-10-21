@@ -7,6 +7,7 @@ import FormField from "~/components/form/form-field";
 import Spinner from "~/components/spinner";
 import Button from "~/components/common/button";
 import { resetPassword } from "~/services/user.server";
+import { invariantResponse } from "~/util/utils";
 
 type ActionData =
   | { password: null | string; confirmPassword: null | string }
@@ -18,9 +19,8 @@ export async function action({ request, params }: ActionFunctionArgs) {
   const password = formData.get("password");
   const confirmPassword = formData.get("confirmPassword");
 
-  if (typeof password !== "string" || typeof params.token !== "string") {
-    return json({ success: false, errors: null });
-  }
+  invariantResponse(typeof password === "string", "Password must be a string");
+  invariantResponse(params.token, "Token must exist");
 
   const errors: ActionData = {
     password: password ? null : "Password is required",

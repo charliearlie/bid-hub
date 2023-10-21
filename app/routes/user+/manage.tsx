@@ -12,6 +12,7 @@ import Spinner from "~/components/spinner";
 import { formValidationRegexes } from "~/services/form-validation-regexes";
 import { getUser, getUserId } from "~/services/session.server";
 import { editUser } from "~/services/user.server";
+import { invariantResponse } from "~/util/utils";
 
 // todo: Move this into own file or make more generic and just look for a key value pair of strings
 type ActionData = {
@@ -71,9 +72,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const user = await getUser(request);
 
-  if (!user) {
-    return redirect("/");
-  }
+  invariantResponse(user, "User not logged in", { status: 404 });
   user.password = "";
   return json({ user });
 };

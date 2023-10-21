@@ -18,7 +18,7 @@ import {
   validateUsername,
 } from "~/services/validators.server";
 import { register } from "~/services/user.server";
-import type { RegisterResponse } from "~/services/types.server";
+import type { RegisterResponse } from "~/util/types";
 
 export const meta = () => {
   return [{ title: "Register for Brake Neck" }];

@@ -60,14 +60,9 @@ export async function getUser(request: Request) {
     return null;
   }
 
-  try {
-    const user = await prisma.user.findUnique({
-      where: { id: userId },
-    });
-    return user;
-  } catch {
-    return null;
-  }
+  return await prisma.user.findUnique({
+    where: { id: userId },
+  });
 }
 
 export async function logout(request: Request) {

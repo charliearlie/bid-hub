@@ -9,7 +9,7 @@ import type {
   LoginForm,
   RegisterForm,
   RegisterResponse,
-} from "~/services/types.server";
+} from "~/util/types";
 import { createUserSession } from "~/services/session.server";
 import sendEmail from "~/services/email.server";
 
