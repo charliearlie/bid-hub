@@ -20,7 +20,11 @@ export default function CarPreview({ car }: CarPreviewProps) {
       />
       <CardContent>
         <div className="h-24">
-          <Link to={`/cars/${slug}`} className="hover:opacity-80">
+          <Link
+            prefetch="intent"
+            to={`/cars/${slug}`}
+            className="hover:opacity-80"
+          >
             <h3 className="block font-black leading-none">
               <span className="block text-3xl">{manufacturerName}</span>
               <span className="block text-xl">
