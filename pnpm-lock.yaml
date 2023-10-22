@@ -14,6 +14,9 @@ dependencies:
   '@radix-ui/react-popover':
     specifier: ^1.0.7
     version: 1.0.7(@types/react-dom@18.0.8)(@types/react@18.0.25)(react-dom@18.2.0)(react@18.2.0)
+  '@radix-ui/react-slot':
+    specifier: ^1.0.2
+    version: 1.0.2(@types/react@18.0.25)(react@18.2.0)
   '@remix-run/node':
     specifier: ^2.1.0
     version: 2.1.0(typescript@4.8.4)

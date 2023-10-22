@@ -1,6 +1,6 @@
 import { ActionFunctionArgs, json } from "@remix-run/node";
 import { useActionData } from "@remix-run/react";
-import Button from "~/components/common/button";
+import Button from "~/components/common/ui/button";
 import { addCar } from "~/services/cars.server";
 
 export const action = async ({}: ActionFunctionArgs) => {

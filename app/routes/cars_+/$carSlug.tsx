@@ -1,12 +1,12 @@
 import { json, type DataFunctionArgs } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import invariant from "tiny-invariant";
-import Button from "~/components/common/button";
+import Button from "~/components/common/ui/button";
 import { getCarBySlug } from "~/services/cars.server";
-import Card from "~/components/common/card/card";
-import CardContent from "~/components/common/card/card-content";
-import CardHeader from "~/components/common/card/card-header";
-import CardSubHeader from "~/components/common/card/card-subheader";
+import Card from "~/components/common/ui/card/card";
+import CardContent from "~/components/common/ui/card/card-content";
+import CardHeader from "~/components/common/ui/card/card-header";
+import CardSubHeader from "~/components/common/ui/card/card-subheader";
 import PowerTrainInfoRows from "~/components/cars/info/powertrain-info-rows";
 import EngineInfoRows from "~/components/cars/info/engine-info-rows";
 import BodyAndChassisInfoRows from "~/components/cars/info/body-and-chassis-info-rows";

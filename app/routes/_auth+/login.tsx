@@ -12,11 +12,11 @@ import {
   DataFunctionArgs,
 } from "@remix-run/node";
 
-import Alert, { AlertType } from "~/components/common/alert";
+import Alert, { AlertType } from "~/components/common/ui/alert";
 import Form from "~/components/form/form";
 import FormField from "~/components/form/form-field";
 import Spinner from "~/components/spinner";
-import Button from "~/components/common/button";
+import Button from "~/components/common/ui/button";
 import { generateMagicLink, login } from "~/services/user.server";
 import { getUser } from "~/services/session.server";
 

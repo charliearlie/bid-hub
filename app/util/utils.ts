@@ -1,3 +1,4 @@
+import { useFormAction, useNavigation } from "@remix-run/react";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -22,4 +23,22 @@ export function invariantResponse(
       { status: 400, ...responseInit }
     );
   }
+}
+
+type UseIsSubmittingOptions = {
+  formAction?: string;
+  formMethod?: "DELETE" | "GET" | "PATCH" | "PUT" | "POST";
+};
+export function useIsSubmitting({
+  formAction,
+  formMethod = "POST",
+}: UseIsSubmittingOptions) {
+  const contextualFormAction = useFormAction();
+  const navigation = useNavigation();
+
+  return (
+    navigation.state === "submitting" &&
+    navigation.formAction === (formAction ?? contextualFormAction) &&
+    navigation.formMethod === formMethod
+  );
 }

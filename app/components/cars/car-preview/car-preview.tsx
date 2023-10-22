@@ -1,7 +1,7 @@
 import { Link } from "@remix-run/react";
-import Card from "~/components/common/card/card";
-import CardContent from "~/components/common/card/card-content";
-import CardImage from "~/components/common/card/card-image";
+import Card from "~/components/common/ui/card/card";
+import CardContent from "~/components/common/ui/card/card-content";
+import CardImage from "~/components/common/ui/card/card-image";
 import type { CarType as Car, CarPreviewType } from "~/util/types";
 
 type CarPreviewProps = {

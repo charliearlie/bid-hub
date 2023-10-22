@@ -6,7 +6,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "~/components/common/dropdown-menu";
+} from "~/components/common/ui/dropdown-menu";
 import type { UserType as User } from "~/util/types";
 
 type Props = {
