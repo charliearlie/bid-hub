@@ -13,6 +13,7 @@ import SharedHeader from "./components/header/shared-header";
 import { getUser, logout } from "./services/session.server";
 import styles from "./styles/app.css";
 import favicon from "./assets/img/favicon.svg";
+import { getEnv } from "./util/env.server";
 
 export function links() {
   return [
@@ -32,10 +33,11 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 };
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  return json({ user: await getUser(request), ENV: process.env });
+  return json({ user: await getUser(request), ENV: getEnv() });
 };
 
 export default function App() {
+  // todo: Put user in a context
   const { ENV, user } = useLoaderData<typeof loader>();
   return (
     <html lang="en">
@@ -52,9 +54,7 @@ export default function App() {
         <Outlet />
         <script
           dangerouslySetInnerHTML={{
-            __html: `window.process = ${JSON.stringify({
-              env: ENV,
-            })}`,
+            __html: `window.ENV = ${JSON.stringify(ENV)}`,
           }}
         />
         <ScrollRestoration />
