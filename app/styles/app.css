@@ -671,6 +671,10 @@ body {
   display: none;
 }
 
+.h-full {
+  height: 100%;
+}
+
 .h-8 {
   height: 2rem;
 }
@@ -685,10 +689,6 @@ body {
 
 .h-10 {
   height: 2.5rem;
-}
-
-.h-full {
-  height: 100%;
 }
 
 .h-screen {
@@ -743,12 +743,12 @@ body {
   height: 15rem;
 }
 
-.w-8 {
-  width: 2rem;
-}
-
 .w-full {
   width: 100%;
+}
+
+.w-8 {
+  width: 2rem;
 }
 
 .w-10 {
@@ -803,12 +803,12 @@ body {
   max-width: 24rem;
 }
 
-.flex-none {
-  flex: none;
-}
-
 .flex-1 {
   flex: 1 1 0%;
+}
+
+.flex-none {
+  flex: none;
 }
 
 @keyframes spin {
@@ -881,6 +881,14 @@ body {
   justify-content: space-between;
 }
 
+.gap-6 {
+  gap: 1.5rem;
+}
+
+.gap-3 {
+  gap: 0.75rem;
+}
+
 .gap-4 {
   gap: 1rem;
 }
@@ -891,14 +899,6 @@ body {
 
 .gap-2 {
   gap: 0.5rem;
-}
-
-.gap-6 {
-  gap: 1.5rem;
-}
-
-.gap-3 {
-  gap: 0.75rem;
 }
 
 .space-x-8 > :not([hidden]) ~ :not([hidden]) {
@@ -1092,6 +1092,10 @@ body {
      object-fit: cover;
 }
 
+.p-20 {
+  padding: 5rem;
+}
+
 .p-4 {
   padding: 1rem;
 }
@@ -1102,10 +1106,6 @@ body {
 
 .p-1 {
   padding: 0.25rem;
-}
-
-.p-20 {
-  padding: 5rem;
 }
 
 .py-4 {
@@ -1190,12 +1190,18 @@ body {
   padding-right: 0.5rem;
 }
 
-.pt-12 {
-  padding-top: 3rem;
-}
-
 .text-center {
   text-align: center;
+}
+
+.text-xl {
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+}
+
+.text-4xl {
+  font-size: 2.25rem;
+  line-height: 2.5rem;
 }
 
 .text-3xl {
@@ -1218,27 +1224,17 @@ body {
   line-height: 2rem;
 }
 
-.text-xl {
-  font-size: 1.25rem;
-  line-height: 1.75rem;
-}
-
 .text-xs {
   font-size: 0.75rem;
   line-height: 1rem;
 }
 
-.text-4xl {
-  font-size: 2.25rem;
-  line-height: 2.5rem;
+.font-bold {
+  font-weight: 700;
 }
 
 .font-black {
   font-weight: 900;
-}
-
-.font-bold {
-  font-weight: 700;
 }
 
 .font-semibold {
