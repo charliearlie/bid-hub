@@ -2,6 +2,7 @@ import React, { useRef } from "react";
 import {
   Link,
   useActionData,
+  useFormAction,
   useNavigation,
   useSubmit,
 } from "@remix-run/react";
@@ -16,12 +17,16 @@ import Alert, { AlertType } from "~/components/common/ui/alert";
 import Form from "~/components/form/form";
 import FormField from "~/components/form/form-field";
 import Spinner from "~/components/spinner";
-import Button from "~/components/common/ui/button";
+import { Button } from "~/components/common/ui/button";
 import { generateMagicLink, login } from "~/services/user.server";
 import { getUser } from "~/services/session.server";
+import { SubmitButton } from "~/components/form/submit-button";
 
 export const meta = () => {
-  return [{ title: "Log in to Brake Neck" }];
+  return [
+    { title: "Log in to Brake Neck" },
+    { name: "description", content: "Log in page for Brake Neck" },
+  ];
 };
 
 export const loader: LoaderFunction = async ({ request }) => {
@@ -67,6 +72,12 @@ export default function LoginRoute() {
 
   const actionData = useActionData<typeof action>();
   const navigation = useNavigation();
+  const formAction = useFormAction();
+
+  const isPending =
+    navigation.state !== "idle" &&
+    navigation.formAction === formAction &&
+    navigation.formMethod === "POST";
 
   const submit = useSubmit();
 
@@ -116,9 +127,13 @@ export default function LoginRoute() {
         />
         <FormField label="Password" name="password" type="password" required />
         <div className="flex flex-col">
-          <Button name="login" variant="primary">
-            {navigation.state !== "idle" ? <Spinner /> : "Log in"}
-          </Button>
+          <SubmitButton
+            name="login"
+            variant="default"
+            status={isPending ? "pending" : "idle"}
+          >
+            Log in
+          </SubmitButton>
           <Link
             className="px-0 pb-2 font-semibold text-blue-500 hover:text-slate-500"
             to="/forgot-password"
@@ -134,7 +149,7 @@ export default function LoginRoute() {
         type="button"
         variant="secondary"
       >
-        {navigation.state !== "idle" ? <Spinner /> : "Send Magic Link"}
+        {isPending ? <Spinner /> : "Send Magic Link"}
       </Button>
     </div>
   );

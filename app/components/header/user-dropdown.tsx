@@ -8,6 +8,7 @@ import {
   DropdownMenuTrigger,
 } from "~/components/common/ui/dropdown-menu";
 import type { UserType as User } from "~/util/types";
+import { Button } from "../common/ui/button";
 
 type Props = {
   className: string;
@@ -17,9 +18,9 @@ export default function UserDropDown({ className, user }: Props) {
   if (!user) {
     return (
       <div className={className}>
-        <Link to="/login" className={`button button-primary w-20 lg:block`}>
-          Log in
-        </Link>
+        <Button asChild>
+          <Link to="/login">Log in</Link>
+        </Button>
       </div>
     );
   }

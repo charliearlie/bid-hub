@@ -5,7 +5,7 @@ import Alert, { AlertType } from "~/components/common/ui/alert";
 import Form from "~/components/form/form";
 import FormField from "~/components/form/form-field";
 import Spinner from "~/components/spinner";
-import Button from "~/components/common/ui/button";
+import { Button } from "~/components/common/ui/button";
 import { resetPassword } from "~/services/user.server";
 import { invariantResponse } from "~/util/utils";
 
