@@ -40,7 +40,10 @@ export const register = async (user: RegisterForm) => {
   return createUserSession(newUser.id);
 };
 
-export const login = async ({ email, password }: LoginForm) => {
+export const login = async (
+  { email, password }: LoginForm,
+  redirectTo?: string
+) => {
   const user = await prisma.user.findUnique({
     where: { email },
   });
@@ -48,7 +51,7 @@ export const login = async ({ email, password }: LoginForm) => {
   if (!user || !(await bcrypt.compare(password, user.password)))
     return json({ error: `Incorrect login`, success: false }, { status: 400 });
 
-  return createUserSession(user.id);
+  return createUserSession(user.id, redirectTo);
 };
 
 export const forgotPassword = async (email: string) => {
