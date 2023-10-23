@@ -1,9 +1,9 @@
-import { ActionFunctionArgs, json } from "@remix-run/node";
+import { DataFunctionArgs, json } from "@remix-run/node";
 import { useActionData } from "@remix-run/react";
-import Button from "~/components/common/button";
+import { Button } from "~/components/common/ui/button";
 import { addCar } from "~/services/cars.server";
 
-export const action = async ({}: ActionFunctionArgs) => {
+export const action = async ({}: DataFunctionArgs) => {
   // const formData = await request.formData();
   const newCar = await addCar({
     slug: "porsche-carrera-gt",

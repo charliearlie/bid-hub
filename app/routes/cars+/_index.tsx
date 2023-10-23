@@ -19,6 +19,7 @@ export const loader = async () => {
       car;
     return { manufacturerName, model, previewImage, slug, variation, year };
   });
+
   return json({ cars: carPreviewData });
 };
 

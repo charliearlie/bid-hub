@@ -1,5 +1,5 @@
 import CarPreview from "../car-preview/car-preview";
-import type { CarType as Car, CarPreviewType } from "~/util/types";
+import type { CarPreviewType } from "~/util/types";
 
 export default function Previews({ cars }: { cars: CarPreviewType[] }) {
   return (

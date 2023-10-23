@@ -1,11 +1,10 @@
 import {
-  redirect,
   type ActionFunctionArgs,
   type LoaderFunctionArgs,
   json,
 } from "@remix-run/node";
 import { useActionData, useLoaderData, useNavigation } from "@remix-run/react";
-import Alert, { AlertType } from "~/components/common/alert";
+import Alert, { AlertType } from "~/components/common/ui/alert";
 import Form from "~/components/form/form";
 import FormField from "~/components/form/form-field";
 import Spinner from "~/components/spinner";

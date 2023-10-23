@@ -1,17 +1,30 @@
-import { json, type DataFunctionArgs } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
+import { json, type DataFunctionArgs, MetaFunction } from "@remix-run/node";
+import { Link, useLoaderData } from "@remix-run/react";
 import invariant from "tiny-invariant";
-import Button from "~/components/common/button";
+import { Button } from "~/components/common/ui/button";
 import { getCarBySlug } from "~/services/cars.server";
-import Card from "~/components/common/card/card";
-import CardContent from "~/components/common/card/card-content";
-import CardHeader from "~/components/common/card/card-header";
-import CardSubHeader from "~/components/common/card/card-subheader";
+import Card from "~/components/common/ui/card/card";
+import CardContent from "~/components/common/ui/card/card-content";
+import CardHeader from "~/components/common/ui/card/card-header";
+import CardSubHeader from "~/components/common/ui/card/card-subheader";
 import PowerTrainInfoRows from "~/components/cars/info/powertrain-info-rows";
 import EngineInfoRows from "~/components/cars/info/engine-info-rows";
 import BodyAndChassisInfoRows from "~/components/cars/info/body-and-chassis-info-rows";
 import DimensionInfoRows from "~/components/cars/info/dimensions-info-rows";
 import { invariantResponse } from "~/util/utils";
+import { ErrorBoundaryComponent } from "~/components/error-boundary";
+
+export const meta: MetaFunction<typeof loader, {}> = ({ data }) => {
+  const carName = `${data?.car.manufacturerName} ${data?.car.model}`;
+  const carYear = data?.car.year;
+  return [
+    { title: `${carName} | Website` },
+    {
+      name: "description",
+      content: `Details and specifications of the ${carYear} ${carName}`,
+    },
+  ];
+};
 
 export async function loader({ params }: DataFunctionArgs) {
   invariant(params.carSlug, "Expected params.carSlug");
@@ -92,9 +105,26 @@ export default function CarSlugRoute() {
               </Card>
             )}
           </div>
-          <Button variant="primary">Like</Button>
+          <Button variant="default">Like</Button>
         </div>
       </div>
     </main>
+  );
+}
+
+export function ErrorBoundary() {
+  return (
+    <ErrorBoundaryComponent
+      statusHandlers={{
+        404: ({ params }) => (
+          <div className="p-4">
+            <h2 className="text-3xl font-semibold">
+              Car with slug {params.carSlug} not found
+            </h2>
+            <Link to="/">Go back home</Link>
+          </div>
+        ),
+      }}
+    />
   );
 }

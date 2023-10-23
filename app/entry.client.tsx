@@ -6,6 +6,10 @@ function Client() {
   return <RemixBrowser />;
 }
 
+if (ENV.MODE === "development") {
+  console.log("Developing on the client brah");
+}
+
 startTransition(() => {
   hydrateRoot(document, <Client />);
 });
