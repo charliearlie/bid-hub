@@ -19,6 +19,7 @@ import { getUser, logout } from "./services/session.server";
 import styles from "./styles/app.css";
 import favicon from "./assets/img/favicon.svg";
 import { getEnv } from "./util/env.server";
+import { ErrorBoundaryComponent } from "./components/error-boundary";
 
 export const meta: MetaFunction = () => {
   return [
@@ -39,6 +40,11 @@ export function links() {
       rel: "stylesheet",
       href: "https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&display=swap",
     },
+    {
+      rel: "icon",
+      type: "image/svg+xml",
+      href: favicon,
+    },
   ];
 }
 
@@ -50,30 +56,46 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   return json({ user: await getUser(request), ENV: getEnv() });
 };
 
-export default function App() {
-  // todo: Put user in a context
-  const { ENV, user } = useLoaderData<typeof loader>();
+function Document({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <head>
         <Meta />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
         <meta charSet="utf-8" />
-        <link rel="icon" type="image/svg+xml" href={favicon} />
         <Links />
       </head>
       <body className="bg-gray-700 text-gray-300">
-        <SharedHeader user={user} />
-        <Outlet />
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `window.ENV = ${JSON.stringify(ENV)}`,
-          }}
-        />
+        {children}
         <ScrollRestoration />
         <Scripts />
         <LiveReload />
       </body>
     </html>
+  );
+}
+
+export default function App() {
+  const { ENV, user } = useLoaderData<typeof loader>();
+  return (
+    <Document>
+      <SharedHeader user={user} />
+      <Outlet />
+      <script
+        dangerouslySetInnerHTML={{
+          __html: `window.ENV = ${JSON.stringify(ENV)}`,
+        }}
+      />
+    </Document>
+  );
+}
+
+export function ErrorBoundary() {
+  return (
+    <Document>
+      <div className="flex-1">
+        <ErrorBoundaryComponent />
+      </div>
+    </Document>
   );
 }
