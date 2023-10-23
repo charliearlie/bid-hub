@@ -1,4 +1,9 @@
-import { ActionFunctionArgs, LoaderFunctionArgs, json } from "@remix-run/node";
+import {
+  ActionFunctionArgs,
+  LoaderFunctionArgs,
+  MetaFunction,
+  json,
+} from "@remix-run/node";
 import {
   Links,
   LiveReload,
@@ -15,6 +20,16 @@ import styles from "./styles/app.css";
 import favicon from "./assets/img/favicon.svg";
 import { getEnv } from "./util/env.server";
 
+export const meta: MetaFunction = () => {
+  return [
+    { title: "Brake Neck" },
+    {
+      name: "description",
+      content: "A website to browse and bid on rare luxurious cars",
+    },
+  ];
+};
+
 export function links() {
   return [
     { rel: "stylesheet", href: styles },
@@ -24,7 +39,6 @@ export function links() {
       rel: "stylesheet",
       href: "https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&display=swap",
     },
-    { rel: "icon", type: "image/svg+xml", href: favicon },
   ];
 }
 
@@ -43,10 +57,9 @@ export default function App() {
     <html lang="en">
       <head>
         <Meta />
-        <meta
-          name="viewport"
-          content="width=device-width,initial-scale=1"
-        ></meta>
+        <meta name="viewport" content="width=device-width,initial-scale=1" />
+        <meta charSet="utf-8" />
+        <link rel="icon" type="image/svg+xml" href={favicon} />
         <Links />
       </head>
       <body className="bg-gray-700 text-gray-300">
