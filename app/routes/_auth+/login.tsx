@@ -4,6 +4,7 @@ import {
   useActionData,
   useFormAction,
   useNavigation,
+  useSearchParams,
   useSubmit,
 } from "@remix-run/react";
 import {
@@ -42,6 +43,7 @@ export async function action({ request }: DataFunctionArgs) {
 
   const password = formData.get("password");
   const emailOrUsername = formData.get("emailOrUsername");
+  const redirectTo = formData.get("redirectTo") as string; // We control it so always a string
 
   if (typeof emailOrUsername !== "string") {
     return json({
@@ -61,14 +63,18 @@ export async function action({ request }: DataFunctionArgs) {
       error: `Invalid Form Data`,
     });
   }
-  return await login({
-    email: emailOrUsername,
-    password,
-  });
+  return await login(
+    {
+      email: emailOrUsername,
+      password,
+    },
+    redirectTo
+  );
 }
 
 export default function LoginRoute() {
   const emailInputRef = useRef<HTMLInputElement>(null);
+  const [searchParams] = useSearchParams();
 
   const actionData = useActionData<typeof action>();
   const navigation = useNavigation();
@@ -126,6 +132,12 @@ export default function LoginRoute() {
           required
         />
         <FormField label="Password" name="password" type="password" required />
+        <input
+          name="redirectTo"
+          type="text"
+          value={searchParams.get("redirectTo") || ""}
+          hidden
+        />
         <div className="flex flex-col">
           <SubmitButton
             name="login"
