@@ -29,7 +29,7 @@ export async function action({ request }: DataFunctionArgs) {
         data.email,
         data.username
       );
-      console.log("availabilityCheck.available", availabilityCheck.available);
+
       if (!availabilityCheck.available) {
         if (!availabilityCheck.properties.email) {
           ctx.addIssue({
