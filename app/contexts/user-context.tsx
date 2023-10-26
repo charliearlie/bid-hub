@@ -1,13 +1,13 @@
-import type { LoaderFunction } from "@remix-run/node";
+import type { DataFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import type { ReactNode} from "react";
+import type { ReactNode } from "react";
 import { createContext, useContext } from "react";
 
-import { getUser } from "~/services/session.server";
+import { getUser } from "~/services/user.server";
 import { useLoaderData } from "@remix-run/react";
 
 type UserContextType = {
-  userId: number | null;
+  userId: string | null;
 };
 
 type UserProviderProps = {
@@ -16,23 +16,22 @@ type UserProviderProps = {
 
 const UserContext = createContext<UserContextType | null>(null);
 
-// Maybe we'll consider calling the me query and get the users username, email, etc.
-export const loader: LoaderFunction = async ({ request }) => {
+export const loader = async ({ request }: DataFunctionArgs) => {
   const user = await getUser(request);
   if (user) {
-    return json<string>(user.id);
+    return json(user.id);
   }
 };
 
 export const UserProvider = ({ children }: UserProviderProps) => {
-  const userId = useLoaderData();
+  const userId = useLoaderData<typeof loader>();
 
   return (
     <UserContext.Provider value={{ userId }}>{children}</UserContext.Provider>
   );
 };
 
-export const useUserId = (): number | null => {
+export const useUserId = () => {
   const { userId } = useContext(UserContext) as UserContextType;
   return userId;
 };

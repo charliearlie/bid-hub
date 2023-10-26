@@ -4,13 +4,16 @@ import {
   json,
 } from "@remix-run/node";
 import { useActionData, useLoaderData, useNavigation } from "@remix-run/react";
-import Alert, { AlertType } from "~/components/common/ui/alert";
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+} from "~/components/common/ui/alert";
 import Form from "~/components/form/form";
 import FormField from "~/components/form/form-field";
 import Spinner from "~/components/spinner";
-import { formValidationRegexes } from "~/services/form-validation-regexes";
-import { getUser, getUserId } from "~/services/session.server";
-import { editUser } from "~/services/user.server";
+import { getUserId } from "~/services/session.server";
+import { editUser, getUser } from "~/services/user.server";
 import { invariantResponse } from "~/util/utils";
 
 // todo: Move this into own file or make more generic and just look for a key value pair of strings
@@ -94,7 +97,10 @@ export default function ManageUserRoute() {
           <p className="text-center">Edit the things about you</p>
           {/* We should add a link to go back to requesting a reset link */}
           {actionData?.error && (
-            <Alert type={AlertType.ERROR} message={actionData.error} />
+            <Alert variant="destructive">
+              <AlertTitle>Something went wrong</AlertTitle>
+              <AlertDescription>{actionData?.error}</AlertDescription>
+            </Alert>
           )}
           <Form
             className="mb-4 w-full rounded px-8 pt-6 pb-8 sm:shadow-md"
@@ -102,22 +108,23 @@ export default function ManageUserRoute() {
             initialFormValues={initialFormState}
             method="post"
           >
-            <FormField label="Username" labelLeft name="username" type="text" />
+            <FormField
+              label="Username"
+              name="username"
+              type="text"
+              errors={[]}
+            />
             <FormField
               label="First name"
-              labelLeft
               name="firstName"
               type="text"
-              validateFunc={(string) => {
-                return formValidationRegexes.textOnly.test(string);
-              }}
-              errorMessage=""
+              errors={[]}
             />
             <FormField
               label="Last name"
-              labelLeft
               name="lastName"
               type="text"
+              errors={[]}
             />
             <input type="file" name="avatarImage" />
             <div className="flex justify-center">

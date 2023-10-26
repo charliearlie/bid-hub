@@ -2,12 +2,8 @@ import { Outlet } from "@remix-run/react";
 
 export default function AuthRoute() {
   return (
-    <main className="flex h-screen flex-col flex-wrap content-center justify-center gap-4 bg-gray-800 sm:bg-gray-700">
-      <h1 className="hidden p-2 text-2xl font-bold md:block">
-        Access Brake Neck to purchase the greatest cars on the planet (this is
-        just here to demo nested routing)
-      </h1>
-      <div className="mb-4 w-full max-w-md self-center px-8 pt-6 pb-10 sm:border-2 sm:border-solid sm:border-gray-700 sm:bg-gray-800">
+    <main className="flex h-[calc(100vh-84px)] flex-col flex-wrap content-center justify-center gap-4 bg-accent dark:bg-background">
+      <div className="mb-4 w-full max-w-md self-center rounded-md border border-accent bg-card px-8 pt-6 pb-10 text-card-foreground shadow-sm sm:border sm:border-solid">
         <Outlet />
       </div>
     </main>

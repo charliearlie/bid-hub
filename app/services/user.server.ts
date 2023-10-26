@@ -1,63 +1,51 @@
-// app/utils/user.server.ts
+import { ForgotPassword } from "@prisma/client";
 import bcrypt from "bcryptjs";
 import { v4 as uuidv4 } from "uuid";
 import { json } from "@remix-run/node";
 
 import { prisma } from "./prisma.server";
-import type {
-  EditUserForm,
-  LoginForm,
-  RegisterForm,
-  RegisterResponse,
-} from "~/util/types";
-import { createUserSession } from "~/services/session.server";
+import type { EditUserForm, LoginForm, RegisterForm } from "~/util/types";
+import { createUserSession, getUserId } from "~/services/session.server";
 import sendEmail from "~/services/email.server";
 
 import resetPasswordEmailTemplate from "~/util/helpers/email/reset-password-email";
 import magicLinkEmailTemplate from "~/util/helpers/email/magic-link-email";
 
-// Important note: these functions are mapped one to one to their old mutations/queries
-// I can better structure them soon - such as magic link and forgot password sharing lots of code
+export const checkAvailability = async (email: string, username: string) => {
+  const emailUsages = await prisma.user.count({ where: { email } });
+  const usernameUsages = await prisma.user.count({ where: { username } });
 
-export const register = async (user: RegisterForm) => {
-  const exists = await prisma.user.count({ where: { email: user.email } });
-  if (exists) {
-    return json<RegisterResponse>({
-      success: false,
-      errors: { server: `User already exists with that email` },
-    });
-  }
+  const isEmailAvailable = emailUsages === 0;
+  const isUsernameAvailable = usernameUsages === 0;
 
-  const newUser = await createUser(user);
-
-  if (!newUser) {
-    return json<RegisterResponse>({
-      success: false,
-      errors: { server: `Something went wrong trying to create a new user.` },
-    });
-  }
-
-  return createUserSession(newUser.id);
+  // This will stink if the number of properties grows, but okay for now
+  return {
+    available: isEmailAvailable && isUsernameAvailable,
+    properties: { email: isEmailAvailable, username: isUsernameAvailable },
+  };
 };
 
-export const login = async (
-  { email, password }: LoginForm,
-  redirectTo?: string
-) => {
-  const user = await prisma.user.findUnique({
-    where: { email },
+export const login = async ({ emailOrUsername, password }: LoginForm) => {
+  const user = await prisma.user.findFirst({
+    where: { OR: [{ email: emailOrUsername }, { username: emailOrUsername }] },
   });
 
-  if (!user || !(await bcrypt.compare(password, user.password)))
-    return json({ error: `Incorrect login`, success: false }, { status: 400 });
+  if (!user || !(await bcrypt.compare(password, user.password))) return null;
 
-  return createUserSession(user.id, redirectTo);
+  return user;
 };
 
-export const forgotPassword = async (email: string) => {
+/**
+ *
+ * @param email
+ * @returns null if email fails to send, otherwise returns a json response
+ */
+export const forgotPassword = async (
+  email: string
+): Promise<{ error: string | null; success: boolean }> => {
   const exists = await prisma.user.count({ where: { email } });
   if (!exists) {
-    return json({ error: `No user with that email exists`, success: false });
+    return { error: `No user with that email exists`, success: false };
   }
 
   const token = uuidv4();
@@ -74,23 +62,31 @@ export const forgotPassword = async (email: string) => {
   const html = resetPasswordEmailTemplate(token);
   await sendEmail(email, "Reset your password", html);
 
-  return json({ success: true, error: null });
+  return { error: null, success: true };
 };
 
-export const resetPassword = async (password: string, token: string) => {
-  const forgotPassword = await prisma.forgotPassword.findUnique({
+export const getUserResetTokenData = async (token: string) => {
+  return await prisma.forgotPassword.findUnique({
     where: {
       token,
     },
   });
+};
 
-  if (!forgotPassword || forgotPassword.expiration < new Date()) {
-    return json({ success: false, errors: ["Token is invalid"] });
+export const isTokenValid = async (token: string, expiration: Date) => {
+  if (!token || expiration < new Date()) {
+    return false;
   }
+  return true;
+};
 
+export const resetForgottenPassword = async (
+  { email, token }: ForgotPassword,
+  password: string
+) => {
   const updatedUser = await prisma.user.update({
     where: {
-      email: forgotPassword.email,
+      email: email,
     },
     data: {
       password: await bcrypt.hash(password, 10),
@@ -105,14 +101,13 @@ export const resetPassword = async (password: string, token: string) => {
   return createUserSession(updatedUser.id);
 };
 
-export const generateMagicLink = async (email: string) => {
-  const exists = await prisma.user.count({ where: { email } });
-  if (!exists) {
-    return json(
-      { error: `No user with that email exists`, success: false },
-      { status: 400 }
-    );
+export const generateMagicLink = async (usernameOrEmail: string) => {
+  const user = await getUserByUsernameOrEmail(usernameOrEmail);
+  if (!user) {
+    return null;
   }
+
+  const { email } = user;
 
   const token = uuidv4();
   const expiration = new Date();
@@ -128,7 +123,7 @@ export const generateMagicLink = async (email: string) => {
   const html = magicLinkEmailTemplate(token);
   const emailData = await sendEmail(email, "Here's your login link", html);
 
-  return json({ success: !!emailData.id, error: "" });
+  return { success: !!emailData.id, error: "", email };
 };
 
 export const handleMagicLinkLogin = async (token: string) => {
@@ -190,3 +185,23 @@ export const editUser = async (userId: string, edited: EditUserForm) => {
     return json({ updatedUser: null, error: "Couldn't update lad" });
   }
 };
+
+export async function getUserByUsernameOrEmail(usernameOrEmail: string) {
+  return await prisma.user.findFirst({
+    where: {
+      OR: [{ username: usernameOrEmail }, { email: usernameOrEmail }],
+    },
+  });
+}
+
+// This has a request param. Does it belong in this file? I'm doubting it
+export async function getUser(request: Request) {
+  const userId = await getUserId(request);
+  if (typeof userId !== "string") {
+    return null;
+  }
+
+  return await prisma.user.findUnique({
+    where: { id: userId },
+  });
+}
