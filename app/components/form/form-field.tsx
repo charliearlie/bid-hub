@@ -1,60 +1,39 @@
-import type { FocusEvent, ReactElement } from "react";
-import { forwardRef, useState } from "react";
-
-export type FormFieldErrorProps = {};
+import { ReactElement, forwardRef, useId } from "react";
+import { Label } from "../common/ui/label";
+import { Input } from "../common/ui/input";
+import InputErrors from "./input-errors";
 
 export type FormFieldProps = {
-  errorMessage?: string | React.ReactElement;
+  errors?: Array<string> | null;
   label: string;
-  labelLeft?: boolean;
-  validateFunc?: (str: string) => boolean;
+  name: string;
 };
 
 type Props = FormFieldProps & React.HTMLProps<HTMLInputElement>;
 
 const FormField = forwardRef<HTMLInputElement, Props>(
-  (
-    { errorMessage, label, labelLeft, name, validateFunc, ...props },
-    ref
-  ): ReactElement => {
-    const [, setIsValidField] = useState<boolean>(true);
+  ({ errors, label, name, ...props }, ref): ReactElement => {
+    const id = useId();
+    const inputId = `${id}-${name}`;
+    const inputErrorsId = `${id}-${name}-errors`;
 
-    const validateInput = (e: FocusEvent<HTMLInputElement>) => {
-      if (!validateFunc) return;
-
-      setIsValidField(validateFunc(e.currentTarget.value));
-    };
-
-    const ErrorMessage = (): ReactElement | null => {
-      if (errorMessage) {
-        if (typeof errorMessage === "string") {
-          return <p className="text-sm text-red-600">{errorMessage}</p>;
-        }
-
-        return errorMessage;
-      }
-
-      return null;
-    };
+    const hasErrors = !!errors?.length;
     return (
-      <div
-        className={`mb-4 flex ${
-          labelLeft ? "flex-row items-center justify-between" : "flex-col"
-        }`}
-      >
-        <label className="block font-bold" htmlFor={name}>
+      <div className="flex w-full flex-col gap-1.5">
+        <Label className="font-bold" htmlFor={inputId}>
           {label}
-        </label>
-        <div className="flex flex-col">
-          <input
-            className="rounded bg-clip-padding px-3 py-2
-        text-lg autofill:first-line:text-lg focus:outline-none focus:outline-2 focus:outline-violet-400"
-            name={name}
-            {...props}
-            ref={ref}
-            onBlur={validateInput}
-          />
-          {errorMessage && <ErrorMessage />}
+        </Label>
+        <Input
+          name={name}
+          className={hasErrors ? "ring-2 ring-destructive ring-offset-1" : ""}
+          id={inputId}
+          {...props}
+          ref={ref}
+          aria-invalid={hasErrors || undefined}
+          aria-describedby={hasErrors ? inputErrorsId : undefined}
+        />
+        <div className="min-h-[24px]">
+          <InputErrors id={inputErrorsId} errors={errors} />
         </div>
       </div>
     );
