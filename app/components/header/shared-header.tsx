@@ -5,6 +5,7 @@ import CloseSVG from "~/styles/svg/close";
 import SearchSVG from "~/styles/svg/search";
 import UserDropDown from "./user-dropdown";
 import type { UserType as User } from "~/util/types";
+import { Input } from "../common/ui/input";
 
 type Props = {
   user: User | null;
@@ -19,7 +20,7 @@ export default function SharedHeader({ user }: Props) {
     { title: "Racing cars", path: "/racing" },
   ];
   return (
-    <nav className="sticky top-0 z-50 bg-gray-800">
+    <nav className="sticky top-0 z-50 bg-gray-800 sm:h-[84px]">
       <div className="mx-auto flex max-w-screen-xl items-center space-x-8 py-3 px-4 md:px-8">
         <div className="flex-none lg:flex-initial">
           <Link to="/">
@@ -53,9 +54,9 @@ export default function SharedHeader({ user }: Props) {
           <div className="flex flex-1 items-center justify-end space-x-2 sm:space-x-6">
             <form className="flex items-center space-x-2 rounded-md border bg-gray-900 p-2">
               <SearchSVG />
-              <input
-                className="w-full appearance-none text-gray-300 placeholder-gray-400 outline-none sm:w-auto"
-                type="text"
+              <Input
+                className="w-full sm:w-auto"
+                type="search"
                 placeholder="Search"
               />
             </form>

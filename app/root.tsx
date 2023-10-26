@@ -15,7 +15,8 @@ import {
 } from "@remix-run/react";
 
 import SharedHeader from "./components/header/shared-header";
-import { getUser, logout } from "./services/session.server";
+import { logout } from "./services/session.server";
+import { getUser } from "./services/user.server";
 import styles from "./styles/app.css";
 import favicon from "./assets/img/favicon.svg";
 import { getEnv } from "./util/env.server";
@@ -65,7 +66,7 @@ function Document({ children }: { children: React.ReactNode }) {
         <meta charSet="utf-8" />
         <Links />
       </head>
-      <body className="bg-gray-700 text-gray-300">
+      <body className="bg-accent text-foreground dark:bg-background">
         {children}
         <ScrollRestoration />
         <Scripts />
