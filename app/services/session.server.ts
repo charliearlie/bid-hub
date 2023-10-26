@@ -1,5 +1,4 @@
 import { createCookieSessionStorage, redirect } from "@remix-run/node";
-import { prisma } from "./prisma.server";
 
 const sessionStorage = createCookieSessionStorage({
   cookie: {
@@ -52,17 +51,6 @@ export async function getUserId(request: Request) {
   const userId = session.get("userId");
   if (!userId || typeof userId !== "string") return null;
   return userId;
-}
-
-export async function getUser(request: Request) {
-  const userId = await getUserId(request);
-  if (typeof userId !== "string") {
-    return null;
-  }
-
-  return await prisma.user.findUnique({
-    where: { id: userId },
-  });
 }
 
 export async function logout(request: Request) {
