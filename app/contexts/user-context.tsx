@@ -1,4 +1,4 @@
-import type { DataFunctionArgs, LoaderFunction } from "@remix-run/node";
+import type { DataFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import type { ReactNode } from "react";
 import { createContext, useContext } from "react";
