@@ -1,111 +1,122 @@
-import { Link, useActionData, useNavigation } from "@remix-run/react";
-import {
-  redirect,
-  type LoaderFunction,
-  type DataFunctionArgs,
-  json,
-} from "@remix-run/node";
+import { Form, Link, useActionData, useNavigation } from "@remix-run/react";
+import { type DataFunctionArgs, json } from "@remix-run/node";
+import { z } from "zod";
+import { useForm } from "@conform-to/react";
+import { parse } from "@conform-to/zod";
 
-import Alert, { AlertType } from "~/components/common/ui/alert";
-import Form from "~/components/form/form";
+import { Alert, AlertTitle } from "~/components/common/ui/alert";
 import FormField from "~/components/form/form-field";
-import { getUser } from "~/services/session.server";
 import Spinner from "~/components/spinner";
 import { Button } from "~/components/common/ui/button";
-import {
-  validateEmail,
-  validatePassword,
-  validateUsername,
-} from "~/services/validators.server";
-import { register } from "~/services/user.server";
-import type { RegisterResponse } from "~/util/types";
+import { checkAvailability, createUser } from "~/services/user.server";
+import { createUserSession } from "~/services/session.server";
 
 export const meta = () => {
   return [{ title: "Register for Brake Neck" }];
 };
 
-export const loader: LoaderFunction = async ({ request }) => {
-  // If there's already a user in the session, redirect to the home page
-  return (await getUser(request)) ? redirect("/") : null;
-};
+const RegisterFormSchema = z.object({
+  email: z.string().email({ message: "Email must be a valid email address" }),
+  username: z.string().min(3, "Username must be at least 3 characters"),
+  password: z.string().min(8, "Password must be at least 8 characters"),
+});
 
 export async function action({ request }: DataFunctionArgs) {
   const formData = await request.formData();
+  const submission = await parse(formData, {
+    schema: RegisterFormSchema.superRefine(async (data, ctx) => {
+      const availabilityCheck = await checkAvailability(
+        data.email,
+        data.username
+      );
+      console.log("availabilityCheck.available", availabilityCheck.available);
+      if (!availabilityCheck.available) {
+        if (!availabilityCheck.properties.email) {
+          ctx.addIssue({
+            path: ["email"],
+            code: z.ZodIssueCode.custom,
+            message: "A user already exists with this email",
+          });
+        }
+        if (!availabilityCheck.properties.username) {
+          ctx.addIssue({
+            path: ["username"],
+            code: z.ZodIssueCode.custom,
+            message: "A user already exists with this username",
+          });
+        }
+        return;
+      }
+    }),
+    async: true,
+  });
 
-  const email = formData.get("email");
-  const password = formData.get("password");
-  const username = formData.get("username");
-
-  if (
-    typeof email !== "string" ||
-    typeof password !== "string" ||
-    typeof username !== "string"
-  ) {
-    return json<RegisterResponse>({
-      success: false,
-      errors: { server: `Invalid Form Data` },
-    });
+  if (submission.intent !== "submit" || !submission.value) {
+    return json({ status: "idle", submission } as const);
   }
 
-  const errors = {
-    email: validateEmail(email),
-    password: validatePassword(password),
-    username: validateUsername(username),
-  };
+  const newUser = await createUser(submission.value);
 
-  if (Object.values(errors).some(Boolean))
-    return json<RegisterResponse>({
-      success: false,
-      errors,
-    });
-
-  return await register({ email, password, username });
+  if (!newUser) {
+    return json(
+      {
+        status: "error",
+        submission,
+        error: "Something went wrong",
+      } as const,
+      { status: 500 }
+    );
+  }
+  return createUserSession(newUser.id);
 }
 
 export default function RegisterRoute() {
   const actionData = useActionData<typeof action>();
   const navigation = useNavigation();
+
+  const [form, fields] = useForm({
+    id: "register-form",
+    lastSubmission: actionData?.submission,
+    shouldValidate: "onBlur",
+    onValidate: ({ formData }) => {
+      return parse(formData, { schema: RegisterFormSchema });
+    },
+  });
   return (
     <div>
       <h2 className="pt-4 pb-8 text-center text-3xl font-bold">
         Join Brake Neck
       </h2>
-      <Form
-        className=""
-        initialFormValues={{
-          email: "",
-          password: "",
-          username: "",
-        }}
-        method="post"
-      >
-        {actionData?.success === false && actionData?.errors?.server && (
-          <Alert message={actionData?.errors?.server} type={AlertType.ERROR} />
+      <Form className="" method="post" {...form.props}>
+        {actionData?.status === "error" && (
+          <Alert variant="destructive">
+            <AlertTitle>{actionData?.error}</AlertTitle>
+          </Alert>
         )}
         <FormField
           label="Username"
           name="username"
           type="text"
-          errorMessage={actionData?.errors?.username}
+          errors={fields.username.errors}
         />
         <FormField
           label="Email"
           name="email"
           type="text"
-          errorMessage={actionData?.errors?.email}
+          errors={fields.email.errors}
         />
         <FormField
           label="Password"
           name="password"
           type="password"
-          errorMessage={actionData?.errors?.password}
+          errors={fields.password.errors}
         />
         <div className="flex justify-between">
           <Button className="w-25" variant="default">
             {navigation.state !== "idle" ? <Spinner /> : "Sign up"}
           </Button>
           <Link
-            className="px-0 py-2 font-semibold text-blue-500 hover:text-slate-500"
+            className="px-0 py-2 font-semibold text-accent-foreground hover:text-slate-500"
             to="/login"
           >
             Already registered?
