@@ -11,7 +11,13 @@ export const SubmitButton = React.forwardRef<
   const isPending = status === "pending";
   const content = isPending ? <Spinner /> : children;
   return (
-    <Button className={className} ref={ref} disabled={isPending} {...props}>
+    <Button
+      className={className}
+      ref={ref}
+      disabled={isPending}
+      type="submit"
+      {...props}
+    >
       {content}
     </Button>
   );
