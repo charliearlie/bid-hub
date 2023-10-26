@@ -19,7 +19,7 @@ export default function UserDropDown({ className, user }: Props) {
     return (
       <div className={className}>
         <Button asChild>
-          <Link to="/login">Log in</Link>
+          <Link to="/register">Log in</Link>
         </Button>
       </div>
     );
@@ -35,7 +35,7 @@ export default function UserDropDown({ className, user }: Props) {
     <div className={`relative ${className}`}>
       <div className="flex items-center space-x-4">
         <DropdownMenu>
-          <DropdownMenuTrigger>
+          <DropdownMenuTrigger asChild>
             <button className="h-10 w-10 rounded-full outline-none ring-2 ring-white ring-offset-2 lg:focus:ring-violet-500">
               <img
                 src="https://ih1.redbubble.net/image.1003426384.0291/st,small,507x507-pad,600x600,f8f8f8.jpg"
