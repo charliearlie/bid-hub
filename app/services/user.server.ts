@@ -4,12 +4,7 @@ import { v4 as uuidv4 } from "uuid";
 import { json } from "@remix-run/node";
 
 import { prisma } from "./prisma.server";
-import type {
-  EditUserForm,
-  LoginForm,
-  RegisterForm,
-  RegisterResponse,
-} from "~/util/types";
+import type { EditUserForm, LoginForm, RegisterForm } from "~/util/types";
 import { createUserSession, getUserId } from "~/services/session.server";
 import sendEmail from "~/services/email.server";
 
