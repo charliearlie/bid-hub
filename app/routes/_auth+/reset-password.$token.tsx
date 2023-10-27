@@ -6,8 +6,6 @@ import { useForm } from "@conform-to/react";
 
 import { Alert, AlertTitle } from "~/components/common/ui/alert";
 import FormField from "~/components/form/form-field";
-import Spinner from "~/components/spinner";
-import { Button } from "~/components/common/ui/button";
 import {
   getUserResetTokenData,
   isTokenValid,
@@ -57,7 +55,6 @@ export async function action({ request, params }: ActionFunctionArgs) {
 
 export default function ForgotPasswordRoute() {
   const actionData = useActionData<typeof action>();
-  const navigation = useNavigation();
   const [form, fields] = useForm({
     id: "reset-password-token-form",
     lastSubmission: actionData?.submission,

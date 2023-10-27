@@ -11,8 +11,6 @@ import {
   AlertTitle,
 } from "~/components/common/ui/alert";
 import FormField from "~/components/form/form-field";
-import Spinner from "~/components/spinner";
-import { Button } from "~/components/common/ui/button";
 import { forgotPassword } from "~/services/user.server";
 import { SubmitButton } from "~/components/form/submit-button";
 
@@ -57,7 +55,6 @@ export const action = async ({ request }: DataFunctionArgs) => {
 
 export default function ForgotPasswordRoute() {
   const actionData = useActionData<typeof action>();
-  const navigation = useNavigation();
 
   const [form, fields] = useForm({
     id: "forgot-password-form",

@@ -1,10 +1,4 @@
-import {
-  Form,
-  Link,
-  useActionData,
-  useFormAction,
-  useNavigation,
-} from "@remix-run/react";
+import { Form, Link, useActionData } from "@remix-run/react";
 import { type DataFunctionArgs, json } from "@remix-run/node";
 import { z } from "zod";
 import { useForm } from "@conform-to/react";
@@ -12,11 +6,8 @@ import { parse } from "@conform-to/zod";
 
 import { Alert, AlertTitle } from "~/components/common/ui/alert";
 import FormField from "~/components/form/form-field";
-import Spinner from "~/components/spinner";
-import { Button } from "~/components/common/ui/button";
 import { checkAvailability, createUser } from "~/services/user.server";
 import { createUserSession } from "~/services/session.server";
-import { isFormInPendingState } from "~/util/utils";
 import { SubmitButton } from "~/components/form/submit-button";
 
 export const meta = () => {
