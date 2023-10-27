@@ -14,7 +14,14 @@ export const SubmitButton = React.forwardRef<
   const formAction = useFormAction();
   const isPending = isFormInPendingState(navigation, formAction);
 
-  const content = isPending ? <Spinner /> : children;
+  const content = isPending ? (
+    <span className="flex items-center justify-evenly text-center">
+      <Spinner />
+      {children}
+    </span>
+  ) : (
+    children
+  );
   return (
     <Button
       className={className}
