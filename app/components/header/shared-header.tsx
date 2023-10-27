@@ -20,7 +20,7 @@ export default function SharedHeader({ user }: Props) {
     { title: "Racing cars", path: "/racing" },
   ];
   return (
-    <nav className="sticky top-0 z-50 bg-gray-800 sm:h-[84px]">
+    <nav className="sticky top-0 z-50 bg-accent-foreground dark:bg-background sm:h-[84px]">
       <div className="mx-auto flex max-w-screen-xl items-center space-x-8 py-3 px-4 md:px-8">
         <div className="flex-none lg:flex-initial">
           <Link to="/">
@@ -31,7 +31,7 @@ export default function SharedHeader({ user }: Props) {
         </div>
         <div className="flex flex-1 items-center justify-between">
           <div
-            className={`absolute top-16 left-0 z-20 w-full border-b bg-gray-800 p-4 lg:static lg:block lg:border-none ${
+            className={`border-bp-4 absolute top-16 left-0 z-20 w-full lg:static lg:block lg:border-none ${
               isMenuOpen ? "" : "hidden"
             }`}
           >
@@ -52,7 +52,7 @@ export default function SharedHeader({ user }: Props) {
             />
           </div>
           <div className="flex flex-1 items-center justify-end space-x-2 sm:space-x-6">
-            <form className="flex items-center space-x-2 rounded-md border bg-gray-900 p-2">
+            <form className="flex items-center space-x-2 rounded-md border bg-input p-2 text-foreground">
               <SearchSVG />
               <Input
                 className="w-full sm:w-auto"

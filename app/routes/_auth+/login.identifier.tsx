@@ -1,12 +1,7 @@
-import {
-  Form,
-  Link,
-  useActionData,
-  useSearchParams,
-} from "@remix-run/react";
+import { Form, Link, useActionData, useSearchParams } from "@remix-run/react";
 import { redirect, json, DataFunctionArgs } from "@remix-run/node";
 import { conform, useForm } from "@conform-to/react";
-import { parse } from "@conform-to/zod";
+import { getFieldsetConstraint, parse } from "@conform-to/zod";
 import { z } from "zod";
 import { ArrowRight, Send } from "lucide-react";
 
@@ -84,7 +79,7 @@ export default function LoginIdentifierRoute() {
   return (
     <div>
       {actionData?.status === "error" && (
-        <Alert variant="destructive" className="my-2 bg-slate-900">
+        <Alert variant="destructive" className="my-2">
           <AlertTitle>User not found</AlertTitle>
           <AlertDescription>
             No user matches that email or username
@@ -92,7 +87,7 @@ export default function LoginIdentifierRoute() {
         </Alert>
       )}
       {actionData?.status === "success" && (
-        <Alert className="my-2 bg-slate-900 text-background">
+        <Alert className="my-2">
           <AlertTitle>Token sent</AlertTitle>
           <AlertDescription>
             A token has been sent to {actionData.email}
@@ -121,12 +116,12 @@ export default function LoginIdentifierRoute() {
           <SubmitButton name={conform.INTENT} value="magic" variant="secondary">
             Send magic link {<Send size={16} />}
           </SubmitButton>
-          <Link
+          {/* <Link
             className="px-0 pb-2 font-semibold text-accent-foreground hover:text-slate-500"
             to="/forgot-password"
           >
             Forgot your username or email?
-          </Link>
+          </Link> */}
         </div>
       </Form>
     </div>

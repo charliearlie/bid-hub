@@ -1,7 +1,7 @@
 import { json, type ActionFunctionArgs } from "@remix-run/node";
 import { Form, useActionData } from "@remix-run/react";
 import { z } from "zod";
-import { parse } from "@conform-to/zod";
+import { getFieldsetConstraint, parse } from "@conform-to/zod";
 import { useForm } from "@conform-to/react";
 
 import { Alert, AlertTitle } from "~/components/common/ui/alert";
@@ -58,6 +58,7 @@ export default function ForgotPasswordRoute() {
   const [form, fields] = useForm({
     id: "reset-password-token-form",
     lastSubmission: actionData?.submission,
+    constraint: getFieldsetConstraint(ResetPasswordTokenFormSchema),
     shouldValidate: "onBlur",
     onValidate({ formData }) {
       return parse(formData, { schema: ResetPasswordTokenFormSchema });

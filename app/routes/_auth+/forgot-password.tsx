@@ -1,7 +1,7 @@
 import { Form, useActionData } from "@remix-run/react";
 import { json, type DataFunctionArgs } from "@remix-run/node";
 import { z } from "zod";
-import { parse } from "@conform-to/zod";
+import { getFieldsetConstraint, parse } from "@conform-to/zod";
 import { useForm } from "@conform-to/react";
 import { Send } from "lucide-react";
 
@@ -59,6 +59,7 @@ export default function ForgotPasswordRoute() {
   const [form, fields] = useForm({
     id: "forgot-password-form",
     lastSubmission: actionData?.submission,
+    constraint: getFieldsetConstraint(ForgotPasswordSchema),
     shouldValidate: "onBlur",
     onValidate({ formData }) {
       return parse(formData, { schema: ForgotPasswordSchema });

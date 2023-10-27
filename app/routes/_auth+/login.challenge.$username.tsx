@@ -6,8 +6,8 @@ import {
   useSearchParams,
 } from "@remix-run/react";
 import { redirect, json, DataFunctionArgs } from "@remix-run/node";
-import { useForm } from "@conform-to/react";
-import { parse } from "@conform-to/zod";
+import { conform, useForm } from "@conform-to/react";
+import { getFieldsetConstraint, parse } from "@conform-to/zod";
 import { z } from "zod";
 
 import { Alert, AlertTitle } from "~/components/common/ui/alert";
@@ -60,6 +60,7 @@ export async function action({ request, params }: DataFunctionArgs) {
   });
 
   if (!user) {
+    submission.error[""] = [errorMessage];
     return json({ status: "error", errorMessage, submission } as const);
   }
 
@@ -75,6 +76,7 @@ export default function LoginIdentifierRoute() {
   const [form, fields] = useForm({
     id: "login-challenge-form",
     lastSubmission: actionData?.submission,
+    constraint: getFieldsetConstraint(LoginChallengeSchema),
     shouldValidate: "onBlur",
     defaultValue: { redirectTo: "" },
     onValidate({ formData }) {
@@ -88,8 +90,8 @@ export default function LoginIdentifierRoute() {
         Welcome back {loaderData.username}
       </h3>
       {actionData?.status === "error" && (
-        <Alert variant="destructive" className="my-2 bg-slate-900">
-          <AlertTitle>Incorrect password</AlertTitle>
+        <Alert variant="destructive" className="my-2">
+          <AlertTitle>{form.error}</AlertTitle>
         </Alert>
       )}
       <Form className="" method="post" {...form.props}>

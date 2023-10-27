@@ -2,7 +2,7 @@ import { Form, Link, useActionData } from "@remix-run/react";
 import { type DataFunctionArgs, json } from "@remix-run/node";
 import { z } from "zod";
 import { useForm } from "@conform-to/react";
-import { parse } from "@conform-to/zod";
+import { getFieldsetConstraint, parse } from "@conform-to/zod";
 
 import { Alert, AlertTitle } from "~/components/common/ui/alert";
 import FormField from "~/components/form/form-field";
@@ -87,6 +87,7 @@ export default function RegisterRoute() {
   const [form, fields] = useForm({
     id: "register-form",
     lastSubmission: actionData?.submission,
+    constraint: getFieldsetConstraint(RegisterFormSchema),
     shouldValidate: "onBlur",
     onValidate: ({ formData }) => {
       return parse(formData, { schema: RegisterFormSchema });

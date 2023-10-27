@@ -53,10 +53,7 @@ export default function UserDropDown({ className, user }: Props) {
                   asChild
                   key={idx}
                 >
-                  <Link
-                    className="block cursor-pointer text-gray-700 hover:bg-gray-50"
-                    to={item.path}
-                  >
+                  <Link className="block cursor-pointer" to={item.path}>
                     {item.title}
                   </Link>
                 </DropdownMenuItem>
