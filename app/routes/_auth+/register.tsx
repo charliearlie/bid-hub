@@ -1,4 +1,10 @@
-import { Form, Link, useActionData, useNavigation } from "@remix-run/react";
+import {
+  Form,
+  Link,
+  useActionData,
+  useFormAction,
+  useNavigation,
+} from "@remix-run/react";
 import { type DataFunctionArgs, json } from "@remix-run/node";
 import { z } from "zod";
 import { useForm } from "@conform-to/react";
@@ -10,15 +16,29 @@ import Spinner from "~/components/spinner";
 import { Button } from "~/components/common/ui/button";
 import { checkAvailability, createUser } from "~/services/user.server";
 import { createUserSession } from "~/services/session.server";
+import { isFormInPendingState } from "~/util/utils";
+import { SubmitButton } from "~/components/form/submit-button";
 
 export const meta = () => {
   return [{ title: "Register for Brake Neck" }];
 };
 
 const RegisterFormSchema = z.object({
-  email: z.string().email({ message: "Email must be a valid email address" }),
-  username: z.string().min(3, "Username must be at least 3 characters"),
-  password: z.string().min(8, "Password must be at least 8 characters"),
+  email: z
+    .string({
+      required_error: "Email is required",
+    })
+    .email({ message: "Email must be a valid email address" }),
+  username: z
+    .string({
+      required_error: "Username is required",
+    })
+    .min(3, "Username must be at least 3 characters"),
+  password: z
+    .string({
+      required_error: "Password is required",
+    })
+    .min(8, "Password must be at least 8 characters"),
 });
 
 export async function action({ request }: DataFunctionArgs) {
@@ -72,7 +92,6 @@ export async function action({ request }: DataFunctionArgs) {
 
 export default function RegisterRoute() {
   const actionData = useActionData<typeof action>();
-  const navigation = useNavigation();
 
   const [form, fields] = useForm({
     id: "register-form",
@@ -112,9 +131,9 @@ export default function RegisterRoute() {
           errors={fields.password.errors}
         />
         <div className="flex justify-between">
-          <Button className="w-25" variant="default">
-            {navigation.state !== "idle" ? <Spinner /> : "Sign up"}
-          </Button>
+          <SubmitButton className="w-25" variant="default">
+            Sign up
+          </SubmitButton>
           <Link
             className="px-0 py-2 font-semibold text-accent-foreground hover:text-slate-500"
             to="/login"

@@ -14,6 +14,7 @@ import FormField from "~/components/form/form-field";
 import Spinner from "~/components/spinner";
 import { Button } from "~/components/common/ui/button";
 import { forgotPassword } from "~/services/user.server";
+import { SubmitButton } from "~/components/form/submit-button";
 
 const ForgotPasswordSchema = z.object({
   email: z
@@ -89,7 +90,7 @@ export default function ForgotPasswordRoute() {
           </AlertDescription>
         </Alert>
       )}
-      <Form className="mb-4 pt-6" method="post" {...form.props} >
+      <Form className="mb-4 pt-6" method="post" {...form.props}>
         <FormField
           label="Email"
           name="email"
@@ -97,15 +98,11 @@ export default function ForgotPasswordRoute() {
           errors={fields.email.errors}
         />
         <div className="mt-2 flex justify-center">
-          <Button className="w-full">
-            {navigation.state !== "idle" ? (
-              <Spinner />
-            ) : (
-              <span className="flex gap-1">
-                Send me a link <Send size={16} />
-              </span>
-            )}
-          </Button>
+          <SubmitButton className="w-full">
+            <span className="flex gap-1">
+              Send me a link <Send size={16} />
+            </span>
+          </SubmitButton>
         </div>
       </Form>
     </div>

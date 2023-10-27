@@ -19,7 +19,7 @@ const FormField = forwardRef<HTMLInputElement, Props>(
 
     const hasErrors = !!errors?.length;
     return (
-      <div className="flex w-full flex-col gap-1.5">
+      <div className="flex w-full flex-col gap-2">
         <Label className="font-bold" htmlFor={inputId}>
           {label}
         </Label>

@@ -14,6 +14,7 @@ import {
   resetForgottenPassword,
 } from "~/services/user.server";
 import { invariantResponse } from "~/util/utils";
+import { SubmitButton } from "~/components/form/submit-button";
 
 const ResetPasswordTokenFormSchema = z
   .object({
@@ -90,9 +91,7 @@ export default function ForgotPasswordRoute() {
           errors={fields.confirmPassword.errors}
         />
         <div className="flex justify-center">
-          <Button className="w-full">
-            {navigation.state !== "idle" ? <Spinner /> : "Reset password"}
-          </Button>
+          <SubmitButton className="w-full">Reset password</SubmitButton>
         </div>
       </Form>
     </div>

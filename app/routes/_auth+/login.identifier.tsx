@@ -70,17 +70,9 @@ export async function action({ request }: DataFunctionArgs) {
 }
 
 export default function LoginIdentifierRoute() {
-  const emailInputRef = useRef<HTMLInputElement>(null);
   const [searchParams] = useSearchParams();
 
   const actionData = useActionData<typeof action>();
-  const navigation = useNavigation();
-  const formAction = useFormAction();
-
-  const isPending =
-    navigation.state !== "idle" &&
-    navigation.formAction === formAction &&
-    navigation.formMethod === "POST";
 
   const [form, fields] = useForm({
     id: "login-identifier-form",
@@ -115,7 +107,6 @@ export default function LoginIdentifierRoute() {
           label="Email or username"
           name="emailOrUsername"
           type="text"
-          ref={emailInputRef}
           required
           errors={fields.emailOrUsername.errors}
         />
@@ -127,20 +118,10 @@ export default function LoginIdentifierRoute() {
           hidden
         />
         <div className="flex flex-col gap-4">
-          <SubmitButton
-            name={conform.INTENT}
-            status={isPending ? "pending" : "idle"}
-            value="submit"
-            variant="default"
-          >
+          <SubmitButton name={conform.INTENT} value="submit" variant="default">
             Next {<ArrowRight size={16} />}
           </SubmitButton>
-          <SubmitButton
-            name={conform.INTENT}
-            value="magic"
-            variant="secondary"
-            status={isPending ? "pending" : "idle"}
-          >
+          <SubmitButton name={conform.INTENT} value="magic" variant="secondary">
             Send magic link {<Send size={16} />}
           </SubmitButton>
           <Link
