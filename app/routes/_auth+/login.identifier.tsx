@@ -1,4 +1,4 @@
-import { Form, Link, useActionData, useSearchParams } from "@remix-run/react";
+import { Form, useActionData, useSearchParams } from "@remix-run/react";
 import { redirect, json, DataFunctionArgs } from "@remix-run/node";
 import { conform, useForm } from "@conform-to/react";
 import { getFieldsetConstraint, parse } from "@conform-to/zod";
@@ -70,6 +70,7 @@ export default function LoginIdentifierRoute() {
     id: "login-identifier-form",
     lastSubmission: actionData?.submission,
     shouldValidate: "onBlur",
+    constraint: getFieldsetConstraint(LoginIdentifierSchema),
     defaultValue: { redirectTo: "" },
     onValidate({ formData }) {
       return parse(formData, { schema: LoginIdentifierSchema });
