@@ -34,7 +34,7 @@ export default function Index() {
         alt="Aston Martin Valkyrie"
       />
       <div>
-        <h2 className="flex h-16 w-full items-center justify-center rounded bg-gray-900 text-center text-3xl font-black">
+        <h2 className="flex h-16 w-full items-center justify-center rounded bg-accent text-center text-3xl font-black">
           Hottest hypercars
         </h2>
         <div className="mx-auto max-w-screen-2xl py-4 px-2 lg:px-4">
