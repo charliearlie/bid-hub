@@ -715,8 +715,16 @@ input[type="number"]::-webkit-outer-spin-button,
   margin-left: auto;
 }
 
+.mr-auto {
+  margin-right: auto;
+}
+
 .block {
   display: block;
+}
+
+.inline-block {
+  display: inline-block;
 }
 
 .inline {
@@ -947,6 +955,10 @@ input[type="number"]::-webkit-outer-spin-button,
   justify-content: space-between;
 }
 
+.justify-evenly {
+  justify-content: space-evenly;
+}
+
 .gap-6 {
   gap: 1.5rem;
 }
@@ -1165,6 +1177,10 @@ input[type="number"]::-webkit-outer-spin-button,
 
 .fill-current {
   fill: currentColor;
+}
+
+.fill-accent {
+  fill: hsl(var(--accent));
 }
 
 .object-cover {

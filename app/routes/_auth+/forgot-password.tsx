@@ -1,4 +1,4 @@
-import { Form, useActionData, useNavigation } from "@remix-run/react";
+import { Form, useActionData } from "@remix-run/react";
 import { json, type DataFunctionArgs } from "@remix-run/node";
 import { z } from "zod";
 import { parse } from "@conform-to/zod";
@@ -11,9 +11,8 @@ import {
   AlertTitle,
 } from "~/components/common/ui/alert";
 import FormField from "~/components/form/form-field";
-import Spinner from "~/components/spinner";
-import { Button } from "~/components/common/ui/button";
 import { forgotPassword } from "~/services/user.server";
+import { SubmitButton } from "~/components/form/submit-button";
 
 const ForgotPasswordSchema = z.object({
   email: z
@@ -56,7 +55,6 @@ export const action = async ({ request }: DataFunctionArgs) => {
 
 export default function ForgotPasswordRoute() {
   const actionData = useActionData<typeof action>();
-  const navigation = useNavigation();
 
   const [form, fields] = useForm({
     id: "forgot-password-form",
@@ -89,7 +87,7 @@ export default function ForgotPasswordRoute() {
           </AlertDescription>
         </Alert>
       )}
-      <Form className="mb-4 pt-6" method="post" {...form.props} >
+      <Form className="mb-4 pt-6" method="post" {...form.props}>
         <FormField
           label="Email"
           name="email"
@@ -97,15 +95,11 @@ export default function ForgotPasswordRoute() {
           errors={fields.email.errors}
         />
         <div className="mt-2 flex justify-center">
-          <Button className="w-full">
-            {navigation.state !== "idle" ? (
-              <Spinner />
-            ) : (
-              <span className="flex gap-1">
-                Send me a link <Send size={16} />
-              </span>
-            )}
-          </Button>
+          <SubmitButton className="w-full">
+            <span className="flex gap-1">
+              Send me a link <Send size={16} />
+            </span>
+          </SubmitButton>
         </div>
       </Form>
     </div>

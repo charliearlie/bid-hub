@@ -1,19 +1,18 @@
 import { json, type ActionFunctionArgs } from "@remix-run/node";
-import { Form, useActionData, useNavigation } from "@remix-run/react";
+import { Form, useActionData } from "@remix-run/react";
 import { z } from "zod";
 import { parse } from "@conform-to/zod";
 import { useForm } from "@conform-to/react";
 
 import { Alert, AlertTitle } from "~/components/common/ui/alert";
 import FormField from "~/components/form/form-field";
-import Spinner from "~/components/spinner";
-import { Button } from "~/components/common/ui/button";
 import {
   getUserResetTokenData,
   isTokenValid,
   resetForgottenPassword,
 } from "~/services/user.server";
 import { invariantResponse } from "~/util/utils";
+import { SubmitButton } from "~/components/form/submit-button";
 
 const ResetPasswordTokenFormSchema = z
   .object({
@@ -56,7 +55,6 @@ export async function action({ request, params }: ActionFunctionArgs) {
 
 export default function ForgotPasswordRoute() {
   const actionData = useActionData<typeof action>();
-  const navigation = useNavigation();
   const [form, fields] = useForm({
     id: "reset-password-token-form",
     lastSubmission: actionData?.submission,
@@ -90,9 +88,7 @@ export default function ForgotPasswordRoute() {
           errors={fields.confirmPassword.errors}
         />
         <div className="flex justify-center">
-          <Button className="w-full">
-            {navigation.state !== "idle" ? <Spinner /> : "Reset password"}
-          </Button>
+          <SubmitButton className="w-full">Reset password</SubmitButton>
         </div>
       </Form>
     </div>

@@ -2,9 +2,7 @@ import {
   Form,
   Link,
   useActionData,
-  useFormAction,
   useLoaderData,
-  useNavigation,
   useSearchParams,
 } from "@remix-run/react";
 import { redirect, json, DataFunctionArgs } from "@remix-run/node";
@@ -73,13 +71,6 @@ export default function LoginIdentifierRoute() {
   const loaderData = useLoaderData<typeof loader>();
 
   const actionData = useActionData<typeof action>();
-  const navigation = useNavigation();
-  const formAction = useFormAction();
-
-  const isPending =
-    navigation.state !== "idle" &&
-    navigation.formAction === formAction &&
-    navigation.formMethod === "POST";
 
   const [form, fields] = useForm({
     id: "login-challenge-form",
@@ -118,16 +109,12 @@ export default function LoginIdentifierRoute() {
         />
         <div className="flex items-center justify-between">
           <Link
-            className="px-0 pb-2 font-semibold text-blue-500 hover:text-slate-500"
+            className="px-0 pb-2 font-semibold text-accent-foreground hover:text-slate-500"
             to="/forgot-password"
           >
             Forgot your password?
           </Link>
-          <SubmitButton
-            name="login"
-            variant="default"
-            status={isPending ? "pending" : "idle"}
-          >
+          <SubmitButton name="login" variant="default">
             Log in
           </SubmitButton>
         </div>
