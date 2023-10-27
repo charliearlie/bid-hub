@@ -123,15 +123,15 @@ export default function RegisterRoute() {
           errors={fields.password.errors}
         />
         <div className="flex justify-between">
-          <SubmitButton className="w-25" variant="default">
-            Sign up
-          </SubmitButton>
           <Link
             className="px-0 py-2 font-semibold text-accent-foreground hover:text-slate-500"
             to="/login"
           >
             Already registered?
           </Link>
+          <SubmitButton className="w-25" variant="default">
+            Sign up
+          </SubmitButton>
         </div>
       </Form>
     </div>
