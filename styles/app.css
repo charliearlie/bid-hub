@@ -78,6 +78,7 @@
     font-family: "Raleway", sans-serif;
   }
 
+  textarea,
   input {
     @apply bg-input text-foreground;
   }
@@ -86,6 +87,7 @@
   input:-webkit-autofill:focus {
     transition: background-color 600000s 0s, color 600000s 0s;
   }
+
   input[data-autocompleted] {
     background-color: transparent !important;
   }

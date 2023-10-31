@@ -5,7 +5,7 @@ import {
   useLoaderData,
   useSearchParams,
 } from "@remix-run/react";
-import { redirect, json, DataFunctionArgs } from "@remix-run/node";
+import { redirect, json, type DataFunctionArgs } from "@remix-run/node";
 import { useForm } from "@conform-to/react";
 import { getFieldsetConstraint, parse } from "@conform-to/zod";
 import { z } from "zod";
@@ -25,8 +25,8 @@ const LoginChallengeSchema = z.object({
 
 export const meta = () => {
   return [
-    { title: "Log in to Brake Neck" },
-    { name: "description", content: "Log in page for Brake Neck" },
+    { title: "Log in to Bidhub" },
+    { name: "description", content: "Log in page for Bidhub" },
   ];
 };
 

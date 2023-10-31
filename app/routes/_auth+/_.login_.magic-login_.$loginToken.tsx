@@ -1,4 +1,4 @@
-import { DataFunctionArgs, json } from "@remix-run/node";
+import { type DataFunctionArgs, json } from "@remix-run/node";
 import { handleMagicLinkLogin } from "~/services/user.server";
 import invariant from "tiny-invariant";
 import { useLoaderData } from "@remix-run/react";

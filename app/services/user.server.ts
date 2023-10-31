@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from "uuid";
 import { json } from "@remix-run/node";
 
 import { prisma } from "./prisma.server";
-import type { EditUserForm, LoginForm, RegisterForm } from "~/util/types";
+import type { LoginForm, RegisterForm } from "~/util/types";
 import { createUserSession, getUserId } from "~/services/session.server";
 import sendEmail from "~/services/email.server";
 
@@ -158,38 +158,18 @@ export const createUser = async (user: RegisterForm) => {
   return { id: newUser.id, email: newUser.email };
 };
 
-export const editUser = async (userId: string, edited: EditUserForm) => {
-  try {
-    const updatedUser = await prisma.user.update({
-      where: {
-        id: userId,
-      },
-      data: {
-        avatarUrl: edited.avatarUrl,
-        personalDetails: {
-          upsert: {
-            update: {
-              firstName: edited.firstName || "",
-              lastName: edited.lastName || "",
-            },
-            set: {
-              firstName: edited.firstName || "",
-              lastName: edited.lastName || "",
-            },
-          },
-        },
-      },
-    });
-    return json({ error: null, updatedUser });
-  } catch (e) {
-    return json({ updatedUser: null, error: "Couldn't update lad" });
-  }
-};
-
 export async function getUserByUsernameOrEmail(usernameOrEmail: string) {
   return await prisma.user.findFirst({
     where: {
       OR: [{ username: usernameOrEmail }, { email: usernameOrEmail }],
+    },
+  });
+}
+
+export async function getUserById(userId: string) {
+  return await prisma.user.findUnique({
+    where: {
+      id: userId,
     },
   });
 }

@@ -2,6 +2,7 @@ import { Navigation, useFormAction, useNavigation } from "@remix-run/react";
 import { type ClassValue, clsx } from "clsx";
 import { useEffect } from "react";
 import { twMerge } from "tailwind-merge";
+import { v4 as uuidv4 } from "uuid";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -77,4 +78,13 @@ export function isFormInPendingState(
     navigation.formAction === formAction &&
     navigation.formMethod === "POST"
   );
+}
+
+export function generateSlug(listingTitle: string) {
+  const uuid = uuidv4();
+  return listingTitle
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)+/g, "")
+    .concat(`-${uuid}`);
 }
