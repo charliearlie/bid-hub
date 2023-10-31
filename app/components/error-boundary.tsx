@@ -1,4 +1,4 @@
-import { ErrorResponse } from "@remix-run/node";
+import { type ErrorResponse } from "@remix-run/node";
 import {
   isRouteErrorResponse,
   useParams,
