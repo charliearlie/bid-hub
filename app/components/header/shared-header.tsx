@@ -15,9 +15,8 @@ export default function SharedHeader({ user }: Props) {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
 
   const navigation = [
-    { title: "Supercars", path: "/supercars" },
-    { title: "Hypercars", path: "/hypercars" },
-    { title: "Racing cars", path: "/racing" },
+    { title: "Buy", path: "/buy" },
+    { title: "Sell", path: "/sell" },
   ];
   return (
     <nav className="sticky top-0 z-50 bg-accent-foreground dark:bg-background sm:h-[84px]">
@@ -25,7 +24,7 @@ export default function SharedHeader({ user }: Props) {
         <div className="flex-none lg:flex-initial">
           <Link to="/">
             <span className="text-2xl font-black text-purple-200 md:text-4xl">
-              BrakeNeck
+              Bidhub
             </span>
           </Link>
         </div>

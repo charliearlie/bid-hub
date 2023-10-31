@@ -9,7 +9,7 @@ type ListingPreviewProps = {
 };
 
 export default function ListingPreview({ listing }: ListingPreviewProps) {
-  const { buyItNowPrice, highestBidValue, images, slug, title } = listing;
+  const { buyItNowPrice, highestBidValue, slug, title } = listing;
 
   return (
     <Card>

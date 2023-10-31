@@ -5,7 +5,7 @@ import {
   useLoaderData,
   useSearchParams,
 } from "@remix-run/react";
-import { redirect, json, DataFunctionArgs } from "@remix-run/node";
+import { redirect, json, type DataFunctionArgs } from "@remix-run/node";
 import { useForm } from "@conform-to/react";
 import { getFieldsetConstraint, parse } from "@conform-to/zod";
 import { z } from "zod";

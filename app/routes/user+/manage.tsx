@@ -12,8 +12,7 @@ import {
 import Form from "~/components/form/form";
 import FormField from "~/components/form/form-field";
 import Spinner from "~/components/spinner";
-import { getUserId } from "~/services/session.server";
-import { editUser, getUser } from "~/services/user.server";
+import { getUser } from "~/services/user.server";
 import { invariantResponse } from "~/util/utils";
 
 // todo: Move this into own file or make more generic and just look for a key value pair of strings
@@ -25,13 +24,9 @@ type ActionData = {
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-  let image = null;
   const formData = await request.formData();
 
   const avatarImage = formData.get("avatarImage") as string;
-  const firstName = formData.get("firstName") as string;
-  const lastName = formData.get("lastName") as string;
-  const username = formData.get("username") as string;
 
   const errors: ActionData = {
     firstName: null, // todo: Do some validation to ensure this is a valid first name
@@ -56,19 +51,9 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       method: "POST",
       body: data,
     });
-    image = await res.json();
+    await res.json();
   }
-
-  const editedUserDetails = {
-    avatarUrl: image?.secure_url ?? null,
-    firstName,
-    lastName,
-    username,
-  };
-
-  const userId = await getUserId(request);
-
-  return await editUser(userId!, editedUserDetails);
+  return null;
 };
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
@@ -85,8 +70,6 @@ export default function ManageUserRoute() {
 
   const initialFormState = {
     username: user.username,
-    firstName: user.personalDetails?.firstName || "",
-    lastName: user.personalDetails?.lastName || "",
   };
   const navigation = useNavigation();
   if (user) {
