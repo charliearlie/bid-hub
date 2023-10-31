@@ -11,7 +11,7 @@ import { createUserSession } from "~/services/session.server";
 import { SubmitButton } from "~/components/form/submit-button";
 
 export const meta = () => {
-  return [{ title: "Register for Brake Neck" }];
+  return [{ title: "Register for Bidhub" }];
 };
 
 const RegisterFormSchema = z.object({
@@ -95,9 +95,7 @@ export default function RegisterRoute() {
   });
   return (
     <div>
-      <h2 className="pt-4 pb-8 text-center text-3xl font-bold">
-        Join Brake Neck
-      </h2>
+      <h2 className="pt-4 pb-8 text-center text-3xl font-bold">Join Bidhub</h2>
       <Form className="" method="post" {...form.props}>
         {actionData?.status === "error" && (
           <Alert variant="destructive">

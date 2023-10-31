@@ -25,8 +25,8 @@ const LoginChallengeSchema = z.object({
 
 export const meta = () => {
   return [
-    { title: "Log in to Brake Neck" },
-    { name: "description", content: "Log in page for Brake Neck" },
+    { title: "Log in to Bidhub" },
+    { name: "description", content: "Log in page for Bidhub" },
   ];
 };
 
