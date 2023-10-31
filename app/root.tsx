@@ -24,10 +24,10 @@ import { ErrorBoundaryComponent } from "./components/error-boundary";
 
 export const meta: MetaFunction = () => {
   return [
-    { title: "Brake Neck" },
+    { title: "Bidhub" },
     {
       name: "description",
-      content: "A website to browse and bid on rare luxurious cars",
+      content: "A marketplace for buying and selling items",
     },
   ];
 };
@@ -54,7 +54,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 };
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  return json({ user: await getUser(request), ENV: getEnv() });
+  const user = await getUser(request);
+  return json({ user, ENV: getEnv() });
 };
 
 function Document({ children }: { children: React.ReactNode }) {
