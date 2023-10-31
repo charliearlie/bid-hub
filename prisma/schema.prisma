@@ -1,51 +1,178 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "mongodb"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
 model User {
-  id              String           @id @default(auto()) @map("_id") @db.ObjectId
-  createdAt       DateTime         @default(now())
-  updatedAt       DateTime         @updatedAt
-  username        String           @unique
-  email           String           @unique
+  createdAt       DateTime             @default(now())
+  updatedAt       DateTime             @updatedAt
+  username        String               @unique
+  email           String               @unique
   password        String
-  active          Boolean          @default(true)
+  active          Boolean              @default(true)
   avatarUrl       String?
   feedbackScore   Int?
+  role            Role                 @default(USER)
+  id              String               @id @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   addresses       Address[]
-  role            Role             @default(USER)
-  auctions        Auction[]
   bids            Bid[]
   comments        Comment[]
   likes           Like[]
+  listings        Listing[]
   payments        Payment[]
-  personalDetails PersonalDetails?
+  personalDetails UserPersonalDetails?
 }
 
-// Both these models match. Maybe I need tp think of a name which matches both their jobs
+model UserPersonalDetails {
+  firstName String
+  lastName  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  id        String   @id @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId    String   @unique @db.Uuid
+  user      User     @relation(fields: [userId], references: [id])
+}
+
 model ForgotPassword {
   email      String
-  token      String   @id @map("_id")
+  token      String   @id
   expiration DateTime
 }
 
 model MagicLogin {
   email      String
-  token      String   @id @map("_id")
+  token      String   @id
   expiration DateTime
 }
 
-type PersonalDetails {
-  firstName String
-  lastName  String
+model Listing {
+  createdAt       DateTime               @default(now()) @db.Timestamptz(6)
+  updatedAt       DateTime               @default(now()) @updatedAt @db.Timestamptz(6)
+  quantity        Int                    @default(1)
+  highestBidValue Int?
+  startTime       DateTime?              @db.Timestamptz(6)
+  endTime         DateTime?              @db.Timestamptz(6)
+  buyItNowPrice   Int?
+  minBidIncrement Int?                   @default(50)
+  images          String[]
+  slug            String                 @unique
+  title           String
+  startingBid     Int?
+  id              String                 @id @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  sellerId        String                 @db.Uuid
+  itemId          String                 @db.Uuid
+  description     String
+  Bid             Bid[]
+  comments        Comment[]
+  likes           Like[]
+  item            Item                   @relation(fields: [itemId], references: [id])
+  seller          User                   @relation(fields: [sellerId], references: [id])
+  condition       Condition?
+  categories      CategoriesOnListings[]
+}
+
+model Item {
+  name        String
+  description String?
+  size        String?
+  material    String?
+  colour      String?
+  image       String?
+  id          String              @id @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  brandId     String?             @db.Uuid
+  categories  CategoriesOnItems[]
+  listings    Listing[]
+}
+
+model Category {
+  name     String
+  id       String                 @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  items    CategoriesOnItems[]
+  listings CategoriesOnListings[]
+}
+
+model CategoriesOnItems {
+  itemId     String   @db.Uuid
+  categoryId String   @db.Uuid
+  category   Category @relation(fields: [categoryId], references: [id])
+  item       Item     @relation(fields: [itemId], references: [id])
+
+  @@id([itemId, categoryId])
+}
+
+model CategoriesOnListings {
+  listingId  String   @db.Uuid
+  categoryId String   @db.Uuid
+  category   Category @relation(fields: [categoryId], references: [id])
+  listing    Listing  @relation(fields: [listingId], references: [id])
+
+  @@id([listingId, categoryId])
+}
+
+model Brand {
+  name String
+  id   String @id @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+}
+
+model Comment {
+  text      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  id        String   @id @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId    String   @db.Uuid
+  listingId String   @db.Uuid
+  listing   Listing  @relation(fields: [listingId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+model Like {
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  id        String   @id @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId    String   @db.Uuid
+  listingId String   @db.Uuid
+  listing   Listing  @relation(fields: [listingId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+model Bid {
+  createdAt DateTime @default(now())
+  bidAmount Float
+  id        String   @id @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  bidderId  String   @db.Uuid
+  listingId String   @db.Uuid
+  bidder    User     @relation(fields: [bidderId], references: [id])
+  listing   Listing  @relation(fields: [listingId], references: [id])
+}
+
+model Address {
+  line1     String
+  line2     String?
+  city      String
+  county    String?
+  country   String
+  postCode  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    String   @db.Uuid
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+model Payment {
+  cardNumber     String
+  cardHolderName String
+  expiryMonth    String
+  expiryYear     String
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  id             String   @id @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId         String   @db.Uuid
+  user           User     @relation(fields: [userId], references: [id])
 }
 
 enum Role {
@@ -53,217 +180,10 @@ enum Role {
   ADMIN
 }
 
-model Manufacturer {
-  id         String   @id @default(auto()) @map("_id") @db.ObjectId
-  name       String   @unique
-  country    String
-  discipline String?
-  cars       Car[]
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-}
-
-model Car {
-  id                 String              @id @default(auto()) @map("_id") @db.ObjectId
-  slug               String              @unique
-  model              String
-  variation          String?
-  year               Int
-  powertrain         Powertrain
-  bodyAndChassis     BodyAndChassis?
-  dimensions         Dimensions?
-  topSpeed           Float?
-  zeroTo60           Float?
-  zeroTo100          Float?
-  images             CarImage[]
-  previewImage       String?
-  manufacturerName   String
-  manufacturer       Manufacturer        @relation(fields: [manufacturerName], references: [name])
-  createdAt          DateTime            @default(now())
-  updatedAt          DateTime            @updatedAt
-  comments           Comment[]
-  likes              Like[]
-  auctions           Auction[]
-  drivetrain         String?
-  infotainmentSystem InfotainmentSystem?
-  safetyFeatures     SafetyFeatures?
-  marketPrice        Int?
-  carType            String
-  codeNames          String[]
-  technologyPartner  String?
-  production         ProductionDetails?
-}
-
-type CarImage {
-  imageUrl String
-  credit   String
-}
-
-type Powertrain {
-  engine           Engine?
-  electricPower    Int?
-  horsepower       Int
-  transmission     String
-  battery          String?
-  hybridDrivetrain String?
-  fullPowerOutput  Int
-  lbsOfTorque      Int?
-  supplier         String?
-}
-
-type Engine {
-  layout        String?
-  displacement  String?
-  supplier      String?
-  name          String?
-  configuration String?
-  induction     String?
-  cylinders     Int?
-}
-
-type BodyAndChassis {
-  bodyMaterial String?
-  bodyStyle String?
-  brakes String?
-  doorType  String?
-  layout  String?
-  steering String?
-  suspension Suspension?
-  seats Int?
-  tyres String?
-}
-
-type Dimensions {
-  wheelBase Float?
-  height  Float?
-  width   Float?
-  length  Float?
-  weight  Float?
-}
-
-type InfotainmentSystem {
-  touchscreenDisplay    Boolean
-  speakers              Int
-  bluetoothConnectivity Boolean
-  appleCarplay          Boolean
-  androidAuto           Boolean
-}
-
-type SafetyFeatures {
-  airbags                    Int?
-  antilockBrakes             Boolean?
-  tractionControl            Boolean?
-  electronicStabilityControl Boolean?
-  backupCamera               Boolean?
-}
-
-type Suspension {
-  front String
-  rear  String
-}
-
-enum CarType {
-  RACING
-  SPORTS
-  LUXURY
-  SUPERCAR
-  HYPERCAR
-}
-
-type RacingInformation {
-  racesEntered Int
-  raceWins     Int
-  podiums      Int
-  series       String
-}
-
-type ProductionDetails {
-  start Int?
-  end   Int?
-  units Int?
-}
-
-model Comment {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  text      String
-  user      User     @relation(fields: [userId], references: [id])
-  userId    String   @db.ObjectId
-  car       Car      @relation(fields: [carId], references: [id])
-  carId     String   @db.ObjectId
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model Like {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  user      User     @relation(fields: [userId], references: [id])
-  userId    String   @db.ObjectId
-  car       Car      @relation(fields: [carId], references: [id])
-  carId     String   @db.ObjectId
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model Auction {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  user        User     @relation(fields: [userId], references: [id])
-  userId      String   @db.ObjectId
-  car         Car      @relation(fields: [carId], references: [id])
-  carId       String   @db.ObjectId
-  startingBid Float
-  currentBid  Float?
-  bids        Bid[]
-  auctionEnd  DateTime
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-}
-
-model Bid {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  user      User     @relation(fields: [userId], references: [id])
-  userId    String   @db.ObjectId
-  auction   Auction  @relation(fields: [auctionId], references: [id])
-  auctionId String   @db.ObjectId
-  bidAmount Float
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model Address {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  line1     String
-  line2     String?
-  city      String
-  county    String?
-  country   String
-  postCode  String
-  user      User     @relation(fields: [userId], references: [id])
-  userId    String   @db.ObjectId
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model Payment {
-  id             String   @id @default(auto()) @map("_id") @db.ObjectId
-  cardNumber     String
-  cardHolderName String
-  expiryMonth    String
-  expiryYear     String
-  user           User     @relation(fields: [userId], references: [id])
-  userId         String   @db.ObjectId
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
-}
-
-model Person {
-  id          String        @id @default(auto()) @map("_id") @db.ObjectId
-  name        String
-  Contributor Contributor[]
-}
-
-model Contributor {
-  id           String @id @default(auto()) @map("_id") @db.ObjectId
-  contribution String
-  person       Person @relation(fields: [personId], references: [id])
-  personId     String @db.ObjectId
+enum Condition {
+  NEW_SEALED
+  NEW_WITH_PACKAGING
+  NEW_WITHOUT_PACKAGING
+  DAMAGED
+  USED
 }

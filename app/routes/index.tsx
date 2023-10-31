@@ -1,26 +1,25 @@
 import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 
-import { Previews } from "~/components/cars";
-import { getAllCars } from "~/services/cars.server";
+import { Previews } from "~/components/listings";
+import { getAllListings } from "~/services/listings.server";
 
 export const meta = () => {
-  return [{ title: "Brake Neck - Cars at break neck speed" }];
+  return [{ title: "Bidhub | Buy & sell things" }];
 };
 
 export const loader = async () => {
-  const cars = await getAllCars();
+  const listings = await getAllListings();
 
-  if (!cars) {
-    throw new Response("Cars failed to load", { status: 500 });
+  if (!listings) {
+    throw new Response("listings failed to load", { status: 500 });
   }
 
-  const carPreviewData = cars.map((car) => {
-    const { manufacturerName, model, previewImage, slug, variation, year } =
-      car;
-    return { manufacturerName, model, previewImage, slug, variation, year };
+  const listingPreviewData = listings.map((listing) => {
+    const { buyItNowPrice, highestBidValue, id, images, slug, title } = listing;
+    return { buyItNowPrice, highestBidValue, id, images, slug, title };
   });
-  return json({ cars: carPreviewData });
+  return json({ listings: listingPreviewData });
 };
 
 export default function Index() {
@@ -35,10 +34,10 @@ export default function Index() {
       />
       <div>
         <h2 className="flex h-16 w-full items-center justify-center rounded bg-accent text-center text-3xl font-black">
-          Hottest hypercars
+          Buy & sell things
         </h2>
         <div className="mx-auto max-w-screen-2xl py-4 px-2 lg:px-4">
-          <Previews cars={loaderData.cars} />
+          <Previews listings={loaderData.listings} />
         </div>
       </div>
     </main>

@@ -1,4 +1,4 @@
-import { Car, User } from "@prisma/client";
+import { User } from "@prisma/client";
 
 export type RegisterForm = {
   username: string;
@@ -40,5 +40,4 @@ export type ReplaceDateProperties<T> = Omit<T, "createdAt" | "updatedAt"> & {
   updatedAt: string;
 };
 
-export type CarType = ReplaceDateProperties<Car>;
 export type UserType = ReplaceDateProperties<User>;
