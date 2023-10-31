@@ -66,13 +66,13 @@ model Listing {
   sellerId        String                 @db.Uuid
   itemId          String                 @db.Uuid
   description     String
+  condition       Condition?
   Bid             Bid[]
+  categories      CategoriesOnListings[]
   comments        Comment[]
   likes           Like[]
   item            Item                   @relation(fields: [itemId], references: [id])
   seller          User                   @relation(fields: [sellerId], references: [id])
-  condition       Condition?
-  categories      CategoriesOnListings[]
 }
 
 model Item {
@@ -89,10 +89,14 @@ model Item {
 }
 
 model Category {
-  name     String
-  id       String                 @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  items    CategoriesOnItems[]
-  listings CategoriesOnListings[]
+  name            String
+  id              String                 @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  parentId        String?                @db.Uuid
+  label           String?
+  items           CategoriesOnItems[]
+  listings        CategoriesOnListings[]
+  parentCategory  Category?              @relation("ChildCategories", fields: [parentId], references: [id])
+  childCategories Category[]             @relation("ChildCategories")
 }
 
 model CategoriesOnItems {

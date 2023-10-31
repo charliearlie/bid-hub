@@ -18,6 +18,7 @@ export async function addListing(
     | "minBidIncrement"
   >,
   item: Item,
+  categoryIds: string[],
   userId: string
 ) {
   const user = await getUserById(userId);
@@ -39,6 +40,15 @@ export async function addListing(
           id: item.id,
         },
       },
+      categories: {
+        create: categoryIds.map((categoryId) => ({
+          category: {
+            connect: {
+              id: categoryId,
+            },
+          },
+        })),
+      },
       slug: generateSlug(listing.title),
     },
   });
@@ -53,4 +63,32 @@ export const getListingBySlug = async (slug: string) => {
   });
 
   return item;
+};
+
+export const getListingsByCategory = async (categoryId: string) => {
+  const listings = await prisma.listing.findMany({
+    where: {
+      categories: {
+        some: {
+          categoryId,
+        },
+      },
+    },
+  });
+
+  return listings;
+};
+
+export const getCategoryDropdownOptions = async () => {
+  const categories = await prisma.category.findMany({
+    select: {
+      id: true,
+      name: true,
+    },
+  });
+
+  return categories.map((category) => ({
+    value: category.id,
+    label: category.name,
+  }));
 };

@@ -7,7 +7,7 @@ function Client() {
 }
 
 if (ENV.MODE === "development") {
-  console.log("Developing on the client brah");
+  console.log("Developing on the client");
 }
 
 startTransition(() => {
