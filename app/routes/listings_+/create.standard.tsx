@@ -1,19 +1,30 @@
 import { conform, useForm } from "@conform-to/react";
 import { getFieldsetConstraint, parse } from "@conform-to/zod";
 import { Item } from "@prisma/client";
+import { SelectValue } from "@radix-ui/react-select";
 import { DataFunctionArgs, json } from "@remix-run/node";
-import { Form, useActionData } from "@remix-run/react";
+import { Form, useActionData, useLoaderData } from "@remix-run/react";
 import { PoundSterlingIcon } from "lucide-react";
 import { useState } from "react";
 import { z } from "zod";
 import { SwitchWithLabel } from "~/components/common/switch-with-label";
 import Card from "~/components/common/ui/card/card";
 import CardContent from "~/components/common/ui/card/card-content";
+import { Label } from "~/components/common/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+} from "~/components/common/ui/select";
 import FormField from "~/components/form/form-field";
 import FormFieldTextArea from "~/components/form/form-field-text-area";
 import { SubmitButton } from "~/components/form/submit-button";
 import { createItem, getItemById } from "~/services/item.server";
-import { addListing } from "~/services/listings.server";
+import {
+  addListing,
+  getCategoryDropdownOptions,
+} from "~/services/listings.server";
 import { getUserId } from "~/services/session.server";
 
 const CreateListingSchema = z
@@ -29,6 +40,7 @@ const CreateListingSchema = z
     itemName: z
       .string({ required_error: "Please enter an item name" })
       .max(100),
+    categoryId: z.string().max(100),
     quantity: z.number().max(100).default(1),
     buyItNowPrice: z.number().max(10000000).optional(),
     startingBid: z.number().max(100000).optional(),
@@ -49,6 +61,12 @@ const CreateListingSchema = z
       message: "Either Buy It Now Price or Starting Price must be specified.",
     }
   );
+
+export const loader = async () => {
+  const categoryDropdownOptions = await getCategoryDropdownOptions();
+
+  return json({ categoryDropdownOptions } as const);
+};
 
 export const action = async ({ request }: DataFunctionArgs) => {
   const formData = await request.formData();
@@ -91,6 +109,7 @@ export const action = async ({ request }: DataFunctionArgs) => {
       minBidIncrement: listingData.minBidIncrement || null,
     },
     newItem,
+    [listingData.categoryId],
     userId
   );
 
@@ -105,6 +124,8 @@ export const action = async ({ request }: DataFunctionArgs) => {
 export default function CreateListingRoute() {
   const [isAuction, setIsAuction] = useState(false);
   const actionData = useActionData<typeof action>();
+  const { categoryDropdownOptions } = useLoaderData<typeof loader>();
+
   const [form, fields] = useForm({
     id: "create-listing-form",
     lastSubmission: actionData?.submission,
@@ -116,7 +137,6 @@ export default function CreateListingRoute() {
     defaultValue: { quantity: 1, itemId: "" }, // We will get the item id if it exists
   });
 
-  console.log("submission", actionData?.submission);
   return (
     <Card>
       <CardContent className="md:p-8">
@@ -143,6 +163,27 @@ export default function CreateListingRoute() {
             {...conform.input(fields.itemName)}
             errors={fields.itemName.errors}
           />
+          {/**
+           * Category is single select for now but will be multi select
+           * todo: Make this a multi select
+           * */}
+          <div className="mb-8 flex w-full flex-col gap-1.5">
+            <Label className="font-bold" htmlFor="category">
+              Category
+            </Label>
+            <Select name="categoryId">
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Select category" />
+              </SelectTrigger>
+              <SelectContent>
+                {categoryDropdownOptions.map((option) => (
+                  <SelectItem key={option.value} value={option.value}>
+                    {option.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
           <div className="flex items-center space-x-2">
             <FormField
               label="Quantity"
