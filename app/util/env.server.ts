@@ -2,9 +2,10 @@ import { z } from "zod";
 
 const schema = z.object({
   NODE_ENV: z.enum(["production", "development", "test"] as const),
+  CLOUDINARY_CLOUD_NAME: z.string(),
   CLOUDINARY_KEY: z.string(),
   CLOUDINARY_SECRET: z.string(),
-  CLOUDINARY_URL: z.string().url(),
+  CLOUDINARY_LEGACY_URL: z.string().url(),
   SESSION_SECRET: z.string(),
   RESEND_API_KEY: z.string(),
 });

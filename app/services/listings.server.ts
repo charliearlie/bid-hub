@@ -7,29 +7,41 @@ export async function getAllListings() {
   return await prisma.listing.findMany();
 }
 
+type ListingSubSet = Pick<
+  Listing,
+  | "description"
+  | "title"
+  | "quantity"
+  | "buyItNowPrice"
+  | "startingBid"
+  | "minBidIncrement"
+  | "images"
+>;
+
 export async function addListing(
-  listing: Pick<
-    Listing,
-    | "description"
-    | "title"
-    | "quantity"
-    | "buyItNowPrice"
-    | "startingBid"
-    | "minBidIncrement"
-  >,
+  {
+    buyItNowPrice,
+    description,
+    images,
+    minBidIncrement,
+    quantity,
+    startingBid,
+    title,
+  }: ListingSubSet,
   item: Item,
   categoryIds: string[],
   userId: string
 ) {
   const user = await getUserById(userId);
+
   const newListing = await prisma.listing.create({
     data: {
-      title: listing.title,
-      description: listing.description,
-      quantity: listing.quantity,
-      buyItNowPrice: listing.buyItNowPrice,
-      startingBid: listing.startingBid,
-      minBidIncrement: listing.minBidIncrement,
+      title,
+      description,
+      quantity,
+      buyItNowPrice,
+      startingBid,
+      minBidIncrement,
       seller: {
         connect: {
           id: user?.id,
@@ -49,7 +61,8 @@ export async function addListing(
           },
         })),
       },
-      slug: generateSlug(listing.title),
+      images,
+      slug: generateSlug(title),
     },
   });
 

@@ -1,12 +1,17 @@
+import { useState } from "react";
+import { z } from "zod";
 import { conform, useForm } from "@conform-to/react";
 import { getFieldsetConstraint, parse } from "@conform-to/zod";
 import { Item } from "@prisma/client";
 import { SelectValue } from "@radix-ui/react-select";
-import { DataFunctionArgs, json } from "@remix-run/node";
+import {
+  DataFunctionArgs,
+  json,
+  unstable_createMemoryUploadHandler as createMemoryUploadHandler,
+  unstable_parseMultipartFormData as parseMultipartFormData,
+} from "@remix-run/node";
 import { Form, useActionData, useLoaderData } from "@remix-run/react";
 import { PoundSterlingIcon } from "lucide-react";
-import { useState } from "react";
-import { z } from "zod";
 import { SwitchWithLabel } from "~/components/common/switch-with-label";
 import Card from "~/components/common/ui/card/card";
 import CardContent from "~/components/common/ui/card/card-content";
@@ -26,6 +31,9 @@ import {
   getCategoryDropdownOptions,
 } from "~/services/listings.server";
 import { getUserId } from "~/services/session.server";
+import { uploadImage } from "~/util/cloudinary.server";
+
+const MAX_FILE_SIZE = 1024 * 1024 * 5; // 5mb
 
 const CreateListingSchema = z
   .object({
@@ -47,6 +55,12 @@ const CreateListingSchema = z
     reservePrice: z.number().max(100000).optional(),
     minBidIncrement: z.number().max(100).optional(),
     itemId: z.string().optional(),
+    image: z
+      .instanceof(File)
+      .optional()
+      .refine((file) => {
+        return !file || file.size <= MAX_FILE_SIZE;
+      }, "File size must be less than 5MB"),
   })
   .refine(
     (data) => {
@@ -69,13 +83,20 @@ export const loader = async () => {
 };
 
 export const action = async ({ request }: DataFunctionArgs) => {
-  const formData = await request.formData();
+  const formData = await parseMultipartFormData(
+    request,
+    createMemoryUploadHandler({ maxPartSize: MAX_FILE_SIZE })
+  );
 
   const submission = await parse(formData, { schema: CreateListingSchema });
 
   if (submission.intent !== "submit" || !submission.value) {
     return json({ status: "idle", submission } as const);
   }
+
+  const image = submission.value?.image
+    ? await uploadImage(submission.value.image)
+    : null;
 
   let newItem: Item | null;
 
@@ -101,12 +122,11 @@ export const action = async ({ request }: DataFunctionArgs) => {
 
   const newListing = await addListing(
     {
-      title: listingData.title,
-      description: listingData.description,
-      quantity: listingData.quantity,
+      ...listingData,
       buyItNowPrice: listingData.buyItNowPrice || null,
       startingBid: listingData.startingBid || null,
       minBidIncrement: listingData.minBidIncrement || null,
+      images: [image?.secure_url || ""],
     },
     newItem,
     [listingData.categoryId],
@@ -137,13 +157,15 @@ export default function CreateListingRoute() {
     defaultValue: { quantity: 1, itemId: "" }, // We will get the item id if it exists
   });
 
+  console.log({ ...conform.input(fields.image) });
+
   return (
     <Card>
       <CardContent className="md:p-8">
         <h1 className="md: p-4 text-center text-4xl font-bold md:text-5xl">
           Sell your item on Bidhub
         </h1>
-        <Form method="post" {...form}>
+        <Form method="post" {...form} encType="multipart/form-data">
           <FormField
             label="Title"
             {...conform.input(fields.title)}
@@ -197,6 +219,12 @@ export default function CreateListingRoute() {
               Icon={PoundSterlingIcon} // Will use a config for the user's currency
             />
           </div>
+          <FormField
+            label="Image"
+            {...conform.input(fields.image)}
+            accept="image/*"
+            type="file"
+          />
           <SwitchWithLabel
             label="Auction"
             checked={isAuction}

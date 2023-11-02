@@ -16,7 +16,7 @@ export default function SharedHeader({ user }: Props) {
 
   const navigation = [
     { title: "Buy", path: "/buy" },
-    { title: "Sell", path: "/sell" },
+    { title: "Sell", path: "/listings/create" },
   ];
   return (
     <nav className="sticky top-0 z-50 bg-accent-foreground dark:bg-background sm:h-[84px]">
