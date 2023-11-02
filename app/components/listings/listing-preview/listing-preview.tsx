@@ -11,18 +11,20 @@ type ListingPreviewProps = {
 export default function ListingPreview({ listing }: ListingPreviewProps) {
   const { buyItNowPrice, highestBidValue, slug, title } = listing;
 
+  const firstImage = listing.images?.[0];
+
   return (
     <Card>
       <CardImage
         to={`/listings/${slug}`}
-        src="https://picsum.photos/200"
+        src={firstImage ? firstImage : "https://picsum.photos/200"}
         alt={title}
       />
       <CardContent>
         <div className="h-24">
           <Link
             prefetch="intent"
-            to={`/listings/${slug}`}
+            to={`$/listings/${slug}`}
             className="hover:opacity-80"
           >
             <h3 className="block font-black leading-none">
