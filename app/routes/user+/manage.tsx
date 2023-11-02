@@ -47,7 +47,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     const data = new FormData();
     data.append("file", avatarImage);
     data.append("upload_preset", "BrakeNeck_car");
-    const res = await fetch(process.env.CLOUDINARY_URL, {
+    const res = await fetch(process.env.CLOUDINARY_LEGACY_URL, {
       method: "POST",
       body: data,
     });
