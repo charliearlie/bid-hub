@@ -1,6 +1,6 @@
 import React, { useId } from "react";
 import { Label } from "../common/ui/label";
-import { UploadCloud, UploadCloudIcon } from "lucide-react";
+import { UploadCloud } from "lucide-react";
 
 enum UPLOAD_PRESET_ENUM {
   bidhubAvatar = "bidhub_avatar",
