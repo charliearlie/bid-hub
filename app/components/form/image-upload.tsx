@@ -1,5 +1,6 @@
-import type { ChangeEvent} from "react";
-import { useState } from "react";
+import React, { useId } from "react";
+import { Label } from "../common/ui/label";
+import { UploadCloud, UploadCloudIcon } from "lucide-react";
 
 enum UPLOAD_PRESET_ENUM {
   bidhubAvatar = "bidhub_avatar",
@@ -12,47 +13,43 @@ type ImageUploadProps = {
 
 type Props = ImageUploadProps & React.HTMLProps<HTMLInputElement>;
 
-type ImageUploadState = {
-  fileName: string;
-  image: string;
-  largeImage: string;
-};
+export const ImageUpload = React.forwardRef<HTMLInputElement, Props>(
+  ({ uploadPreset = UPLOAD_PRESET_ENUM.bidhubItem, ...props }, ref) => {
+    const id = useId();
+    return (
+      <div className="border-text-foreground flex min-h-[200px] flex-col items-center justify-between rounded-md border-2 border-dashed border-accent bg-input">
+        <Label
+          htmlFor={id}
+          className="flex h-full w-full flex-col items-center justify-center font-bold"
+        >
+          <div className="flex flex-col items-center gap-2">
+            <UploadCloud size={64} />
+            <p>
+              Click to <strong>upload</strong> or drag and drop
+            </p>
+            <p className="font-light">SVG, PNG, JPG or GIF</p>
+          </div>
+        </Label>
+        <input className="hidden" type="file" id={id} ref={ref} {...props} />
+        <div className="self-start">
+          <img height={50} width={50} src="https://picsum.photos/200" />
+        </div>
+      </div>
+    );
+  }
+);
 
-export default function ImageUpload({
-  uploadPreset = UPLOAD_PRESET_ENUM.bidhubItem,
-  ...props
-}: Props) {
-  const [imageState, setImageState] = useState<ImageUploadState>();
-  const uploadImage = async (event: ChangeEvent<HTMLInputElement>) => {
-    const files = event.target.files;
+// export default function ImageUpload({
+//   uploadPreset = UPLOAD_PRESET_ENUM.bidhubItem,
+//   ...props
+// }: Props) {
+//   return (
+//     <input
+//       type="file"
+//       onChange={uploadImage}
+//       {...props}
+//     />
+//   );
+// }
 
-    if (files) {
-      const data = new FormData();
-      data.append("file", files[0]);
-      data.append("upload_preset", uploadPreset);
-
-      const res = await fetch(
-        "https://api.cloudinary.com/v1_1/bidhub/image/upload",
-        {
-          method: "POST",
-          body: data,
-        }
-      );
-
-      const file = await res.json();
-      setImageState({
-        image: file.secure_url,
-        largeImage: file.eager[0].secure_url,
-        fileName: files[0].name,
-      });
-    }
-  };
-  return (
-    <input
-      type="file"
-      onChange={uploadImage}
-      {...props}
-      value={imageState?.largeImage}
-    />
-  );
-}
+// file:-mx-3 file:-my-[0.32rem] file:overflow-hidden file:rounded-none file:border-0 file:border-solid file:border-inherit file:bg-neutral-100 file:px-3 file:py-[0.32rem] file:text-neutral-700 file:transition file:duration-150 file:ease-in-out file:[border-inline-end-width:1px] file:[margin-inline-end:0.75rem] hover:file:bg-neutral-200

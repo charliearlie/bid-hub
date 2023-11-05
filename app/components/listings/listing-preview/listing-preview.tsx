@@ -21,19 +21,29 @@ export default function ListingPreview({ listing }: ListingPreviewProps) {
         alt={title}
       />
       <CardContent>
-        <div className="h-24">
+        <div className="h-8">
           <Link
             prefetch="intent"
             to={`$/listings/${slug}`}
             className="hover:opacity-80"
           >
-            <h3 className="block font-black leading-none">
-              <span className="block text-3xl">{title}</span>
-              <span className="block text-xl">£{highestBidValue}</span>
+            <h3 className="block max-h-8 overflow-hidden text-ellipsis font-medium leading-none">
+              <span className="block">{title}</span>
             </h3>
           </Link>
         </div>
-        <p className="font-semi-bold text-xl">£{buyItNowPrice}</p>
+        <div className="flex items-end justify-between">
+          <p className="text-xl font-bold">£{buyItNowPrice}</p>
+          {highestBidValue && (
+            <p className="font-semi-bold text-xl">{highestBidValue}</p>
+          )}
+        </div>
+        <div className="flex items-start justify-between">
+          <p className="text-sm font-semibold">Buy now</p>
+          {highestBidValue && (
+            <p className="font-semi-bold text-xl">Highest bid</p>
+          )}
+        </div>
       </CardContent>
     </Card>
   );

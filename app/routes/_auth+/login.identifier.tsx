@@ -98,10 +98,8 @@ export default function LoginIdentifierRoute() {
       <Form className="" method="post" {...form.props}>
         <FormField
           label="Email or username"
-          name="emailOrUsername"
-          type="text"
-          required
           errors={fields.emailOrUsername.errors}
+          {...conform.input(fields.emailOrUsername)}
         />
         <input
           name="redirectTo"

@@ -15,11 +15,7 @@ export const meta = () => {
 };
 
 const RegisterFormSchema = z.object({
-  email: z
-    .string({
-      required_error: "Email is required",
-    })
-    .email({ message: "Email must be a valid email address" }),
+  email: z.string().email({ message: "Email must be a valid email address" }),
   username: z
     .string({
       required_error: "Username is required",

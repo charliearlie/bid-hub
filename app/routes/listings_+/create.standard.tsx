@@ -157,8 +157,6 @@ export default function CreateListingRoute() {
     defaultValue: { quantity: 1, itemId: "" }, // We will get the item id if it exists
   });
 
-  console.log({ ...conform.input(fields.image) });
-
   return (
     <Card>
       <CardContent className="md:p-8">
@@ -168,13 +166,14 @@ export default function CreateListingRoute() {
         <Form method="post" {...form} encType="multipart/form-data">
           <FormField
             label="Title"
-            {...conform.input(fields.title)}
+            helperText="This is what will be displayed in search results"
             errors={fields.title.errors} // These should work in the line above so need to fix - todo
+            {...conform.input(fields.title)}
           />
           <FormFieldTextArea
-            name="description"
             label="Description"
             errors={fields.description.errors}
+            {...conform.input(fields.description)}
           />
           {/**
            * itemName will do some magic mapping to existing items
@@ -182,8 +181,9 @@ export default function CreateListingRoute() {
            * */}
           <FormField
             label="Item name"
-            {...conform.input(fields.itemName)}
             errors={fields.itemName.errors}
+            helperText="Find your item or create a new one"
+            {...conform.input(fields.itemName)}
           />
           {/**
            * Category is single select for now but will be multi select
@@ -209,21 +209,21 @@ export default function CreateListingRoute() {
           <div className="flex items-center space-x-2">
             <FormField
               label="Quantity"
-              {...conform.input(fields.quantity)}
               errors={fields.quantity.errors}
+              {...conform.input(fields.quantity)}
             />
             <FormField
               label="Sale price"
-              {...conform.input(fields.buyItNowPrice)}
               errors={fields.buyItNowPrice.errors}
               Icon={PoundSterlingIcon} // Will use a config for the user's currency
+              {...conform.input(fields.buyItNowPrice)}
             />
           </div>
           <FormField
             label="Image"
-            {...conform.input(fields.image)}
             accept="image/*"
             type="file"
+            {...conform.input(fields.image)}
           />
           <SwitchWithLabel
             label="Auction"
@@ -235,23 +235,23 @@ export default function CreateListingRoute() {
               <div className="mt-5 flex items-center space-x-2">
                 <FormField
                   label="Starting price"
-                  {...conform.input(fields.startingBid)}
                   errors={fields.startingBid.errors}
                   Icon={PoundSterlingIcon}
+                  {...conform.input(fields.startingBid)}
                 />
                 <FormField
                   label="Reserve price"
-                  {...conform.input(fields.reservePrice)}
                   errors={fields.reservePrice.errors}
                   Icon={PoundSterlingIcon}
+                  {...conform.input(fields.reservePrice)}
                 />
               </div>
               <div className="mt-5 flex items-center space-x-2">
                 <FormField
                   label="Smallest bid"
-                  {...conform.input(fields.minBidIncrement)}
                   errors={fields.minBidIncrement.errors}
                   Icon={PoundSterlingIcon}
+                  {...conform.input(fields.minBidIncrement)}
                 />
                 <FormField
                   name="endDate"

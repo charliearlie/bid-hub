@@ -7,15 +7,18 @@ import { cn } from "~/util/utils";
 
 export type FormFieldProps = {
   errors?: Array<string> | null;
+  helperText?: string;
   Icon?: LucideIcon;
   label: string;
-  name: string;
 };
 
 type Props = FormFieldProps & React.HTMLProps<HTMLInputElement>;
 
 const FormField = forwardRef<HTMLInputElement, Props>(
-  ({ errors, Icon, label, name, ...props }, ref): ReactElement => {
+  (
+    { errors, helperText, Icon, label, name, type, ...props },
+    ref
+  ): ReactElement => {
     const id = useId();
     const inputId = `${id}-${name}`;
     const inputErrorsId = `${id}-${name}-errors`;
@@ -31,17 +34,21 @@ const FormField = forwardRef<HTMLInputElement, Props>(
             name={name}
             className={cn(
               hasErrors && "ring-2 ring-destructive ring-offset-1",
-              Icon && "pl-8"
+              Icon && "pl-5",
+              type === "file" &&
+                "file:-mx-3 file:-my-[0.32rem] file:cursor-pointer file:overflow-hidden file:rounded-none file:border-0 file:border-solid file:border-inherit file:bg-background file:px-3 file:py-[0.32rem] file:text-foreground file:transition file:duration-150 file:ease-in-out file:[border-inline-end-width:1px] file:[margin-inline-end:0.75rem] hover:file:bg-secondary-foreground"
             )}
             id={inputId}
+            type={type}
             {...props}
             ref={ref}
             aria-invalid={hasErrors || undefined}
             aria-describedby={hasErrors ? inputErrorsId : undefined}
           />
-          {Icon && <Icon className="absolute" size={16} />}
+          {Icon && <Icon className="absolute" strokeWidth={3} size={16} />}
         </span>
-        <div className="min-h-[24px]">
+        {helperText && <span className="text-sm font-light">{helperText}</span>}
+        <div className="flex min-h-[18px] items-start">
           <InputErrors id={inputErrorsId} errors={errors} />
         </div>
       </div>

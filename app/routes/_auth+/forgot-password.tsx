@@ -2,7 +2,7 @@ import { Form, useActionData } from "@remix-run/react";
 import { json, type DataFunctionArgs } from "@remix-run/node";
 import { z } from "zod";
 import { getFieldsetConstraint, parse } from "@conform-to/zod";
-import { useForm } from "@conform-to/react";
+import { conform, useForm } from "@conform-to/react";
 import { Send } from "lucide-react";
 
 import {
@@ -91,9 +91,8 @@ export default function ForgotPasswordRoute() {
       <Form className="mb-4 pt-6" method="post" {...form.props}>
         <FormField
           label="Email"
-          name="email"
-          type="text"
           errors={fields.email.errors}
+          {...conform.input(fields.email, { type: "email" })}
         />
         <div className="mt-2 flex justify-center">
           <SubmitButton className="w-full">

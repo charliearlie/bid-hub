@@ -6,7 +6,7 @@ import {
   useSearchParams,
 } from "@remix-run/react";
 import { redirect, json, type DataFunctionArgs } from "@remix-run/node";
-import { useForm } from "@conform-to/react";
+import { conform, useForm } from "@conform-to/react";
 import { getFieldsetConstraint, parse } from "@conform-to/zod";
 import { z } from "zod";
 
@@ -97,10 +97,8 @@ export default function LoginIdentifierRoute() {
       <Form className="" method="post" {...form.props}>
         <FormField
           label="Password"
-          name="password"
-          type="password"
-          required
           errors={fields.password.errors}
+          {...conform.input(fields.password, { type: "password" })}
         />
         <input
           name="redirectTo"
