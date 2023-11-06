@@ -19,7 +19,7 @@ type Props = {
   };
 };
 
-export function DatePicker({ name }: { name: string }) {
+export function DatePicker({ disabled, name }: Props) {
   const [date, setDate] = React.useState<Date>();
 
   return (
@@ -42,7 +42,7 @@ export function DatePicker({ name }: { name: string }) {
           selected={date}
           onSelect={setDate}
           initialFocus
-          disabled={{ before: new Date() }}
+          disabled={disabled}
         />
       </PopoverContent>
       <Input name={name} type="hidden" value={date?.toISOString()} />

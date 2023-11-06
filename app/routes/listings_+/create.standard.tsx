@@ -257,7 +257,10 @@ export default function CreateListingRoute() {
                   <Label className="font-bold" htmlFor="date">
                     Date
                   </Label>
-                  <DatePicker name="endTime" />
+                  <DatePicker
+                    name="endTime"
+                    disabled={{ before: new Date() }}
+                  />
                   <div className="flex min-h-[18px] items-start">
                     {JSON.stringify(fields.endTime.errors)}
                   </div>
