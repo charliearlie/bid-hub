@@ -88,3 +88,17 @@ export function generateSlug(listingTitle: string) {
     .replace(/(^-|-$)+/g, "")
     .concat(`-${uuid}`);
 }
+
+export function buildListingEndDateAndTime(endDateString?: string) {
+  if (!endDateString) {
+    return;
+  }
+
+  const endDate = new Date(endDateString);
+  const currentDate = new Date();
+  endDate.setHours(currentDate.getHours() + 1);
+  endDate.setMinutes(currentDate.getMinutes());
+  endDate.setSeconds(currentDate.getSeconds());
+
+  return endDate;
+}
