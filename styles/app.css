@@ -98,44 +98,11 @@
     -webkit-appearance: none;
     margin: 0;
   }
-}
 
-@layer components {
-  .scrollable-row {
-    display: grid;
-    padding-left: 8px;
-    grid-gap: 8px;
-    grid-auto-flow: column;
-    grid-auto-columns: calc(100vw - 100px);
-    padding-top: 1px;
-    padding-bottom: 2px;
-    overflow-x: scroll;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-    &::-webkit-scrollbar {
-      display: none;
-    }
-    scroll-snap-type: x mandatory;
-    -webkit-overflow-scrolling: touch;
-
-    & > * {
-      scroll-snap-align: start;
-      scroll-margin: 0 0 0 8px;
-      scroll-snap-margin: 0 0 0 8px;
-    }
-
-    @screen md {
-      grid-auto-columns: 50vw - 75px;
-    }
-
-    @screen sm {
-      grid-auto-columns: 100vw - 50px;
-    }
-
-    @screen lg {
-      overflow-x: unset;
-      padding-left: 16px;
-      grid-auto-columns: 1fr;
-    }
+  h1 {
+    @apply text-4xl font-bold;
+  }
+  h2 {
+    @apply text-3xl font-bold;
   }
 }

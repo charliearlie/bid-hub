@@ -8,14 +8,12 @@ export default function Previews({
   listings: ListingPreviewType[];
 }) {
   return (
-    <ul>
-      <ScrollableRow>
-        {listings.map((listing) => (
-          <div className="snap-center">
-            <ListingPreview listing={listing} key={listing.slug} />
-          </div>
-        ))}
-      </ScrollableRow>
-    </ul>
+    <ScrollableRow>
+      {listings.map((listing) => (
+        <ul key={listing.id} className="snap-start">
+          <ListingPreview listing={listing} key={listing.slug} />
+        </ul>
+      ))}
+    </ScrollableRow>
   );
 }
