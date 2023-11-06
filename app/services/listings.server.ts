@@ -1,7 +1,7 @@
 import type { Item, Listing } from "@prisma/client";
 import { prisma } from "./prisma.server";
 import { getUserById } from "./user.server";
-import { generateSlug } from "~/util/utils";
+import { buildListingEndDateAndTime, generateSlug } from "~/util/utils";
 
 export async function getAllListings() {
   return await prisma.listing.findMany();
@@ -16,7 +16,7 @@ type ListingSubSet = Pick<
   | "startingBid"
   | "minBidIncrement"
   | "images"
->;
+> & { endTime?: string };
 
 export async function addListing(
   {
@@ -27,21 +27,25 @@ export async function addListing(
     quantity,
     startingBid,
     title,
+    endTime: _endtime,
   }: ListingSubSet,
   item: Item,
   categoryIds: string[],
   userId: string
 ) {
   const user = await getUserById(userId);
+  const endTime = buildListingEndDateAndTime(_endtime);
 
   const newListing = await prisma.listing.create({
     data: {
-      title,
-      description,
-      quantity,
       buyItNowPrice,
-      startingBid,
+      description,
+      endTime,
+      images,
       minBidIncrement,
+      quantity,
+      startingBid,
+      title,
       seller: {
         connect: {
           id: user?.id,
@@ -61,7 +65,6 @@ export async function addListing(
           },
         })),
       },
-      images,
       slug: generateSlug(title),
     },
   });
