@@ -11,7 +11,9 @@ export const loader = async ({ request }: DataFunctionArgs) => {
 export default function AddListingRoute() {
   return (
     <main className="container mx-auto max-w-3xl p-4">
-      <h1>Create Listing</h1>
+      <h1 className="flex justify-center p-4 text-4xl font-bold">
+        Sell your item on Bidhub
+      </h1>
       <div>
         <Outlet />
       </div>

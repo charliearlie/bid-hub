@@ -32,6 +32,7 @@ import {
 } from "~/services/listings.server";
 import { getUserId } from "~/services/session.server";
 import { uploadImage } from "~/util/cloudinary.server";
+import { DatePicker } from "~/components/common/date-picker";
 
 const MAX_FILE_SIZE = 1024 * 1024 * 5; // 5mb
 
@@ -55,6 +56,7 @@ const CreateListingSchema = z
     reservePrice: z.number().max(100000).optional(),
     minBidIncrement: z.number().max(100).optional(),
     itemId: z.string().optional(),
+    endTime: z.string().optional(),
     image: z
       .instanceof(File)
       .optional()
@@ -63,8 +65,7 @@ const CreateListingSchema = z
       }, "File size must be less than 5MB"),
   })
   .refine(
-    (data) => {
-      const { buyItNowPrice, startingBid } = data;
+    ({ buyItNowPrice, startingBid }) => {
       return (
         (buyItNowPrice !== null && startingBid !== null) ||
         buyItNowPrice !== null ||
@@ -73,6 +74,7 @@ const CreateListingSchema = z
     },
     {
       message: "Either Buy It Now Price or Starting Price must be specified.",
+      path: ["buyItNowPrice", "startingBid"],
     }
   );
 
@@ -127,6 +129,7 @@ export const action = async ({ request }: DataFunctionArgs) => {
       startingBid: listingData.startingBid || null,
       minBidIncrement: listingData.minBidIncrement || null,
       images: [image?.secure_url || ""],
+      endTime: listingData.endTime,
     },
     newItem,
     [listingData.categoryId],
@@ -160,9 +163,6 @@ export default function CreateListingRoute() {
   return (
     <Card>
       <CardContent className="md:p-8">
-        <h1 className="md: p-4 text-center text-4xl font-bold md:text-5xl">
-          Sell your item on Bidhub
-        </h1>
         <Form method="post" {...form} encType="multipart/form-data">
           <FormField
             label="Title"
@@ -253,12 +253,18 @@ export default function CreateListingRoute() {
                   Icon={PoundSterlingIcon}
                   {...conform.input(fields.minBidIncrement)}
                 />
-                <FormField
-                  name="endDate"
-                  type="date"
-                  label="End date"
-                  errors={[]}
-                />
+                <div className="flex w-full flex-col gap-1.5">
+                  <Label className="font-bold" htmlFor="date">
+                    Date
+                  </Label>
+                  <DatePicker
+                    name="endTime"
+                    disabled={{ before: new Date() }}
+                  />
+                  <div className="flex min-h-[18px] items-start">
+                    {JSON.stringify(fields.endTime.errors)}
+                  </div>
+                </div>
               </div>
             </div>
           )}

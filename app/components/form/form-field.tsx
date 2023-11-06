@@ -36,7 +36,7 @@ const FormField = forwardRef<HTMLInputElement, Props>(
               hasErrors && "ring-2 ring-destructive ring-offset-1",
               Icon && "pl-5",
               type === "file" &&
-                "file:-mx-3 file:-my-[0.32rem] file:cursor-pointer file:overflow-hidden file:rounded-none file:border-0 file:border-solid file:border-inherit file:bg-background file:px-3 file:py-[0.32rem] file:text-foreground file:transition file:duration-150 file:ease-in-out file:[border-inline-end-width:1px] file:[margin-inline-end:0.75rem] hover:file:bg-secondary-foreground"
+                "file:-mx-3 file:-my-[0.32rem] file:cursor-pointer file:overflow-hidden file:rounded-none file:border-0 file:border-solid file:border-inherit file:bg-background file:px-3 file:py-[0.32rem] file:text-foreground file:transition file:duration-150 file:ease-in-out file:[margin-inline-end:0.75rem] file:[border-inline-end-width:3px] hover:file:opacity-70"
             )}
             id={inputId}
             type={type}
@@ -47,7 +47,9 @@ const FormField = forwardRef<HTMLInputElement, Props>(
           />
           {Icon && <Icon className="absolute" strokeWidth={3} size={16} />}
         </span>
-        {helperText && <span className="text-sm font-light">{helperText}</span>}
+        {helperText && !hasErrors && (
+          <span className="text-sm font-light">{helperText}</span>
+        )}
         <div className="flex min-h-[18px] items-start">
           <InputErrors id={inputErrorsId} errors={errors} />
         </div>
