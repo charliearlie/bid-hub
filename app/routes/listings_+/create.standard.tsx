@@ -31,7 +31,7 @@ import {
   getCategoryDropdownOptions,
 } from "~/services/listings.server";
 import { getUserId } from "~/services/session.server";
-import { uploadImage } from "~/util/cloudinary";
+import { uploadImage } from "~/util/cloudinary.server";
 import { DatePicker } from "~/components/common/date-picker";
 import { File } from "@web-std/file";
 
