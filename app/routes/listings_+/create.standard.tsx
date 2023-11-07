@@ -33,16 +33,8 @@ import {
 import { getUserId } from "~/services/session.server";
 import { uploadImage } from "~/util/cloudinary.server";
 import { DatePicker } from "~/components/common/date-picker";
-import type { File as FileType } from "@web-std/file";
 
 const MAX_FILE_SIZE = 1024 * 1024 * 5; // 5mb
-const ACCEPTED_IMAGE_TYPES = [
-  "image/jpeg",
-  "image/jpg",
-  "image/png",
-  "image/webp",
-];
-
 const CreateListingSchema = z
   .object({
     title: z
