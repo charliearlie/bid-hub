@@ -1,6 +1,5 @@
 import { writeAsyncIterableToWritable } from "@remix-run/node";
 import cloudinary from "cloudinary";
-import { File } from "@web-std/file";
 
 enum UPLOAD_PRESET_ENUM {
   bidhubAvatar = "bidhub_avatar",

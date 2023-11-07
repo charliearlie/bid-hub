@@ -101,6 +101,8 @@ export const action = async ({ request }: DataFunctionArgs) => {
     createMemoryUploadHandler({ maxPartSize: MAX_FILE_SIZE })
   );
 
+  console.log(formData.get("image"));
+
   const submission = await parse(formData, { schema: CreateListingSchema });
   console.log("submission", submission);
 
