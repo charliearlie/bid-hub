@@ -33,6 +33,7 @@ import {
 import { getUserId } from "~/services/session.server";
 import { uploadImage } from "~/util/cloudinary";
 import { DatePicker } from "~/components/common/date-picker";
+import { File } from "@web-std/file";
 
 const MAX_FILE_SIZE = 1024 * 1024 * 5; // 5mb
 
