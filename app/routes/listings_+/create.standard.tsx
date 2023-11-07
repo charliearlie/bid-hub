@@ -2,10 +2,11 @@ import { useState } from "react";
 import { z } from "zod";
 import { conform, useForm } from "@conform-to/react";
 import { getFieldsetConstraint, parse } from "@conform-to/zod";
-import { Item } from "@prisma/client";
+import type { Item } from "@prisma/client";
 import { SelectValue } from "@radix-ui/react-select";
+import type {
+  DataFunctionArgs} from "@remix-run/node";
 import {
-  DataFunctionArgs,
   json,
   unstable_createMemoryUploadHandler as createMemoryUploadHandler,
   unstable_parseMultipartFormData as parseMultipartFormData,
@@ -36,6 +37,15 @@ import { DatePicker } from "~/components/common/date-picker";
 
 const MAX_FILE_SIZE = 1024 * 1024 * 5; // 5mb
 
+const FileSchema = z.object({
+  name: z.string(),
+  size: z.number(),
+  type: z.string(),
+  arrayBuffer: z.function(),
+  slice: z.function(),
+  stream: z.function(),
+});
+
 const CreateListingSchema = z
   .object({
     title: z
@@ -57,8 +67,7 @@ const CreateListingSchema = z
     minBidIncrement: z.number().max(100).optional(),
     itemId: z.string().optional(),
     endTime: z.string().optional(),
-    image: z
-      .instanceof(File)
+    image: FileSchema
       .optional()
       .refine((file) => {
         return !file || file.size <= MAX_FILE_SIZE;
