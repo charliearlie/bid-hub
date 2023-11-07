@@ -35,7 +35,6 @@ import { uploadImage } from "~/util/cloudinary.server";
 import { DatePicker } from "~/components/common/date-picker";
 
 const MAX_FILE_SIZE = 1024 * 1024 * 5; // 5mb
-
 const CreateListingSchema = z
   .object({
     title: z
@@ -58,11 +57,11 @@ const CreateListingSchema = z
     itemId: z.string().optional(),
     endTime: z.string().optional(),
     image: z
-      .instanceof(File)
-      .optional()
-      .refine((file) => {
-        return !file || file.size <= MAX_FILE_SIZE;
-      }, "File size must be less than 5MB"),
+      .any()
+      .refine(
+        (file) => !file || file?.size <= MAX_FILE_SIZE,
+        `Max file size is 5MB.`
+      ),
   })
   .refine(
     ({ buyItNowPrice, startingBid }) => {
@@ -90,7 +89,10 @@ export const action = async ({ request }: DataFunctionArgs) => {
     createMemoryUploadHandler({ maxPartSize: MAX_FILE_SIZE })
   );
 
+  console.log(formData.get("image"));
+
   const submission = await parse(formData, { schema: CreateListingSchema });
+  console.log("submission", submission);
 
   if (submission.intent !== "submit" || !submission.value) {
     return json({ status: "idle", submission } as const);
@@ -100,6 +102,8 @@ export const action = async ({ request }: DataFunctionArgs) => {
     ? await uploadImage(submission.value.image)
     : null;
 
+  console.log("image", image);
+
   let newItem: Item | null;
 
   if (submission.value.itemId) {
@@ -107,6 +111,8 @@ export const action = async ({ request }: DataFunctionArgs) => {
   } else {
     newItem = await createItem(submission.value.itemName);
   }
+
+  console.log("newItem", newItem);
 
   if (!newItem) {
     submission.error[""] = ["We failed to create your item"];
@@ -159,6 +165,8 @@ export default function CreateListingRoute() {
     },
     defaultValue: { quantity: 1, itemId: "" }, // We will get the item id if it exists
   });
+
+  console.log("actionData", actionData);
 
   return (
     <Card>
