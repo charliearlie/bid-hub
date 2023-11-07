@@ -36,8 +36,15 @@ export default function Index() {
         <h2 className="flex h-16 w-full items-center justify-center rounded bg-accent text-center text-3xl font-black">
           Buy & sell things
         </h2>
-        <div className="mx-auto max-w-screen-lg py-4 px-2 lg:px-4">
+        <div className="mx-auto max-w-screen-xl py-4 px-2 lg:px-4">
+          <h2>Recent listings</h2>
           <Previews listings={loaderData.listings} />
+        </div>
+        <div className="bg-accent">
+          <div className="mx-auto max-w-screen-xl py-4 px-2 lg:px-4">
+            <h2>Popular items right now</h2>
+            <Previews listings={loaderData.listings.reverse()} />
+          </div>
         </div>
       </div>
     </main>

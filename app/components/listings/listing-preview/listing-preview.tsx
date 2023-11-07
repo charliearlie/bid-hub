@@ -1,4 +1,5 @@
 import { Link } from "@remix-run/react";
+import { Badge } from "~/components/common/ui/badge";
 import Card from "~/components/common/ui/card/card";
 import CardContent from "~/components/common/ui/card/card-content";
 import CardImage from "~/components/common/ui/card/card-image";
@@ -32,17 +33,23 @@ export default function ListingPreview({ listing }: ListingPreviewProps) {
             </h3>
           </Link>
         </div>
-        <div className="flex items-end justify-between">
-          <p className="text-xl font-bold">£{buyItNowPrice}</p>
-          {highestBidValue && (
-            <p className="font-semi-bold text-xl">{highestBidValue}</p>
-          )}
-        </div>
-        <div className="flex items-start justify-between">
-          <p className="text-sm font-semibold">Buy now</p>
-          {highestBidValue && (
-            <p className="font-semi-bold text-xl">Highest bid</p>
-          )}
+        <div className="flex items-center justify-between">
+          <div className="flex flex-col items-start">
+            {buyItNowPrice && (
+              <>
+                <p className="text-xl font-bold">£{buyItNowPrice}</p>
+                <p className="text-sm font-semibold">Buy now</p>
+              </>
+            )}
+          </div>
+          <div className="flex flex-col items-end">
+            {highestBidValue && (
+              <>
+                <p className="text-xl font-light">£{highestBidValue}</p>
+                <Badge>ends 3d</Badge>
+              </>
+            )}
+          </div>
         </div>
       </CardContent>
     </Card>
