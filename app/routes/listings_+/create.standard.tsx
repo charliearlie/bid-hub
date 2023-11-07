@@ -92,6 +92,7 @@ export const action = async ({ request }: DataFunctionArgs) => {
   );
 
   const submission = await parse(formData, { schema: CreateListingSchema });
+  console.log("submission", submission);
 
   if (submission.intent !== "submit" || !submission.value) {
     return json({ status: "idle", submission } as const);
@@ -101,6 +102,8 @@ export const action = async ({ request }: DataFunctionArgs) => {
     ? await uploadImage(submission.value.image)
     : null;
 
+  console.log("image", image);
+
   let newItem: Item | null;
 
   if (submission.value.itemId) {
@@ -108,6 +111,8 @@ export const action = async ({ request }: DataFunctionArgs) => {
   } else {
     newItem = await createItem(submission.value.itemName);
   }
+
+  console.log("newItem", newItem);
 
   if (!newItem) {
     submission.error[""] = ["We failed to create your item"];
@@ -160,6 +165,8 @@ export default function CreateListingRoute() {
     },
     defaultValue: { quantity: 1, itemId: "" }, // We will get the item id if it exists
   });
+
+  console.log("actionData", actionData);
 
   return (
     <Card>
