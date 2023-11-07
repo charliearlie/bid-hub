@@ -10,7 +10,8 @@ type ListingPreviewProps = {
 };
 
 export default function ListingPreview({ listing }: ListingPreviewProps) {
-  const { buyItNowPrice, highestBidValue, slug, title } = listing;
+  const { buyItNowPrice, highestBidValue, slug, startingBid, title } = listing;
+  const auctionPrice = highestBidValue || startingBid || null;
 
   const firstImage = listing.images?.[0];
 
@@ -43,9 +44,9 @@ export default function ListingPreview({ listing }: ListingPreviewProps) {
             )}
           </div>
           <div className="flex flex-col items-end">
-            {highestBidValue && (
+            {auctionPrice && (
               <>
-                <p className="text-xl font-light">£{highestBidValue}</p>
+                <p className="text-xl font-light">£{auctionPrice}</p>
                 <Badge>ends 3d</Badge>
               </>
             )}
