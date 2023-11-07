@@ -31,7 +31,7 @@ import {
   getCategoryDropdownOptions,
 } from "~/services/listings.server";
 import { getUserId } from "~/services/session.server";
-import { uploadImage } from "~/util/cloudinary.server";
+import { uploadImage } from "~/util/cloudinary";
 import { DatePicker } from "~/components/common/date-picker";
 
 const MAX_FILE_SIZE = 1024 * 1024 * 5; // 5mb
