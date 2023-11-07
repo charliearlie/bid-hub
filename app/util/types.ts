@@ -42,7 +42,13 @@ export type ReplaceDateProperties<T> = Omit<T, "createdAt" | "updatedAt"> & {
 
 export type ListingPreviewType = Pick<
   Listing,
-  "id" | "highestBidValue" | "buyItNowPrice" | "images" | "slug" | "title"
+  | "id"
+  | "highestBidValue"
+  | "buyItNowPrice"
+  | "images"
+  | "slug"
+  | "startingBid"
+  | "title"
 >;
 
 type ItemPreviewType = Pick<Item, "name" | "description">;
