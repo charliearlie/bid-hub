@@ -18,7 +18,6 @@ import SharedHeader from "./components/header/shared-header";
 import { logout } from "./services/session.server";
 import { getUser } from "./services/user.server";
 import styles from "./styles/app.css";
-import favicon from "./assets/img/favicon.svg";
 import { getEnv } from "./util/env.server";
 import { ErrorBoundaryComponent } from "./components/error-boundary";
 
@@ -43,8 +42,7 @@ export function links() {
     },
     {
       rel: "icon",
-      type: "image/svg+xml",
-      href: favicon,
+      href: "https://fav.farm/👨🏻‍⚖️",
     },
   ];
 }
