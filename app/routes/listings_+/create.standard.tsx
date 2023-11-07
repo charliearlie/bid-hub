@@ -64,9 +64,12 @@ const CreateListingSchema = z
     minBidIncrement: z.number().max(100).optional(),
     itemId: z.string().optional(),
     endTime: z.string().optional(),
-    image: z.any().refine((files) => {
-      return files?.[0]?.size >= MAX_FILE_SIZE;
-    }, `Max file size is 5MB.`),
+    image: z
+      .any()
+      .refine(
+        (file) => !file || file?.size <= MAX_FILE_SIZE,
+        `Max file size is 5MB.`
+      ),
   })
   .refine(
     ({ buyItNowPrice, startingBid }) => {
