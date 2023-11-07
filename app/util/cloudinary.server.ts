@@ -21,6 +21,8 @@ export async function uploadImage(
   file: File,
   preset: UPLOAD_PRESET_ENUM = UPLOAD_PRESET_ENUM.bidhubItem
 ) {
+  if (!file) return;
+
   const buffer = await file.arrayBuffer();
   const data = new Uint8Array(buffer);
   const iterableData = createAsyncIterable(data);
