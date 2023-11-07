@@ -67,12 +67,8 @@ const CreateListingSchema = z
     image: z
       .any()
       .refine(
-        (files) => files?.[0]?.size <= MAX_FILE_SIZE,
+        (files) => files?.[0]?.size >= MAX_FILE_SIZE,
         `Max file size is 5MB.`
-      )
-      .refine(
-        (files) => ACCEPTED_IMAGE_TYPES.includes(files?.[0]?.type),
-        ".jpg, .jpeg, .png and .webp files are accepted."
       ),
   })
   .refine(
