@@ -6,7 +6,7 @@ An eBay alternative built on a modern tech stack
 
 Clone repository
 
-Fill in the `.env.template` and remove the `.template` suffix.
+Open project in IDE and fill in the `.env.template` and remove the `.template` suffix. (should be `.env`)
 
 From your terminal:
 
