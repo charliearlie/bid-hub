@@ -251,25 +251,3 @@ export async function getUser(request: Request) {
     },
   });
 }
-
-export async function createOrUpdateAddress(
-  userId: string,
-  address: Prisma.AddressCreateWithoutUserInput
-) {
-  const addressData = await prisma.address.upsert({
-    where: {
-      id: address.id,
-    },
-    update: address,
-    create: {
-      ...address,
-      user: {
-        connect: {
-          id: userId,
-        },
-      },
-    },
-  });
-
-  return addressData;
-}
