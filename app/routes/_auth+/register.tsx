@@ -28,7 +28,6 @@ const RegisterFormSchema = z.object({
       required_error: "Password is required",
     })
     .min(8, "Password must be at least 8 characters"),
-  personalDetails: PersonalDetailsFieldsetSchema,
 });
 
 export async function action({ request }: DataFunctionArgs) {
@@ -93,7 +92,6 @@ export default function RegisterRoute() {
     },
   });
 
-  const userData = useFieldset(form.ref, fields.personalDetails);
   return (
     <div>
       <h2 className="pt-4 pb-8 text-center text-3xl font-bold">Join Bidhub</h2>
@@ -121,7 +119,6 @@ export default function RegisterRoute() {
           type="password"
           errors={fields.password.errors}
         />
-        <UserDetailsFieldset user={userData} />
         <div className="flex justify-between">
           <Link
             className="px-0 py-2 font-semibold text-accent-foreground hover:text-slate-500"
