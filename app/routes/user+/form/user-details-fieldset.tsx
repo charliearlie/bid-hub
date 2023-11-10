@@ -1,10 +1,7 @@
 import { Fieldset, conform } from "@conform-to/react";
 import { z } from "zod";
 import FormField from "~/components/form/form-field";
-import {
-  PersonalDetailsFieldsetSchema,
-  UserSchema,
-} from "~/services/schemas.server";
+import { PersonalDetailsFieldsetSchema } from "~/services/schemas.server";
 
 type Props = {
   user: Fieldset<z.infer<typeof PersonalDetailsFieldsetSchema>>;

@@ -32,7 +32,6 @@ import { UserDetailsFieldset } from "./form/user-details-fieldset";
 import { Separator } from "~/components/common/ui/separator";
 import { SubmitButton } from "~/components/form/submit-button";
 import { Button } from "~/components/common/ui/button";
-import { Prisma } from "@prisma/client";
 import FormField from "~/components/form/form-field";
 
 const ManageUserFormSchema = z.object({
@@ -44,21 +43,18 @@ const ManageUserFormSchema = z.object({
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData();
-  console.log("MADE IT 47");
   const submission = parse(formData, { schema: ManageUserFormSchema });
 
   if (submission.intent !== "submit" || !submission.value) {
     return json({ status: "idle", submission } as const);
   }
 
-  // const image = submission.value?.avatarImage
-  //   ? await uploadImage(
-  //       submission.value.avatarImage,
-  //       UPLOAD_PRESET_ENUM.bidhubAvatar
-  //     )
-  //   : null;
-
-  console.log("MADE IT 61");
+  const image = submission.value?.avatarImage
+    ? await uploadImage(
+        submission.value.avatarImage,
+        UPLOAD_PRESET_ENUM.bidhubAvatar
+      )
+    : null;
 
   const user = await getUser(request);
   if (!user) {
@@ -78,6 +74,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   // todo: add good error/success messages
   return json({
     status: updatedUserAddresses && updatedUser ? "success" : "error",
+    image,
     submission,
   } as const);
 };
