@@ -16,43 +16,15 @@ async function* createAsyncIterable(data: Uint8Array) {
   yield data;
 }
 
-export async function uploadImage(
-  file: File,
-  preset: UPLOAD_PRESET_ENUM = UPLOAD_PRESET_ENUM.bidhubItem
-) {
-  if (!file) return;
-
-  const buffer = await file.arrayBuffer();
-  const data = new Uint8Array(buffer);
-  const iterableData = createAsyncIterable(data);
-  const uploadPromise = new Promise(async (resolve, reject) => {
-    const uploadStream = cloudinary.v2.uploader.upload_stream(
-      {
-        folder: "bidhub",
-        upload_preset: preset,
-      },
-      (error, result) => {
-        if (error) {
-          console.error("error", error);
-          resolve(null);
-          return;
-        }
-        resolve(result);
-      }
-    );
-    await writeAsyncIterableToWritable(iterableData, uploadStream);
-  });
-
-  return uploadPromise as Promise<cloudinary.UploadApiResponse | null>;
-}
-
 export async function uploadImages(
-  files: File[],
+  files: File | File[],
   preset: UPLOAD_PRESET_ENUM = UPLOAD_PRESET_ENUM.bidhubItem
 ) {
-  if (!files || !files.length) return [];
+  const filesArray = Array.isArray(files) ? files : [files]; // Ensure files is an array
 
-  const uploadPromises = files.map(async (file) => {
+  if (!filesArray.length) return [];
+
+  const uploadPromises = filesArray.map(async (file) => {
     const buffer = await file.arrayBuffer();
     const data = new Uint8Array(buffer);
     const iterableData = createAsyncIterable(data);

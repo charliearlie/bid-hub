@@ -25,7 +25,7 @@ import {
   updateUserAddresses,
   updateUserPersonalDetails,
 } from "~/services/user.server";
-import { UPLOAD_PRESET_ENUM, uploadImage } from "~/util/cloudinary.server";
+import { UPLOAD_PRESET_ENUM, uploadImages } from "~/util/cloudinary.server";
 import { invariantResponse } from "~/util/utils";
 import { AddressFieldset } from "./form/address-fieldset";
 import { UserDetailsFieldset } from "./form/user-details-fieldset";
@@ -50,7 +50,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   }
 
   const image = submission.value?.avatarImage
-    ? await uploadImage(
+    ? await uploadImages(
         submission.value.avatarImage,
         UPLOAD_PRESET_ENUM.bidhubAvatar
       )
