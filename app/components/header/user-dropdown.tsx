@@ -26,7 +26,7 @@ export default function UserDropDown({ className, user }: Props) {
   }
 
   const navigation = [
-    { title: "Dashboard", path: "/user/dashboard" },
+    { title: "Manage", path: "/user/manage" },
     { title: "Settings", path: "/user/settings" },
     { title: "Log out", path: "/logout" },
   ];
