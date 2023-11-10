@@ -1,7 +1,7 @@
 import { Form, Link, useActionData } from "@remix-run/react";
 import { type DataFunctionArgs, json } from "@remix-run/node";
 import { z } from "zod";
-import { useForm } from "@conform-to/react";
+import { useFieldset, useForm } from "@conform-to/react";
 import { getFieldsetConstraint, parse } from "@conform-to/zod";
 
 import { Alert, AlertTitle } from "~/components/common/ui/alert";
@@ -9,6 +9,8 @@ import FormField from "~/components/form/form-field";
 import { checkAvailability, createUser } from "~/services/user.server";
 import { createUserSession } from "~/services/session.server";
 import { SubmitButton } from "~/components/form/submit-button";
+import { UserDetailsFieldset } from "../user+/form/user-details-fieldset";
+import { PersonalDetailsFieldsetSchema } from "~/services/schemas.server";
 
 export const meta = () => {
   return [{ title: "Register for Bidhub" }];
@@ -26,6 +28,7 @@ const RegisterFormSchema = z.object({
       required_error: "Password is required",
     })
     .min(8, "Password must be at least 8 characters"),
+  personalDetails: PersonalDetailsFieldsetSchema,
 });
 
 export async function action({ request }: DataFunctionArgs) {
@@ -89,6 +92,8 @@ export default function RegisterRoute() {
       return parse(formData, { schema: RegisterFormSchema });
     },
   });
+
+  const userData = useFieldset(form.ref, fields.personalDetails);
   return (
     <div>
       <h2 className="pt-4 pb-8 text-center text-3xl font-bold">Join Bidhub</h2>
@@ -116,6 +121,7 @@ export default function RegisterRoute() {
           type="password"
           errors={fields.password.errors}
         />
+        <UserDetailsFieldset user={userData} />
         <div className="flex justify-between">
           <Link
             className="px-0 py-2 font-semibold text-accent-foreground hover:text-slate-500"

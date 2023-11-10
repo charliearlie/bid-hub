@@ -1,59 +1,85 @@
 import {
+  conform,
+  list,
+  useFieldList,
+  useFieldset,
+  useForm,
+} from "@conform-to/react";
+import { getFieldsetConstraint, parse } from "@conform-to/zod";
+import {
   type ActionFunctionArgs,
   type LoaderFunctionArgs,
   json,
 } from "@remix-run/node";
-import { useActionData, useLoaderData, useNavigation } from "@remix-run/react";
+import { Form, useActionData, useLoaderData } from "@remix-run/react";
+import { z } from "zod";
+import Card from "~/components/common/ui/card/card";
+import CardContent from "~/components/common/ui/card/card-content";
 import {
-  Alert,
-  AlertDescription,
-  AlertTitle,
-} from "~/components/common/ui/alert";
-import Form from "~/components/form/form";
-import FormField from "~/components/form/form-field";
-import Spinner from "~/components/spinner";
-import { getUser } from "~/services/user.server";
+  AddressFieldsetSchema,
+  FileSchema,
+  PersonalDetailsFieldsetSchema,
+} from "~/services/schemas.server";
+import {
+  getUser,
+  updateUserAddresses,
+  updateUserPersonalDetails,
+} from "~/services/user.server";
+import { UPLOAD_PRESET_ENUM, uploadImage } from "~/util/cloudinary.server";
 import { invariantResponse } from "~/util/utils";
+import { AddressFieldset } from "./form/address-fieldset";
+import { UserDetailsFieldset } from "./form/user-details-fieldset";
+import { Separator } from "~/components/common/ui/separator";
+import { SubmitButton } from "~/components/form/submit-button";
+import { Button } from "~/components/common/ui/button";
+import { Prisma } from "@prisma/client";
+import FormField from "~/components/form/form-field";
 
-// todo: Move this into own file or make more generic and just look for a key value pair of strings
-type ActionData = {
-  username: null | string;
-  avatarImage: null | string;
-  firstName: null | string;
-  lastName: null | string;
-};
+const ManageUserFormSchema = z.object({
+  personalDetails: PersonalDetailsFieldsetSchema,
+  addresses: z.array(AddressFieldsetSchema),
+  email: z.string().email(),
+  avatarImage: FileSchema,
+});
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData();
+  console.log("MADE IT 47");
+  const submission = parse(formData, { schema: ManageUserFormSchema });
 
-  const avatarImage = formData.get("avatarImage") as string;
-
-  const errors: ActionData = {
-    firstName: null, // todo: Do some validation to ensure this is a valid first name
-    lastName: null, // Same as above but we must ensure that the user can save without adding their name
-    avatarImage: null, // Same
-    username: null, // again same
-  };
-
-  const hasErrors = Object.values(errors).some((errorMessage) => errorMessage);
-  if (hasErrors) {
-    return json({
-      user: null,
-      error: "Got some validation tings you need to fix lad",
-    });
+  if (submission.intent !== "submit" || !submission.value) {
+    return json({ status: "idle", submission } as const);
   }
 
-  if (avatarImage) {
-    const data = new FormData();
-    data.append("file", avatarImage);
-    data.append("upload_preset", "BrakeNeck_car");
-    const res = await fetch(process.env.CLOUDINARY_LEGACY_URL, {
-      method: "POST",
-      body: data,
-    });
-    await res.json();
+  // const image = submission.value?.avatarImage
+  //   ? await uploadImage(
+  //       submission.value.avatarImage,
+  //       UPLOAD_PRESET_ENUM.bidhubAvatar
+  //     )
+  //   : null;
+
+  console.log("MADE IT 61");
+
+  const user = await getUser(request);
+  if (!user) {
+    throw new Response("User not logged in", { status: 404 });
   }
-  return null;
+
+  const updatedUserAddresses = await updateUserAddresses(
+    submission.value.addresses,
+    user.id
+  );
+
+  const updatedUser = await updateUserPersonalDetails(
+    submission.value.personalDetails,
+    user.id
+  );
+
+  // todo: add good error/success messages
+  return json({
+    status: updatedUserAddresses && updatedUser ? "success" : "error",
+    submission,
+  } as const);
 };
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
@@ -68,56 +94,62 @@ export default function ManageUserRoute() {
   const { user } = useLoaderData<typeof loader>();
   const actionData = useActionData<typeof action>();
 
-  const initialFormState = {
-    username: user.username,
-  };
-  const navigation = useNavigation();
+  const [form, fields] = useForm({
+    id: "manage-user-form",
+    constraint: getFieldsetConstraint(ManageUserFormSchema),
+    lastSubmission: actionData?.submission,
+    onValidate({ formData }) {
+      return parse(formData, { schema: ManageUserFormSchema });
+    },
+    shouldValidate: "onBlur",
+    defaultValue: {
+      email: user.email,
+      personalDetails: {
+        firstName: user.personalDetails?.firstName || "",
+        lastName: user.personalDetails?.lastName || "",
+      },
+      addresses: user.addresses.length ? user.addresses : [{}],
+    },
+  });
+
+  const userData = useFieldset(form.ref, fields.personalDetails);
+  const addresses = useFieldList(form.ref, fields.addresses);
+
+  const hasAddressStored = user.addresses.length > 0;
   if (user) {
     return (
-      <main>
-        <div className="flex flex-col flex-wrap content-center">
-          <h1 className="text-center text-3xl font-bold">Edit user</h1>
-          <p className="text-center">Edit the things about you</p>
-          {/* We should add a link to go back to requesting a reset link */}
-          {actionData?.error && (
-            <Alert variant="destructive">
-              <AlertTitle>Something went wrong</AlertTitle>
-              <AlertDescription>{actionData?.error}</AlertDescription>
-            </Alert>
-          )}
-          <Form
-            className="mb-4 w-full rounded px-8 pt-6 pb-8 sm:shadow-md"
-            encType="multipart/form-data"
-            initialFormValues={initialFormState}
-            method="post"
-          >
+      <Card>
+        <CardContent className="md:p-8">
+          <Form method="post" {...form.props}>
             <FormField
-              label="Username"
-              name="username"
-              type="text"
-              errors={[]}
+              label="Email"
+              {...conform.input(fields.email, { type: "email" })}
+              disabled
+              helperText="Contact support to change your email address"
             />
-            <FormField
-              label="First name"
-              name="firstName"
-              type="text"
-              errors={[]}
-            />
-            <FormField
-              label="Last name"
-              name="lastName"
-              type="text"
-              errors={[]}
-            />
-            <input type="file" name="avatarImage" />
-            <div className="flex justify-center">
-              <button className="w-25 rounded bg-violet-700 px-3 py-2 text-lg font-semibold text-white hover:bg-violet-900">
-                {navigation.state !== "idle" ? <Spinner /> : "Update"}
-              </button>
+            <UserDetailsFieldset user={userData} />
+            <Separator />
+            <h3 className="py-4 text-lg font-semibold">Addresses</h3>
+            {addresses.map((address, index) => (
+              <>
+                {index > 0 && <Separator />}
+                <AddressFieldset key={address.id} address={address} />
+              </>
+            ))}
+            <div className="flex justify-center py-2">
+              {hasAddressStored && (
+                <Button
+                  variant="outline"
+                  {...list.insert(fields.addresses.name, {})}
+                >
+                  Add address
+                </Button>
+              )}
             </div>
+            <SubmitButton>Save changes</SubmitButton>
           </Form>
-        </div>
-      </main>
+        </CardContent>
+      </Card>
     );
   }
 }

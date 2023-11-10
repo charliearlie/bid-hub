@@ -1,15 +1,20 @@
-import { ForgotPassword } from "@prisma/client";
+import { ForgotPassword, Prisma } from "@prisma/client";
 import bcrypt from "bcryptjs";
 import { v4 as uuidv4 } from "uuid";
 import { json } from "@remix-run/node";
 
-import { prisma } from "./prisma.server";
+import { prisma } from "../util/prisma.server";
 import type { LoginForm, RegisterForm } from "~/util/types";
 import { createUserSession, getUserId } from "~/services/session.server";
 import sendEmail from "~/services/email.server";
 
 import resetPasswordEmailTemplate from "~/util/helpers/email/reset-password-email";
 import magicLinkEmailTemplate from "~/util/helpers/email/magic-link-email";
+import { z } from "zod";
+import {
+  AddressFieldsetSchema,
+  PersonalDetailsFieldsetSchema,
+} from "./schemas.server";
 
 export const checkAvailability = async (email: string, username: string) => {
   const emailUsages = await prisma.user.count({ where: { email } });
@@ -153,10 +158,67 @@ export const createUser = async (user: RegisterForm) => {
       email: user.email,
       password: passwordHash,
       username: user.username,
+      personalDetails: {
+        create: {
+          firstName: "",
+          lastName: "",
+        },
+      },
     },
   });
   return { id: newUser.id, email: newUser.email };
 };
+
+export async function updateUserAddresses(
+  addresses: z.infer<typeof AddressFieldsetSchema>[],
+  userId: string
+) {
+  // Would rather use upsert here but it's behaving weird
+  const updatedAddresses = await Promise.all(
+    addresses.map(async (address) => {
+      const { addressLine1, addressLine2, cityOrTown, id, name, postcode } =
+        address;
+
+      if (id) {
+        const updatedAddress = await prisma.address.update({
+          where: { id: address.id },
+          data: address,
+        });
+
+        return updatedAddress;
+      } else {
+        const createdAddress = await prisma.address.create({
+          data: {
+            addressLine1,
+            addressLine2,
+            cityOrTown,
+            name,
+            postcode,
+            user: { connect: { id: userId } },
+          },
+        });
+
+        return createdAddress;
+      }
+    })
+  );
+
+  return updatedAddresses;
+}
+
+export async function updateUserPersonalDetails(
+  personalDetails: z.infer<typeof PersonalDetailsFieldsetSchema>,
+  userId: string
+) {
+  const updatedPersonalDetails = await prisma.userPersonalDetails.update({
+    where: {
+      userId,
+    },
+    data: personalDetails,
+  });
+
+  return updatedPersonalDetails;
+}
 
 export async function getUserByUsernameOrEmail(usernameOrEmail: string) {
   return await prisma.user.findFirst({
@@ -183,5 +245,31 @@ export async function getUser(request: Request) {
 
   return await prisma.user.findUnique({
     where: { id: userId },
+    include: {
+      personalDetails: true,
+      addresses: true,
+    },
   });
+}
+
+export async function createOrUpdateAddress(
+  userId: string,
+  address: Prisma.AddressCreateWithoutUserInput
+) {
+  const addressData = await prisma.address.upsert({
+    where: {
+      id: address.id,
+    },
+    update: address,
+    create: {
+      ...address,
+      user: {
+        connect: {
+          id: userId,
+        },
+      },
+    },
+  });
+
+  return addressData;
 }

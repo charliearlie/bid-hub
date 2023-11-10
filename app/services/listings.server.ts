@@ -1,5 +1,5 @@
 import type { Item, Listing } from "@prisma/client";
-import { prisma } from "./prisma.server";
+import { prisma } from "../util/prisma.server";
 import { getUserById } from "./user.server";
 import { buildListingEndDateAndTime, generateSlug } from "~/util/utils";
 
