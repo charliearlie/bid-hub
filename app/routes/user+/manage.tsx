@@ -17,7 +17,6 @@ import Card from "~/components/common/ui/card/card";
 import CardContent from "~/components/common/ui/card/card-content";
 import {
   AddressFieldsetSchema,
-  FileSchema,
   PersonalDetailsFieldsetSchema,
 } from "~/services/schemas.server";
 import {
@@ -26,7 +25,6 @@ import {
   updateUserAvatar,
   updateUserPersonalDetails,
 } from "~/services/user.server";
-import { UPLOAD_PRESET_ENUM, uploadImages } from "~/util/cloudinary.server";
 import { invariantResponse } from "~/util/utils";
 import { AddressFieldset } from "./form/address-fieldset";
 import { UserDetailsFieldset } from "./form/user-details-fieldset";

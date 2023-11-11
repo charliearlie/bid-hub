@@ -1,7 +1,7 @@
 import { Form, Link, useActionData } from "@remix-run/react";
 import { type DataFunctionArgs, json } from "@remix-run/node";
 import { z } from "zod";
-import { useFieldset, useForm } from "@conform-to/react";
+import { useForm } from "@conform-to/react";
 import { getFieldsetConstraint, parse } from "@conform-to/zod";
 
 import { Alert, AlertTitle } from "~/components/common/ui/alert";
@@ -9,8 +9,6 @@ import FormField from "~/components/form/form-field";
 import { checkAvailability, createUser } from "~/services/user.server";
 import { createUserSession } from "~/services/session.server";
 import { SubmitButton } from "~/components/form/submit-button";
-import { UserDetailsFieldset } from "../user+/form/user-details-fieldset";
-import { PersonalDetailsFieldsetSchema } from "~/services/schemas.server";
 
 export const meta = () => {
   return [{ title: "Register for Bidhub" }];
