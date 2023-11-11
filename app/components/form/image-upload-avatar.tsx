@@ -1,4 +1,5 @@
 import { FieldConfig } from "@conform-to/react";
+import { UploadApiResponse } from "cloudinary";
 import { PlusIcon } from "lucide-react";
 import React, { ChangeEvent, useState } from "react";
 import { z } from "zod";
@@ -50,7 +51,7 @@ export const ImageUploadAvatar = React.forwardRef<
                 }
               );
 
-              const image = await res.json();
+              const image: UploadApiResponse = await res.json();
               if (image.secure_url) {
                 setPreviewImage(image.secure_url);
               }
