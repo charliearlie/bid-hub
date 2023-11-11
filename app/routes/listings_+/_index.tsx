@@ -1,7 +1,9 @@
 import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
-import Previews from "~/components/listings/listing-preview/previews";
+
 import { getAllListings } from "~/services/listings.server";
+
+import Previews from "~/components/listings/listing-preview/previews";
 
 export const meta = () => {
   return [{ title: "Latest listings" }, { name: "description", content: "" }];

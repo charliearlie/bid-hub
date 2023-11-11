@@ -13,8 +13,7 @@ import {
 } from "@remix-run/node";
 import { Form, useActionData, useLoaderData } from "@remix-run/react";
 import { z } from "zod";
-import Card from "~/components/common/ui/card/card";
-import CardContent from "~/components/common/ui/card/card-content";
+
 import {
   AddressFieldsetSchema,
   PersonalDetailsFieldsetSchema,
@@ -25,14 +24,19 @@ import {
   updateUserAvatar,
   updateUserPersonalDetails,
 } from "~/services/user.server";
-import { invariantResponse } from "~/util/utils";
-import { AddressFieldset } from "./form/address-fieldset";
-import { UserDetailsFieldset } from "./form/user-details-fieldset";
-import { Separator } from "~/components/common/ui/separator";
-import { SubmitButton } from "~/components/form/submit-button";
+
 import { Button } from "~/components/common/ui/button";
+import Card from "~/components/common/ui/card/card";
+import CardContent from "~/components/common/ui/card/card-content";
+import { Separator } from "~/components/common/ui/separator";
 import FormField from "~/components/form/form-field";
 import { ImageUploadAvatar } from "~/components/form/image-upload-avatar";
+import { SubmitButton } from "~/components/form/submit-button";
+
+import { invariantResponse } from "~/util/utils";
+
+import { AddressFieldset } from "./form/address-fieldset";
+import { UserDetailsFieldset } from "./form/user-details-fieldset";
 
 const ManageUserFormSchema = z.object({
   personalDetails: PersonalDetailsFieldsetSchema,

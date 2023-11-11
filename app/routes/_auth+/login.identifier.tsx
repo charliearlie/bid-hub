@@ -1,9 +1,14 @@
-import { Form, useActionData, useSearchParams } from "@remix-run/react";
-import { redirect, json, type DataFunctionArgs } from "@remix-run/node";
 import { conform, useForm } from "@conform-to/react";
 import { getFieldsetConstraint, parse } from "@conform-to/zod";
-import { z } from "zod";
+import { redirect, json, type DataFunctionArgs } from "@remix-run/node";
+import { Form, useActionData, useSearchParams } from "@remix-run/react";
 import { ArrowRight, Send } from "lucide-react";
+import { z } from "zod";
+
+import {
+  generateMagicLink,
+  getUserByUsernameOrEmail,
+} from "~/services/user.server";
 
 import {
   Alert,
@@ -11,10 +16,6 @@ import {
   AlertTitle,
 } from "~/components/common/ui/alert";
 import FormField from "~/components/form/form-field";
-import {
-  generateMagicLink,
-  getUserByUsernameOrEmail,
-} from "~/services/user.server";
 import { SubmitButton } from "~/components/form/submit-button";
 
 const LoginIdentifierSchema = z.object({

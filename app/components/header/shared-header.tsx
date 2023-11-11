@@ -3,9 +3,11 @@ import { useState } from "react";
 import BurgerSVG from "~/styles/svg/burger";
 import CloseSVG from "~/styles/svg/close";
 import SearchSVG from "~/styles/svg/search";
-import UserDropDown from "./user-dropdown";
+
 import type { UserType as User } from "~/util/types";
+
 import { Input } from "../common/ui/input";
+import UserDropDown from "./user-dropdown";
 
 type Props = {
   user: User | null;

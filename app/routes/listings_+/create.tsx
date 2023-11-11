@@ -1,5 +1,6 @@
 import { type DataFunctionArgs, json } from "@remix-run/node";
 import { Outlet } from "@remix-run/react";
+
 import { requireUserId } from "~/services/session.server";
 
 export const loader = async ({ request }: DataFunctionArgs) => {

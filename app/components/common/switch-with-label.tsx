@@ -1,5 +1,6 @@
-import { useId } from "react";
 import type { SwitchProps } from "@radix-ui/react-switch";
+import { useId } from "react";
+
 import { Label } from "./ui/label";
 import { Switch } from "./ui/switch";
 

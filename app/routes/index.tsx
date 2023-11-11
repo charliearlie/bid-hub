@@ -1,8 +1,9 @@
 import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 
-import { Previews } from "~/components/listings";
 import { getAllListings } from "~/services/listings.server";
+
+import { Previews } from "~/components/listings";
 
 export const meta = () => {
   return [{ title: "Bidhub | Buy & sell things" }];

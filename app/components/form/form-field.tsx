@@ -1,9 +1,11 @@
-import { type ReactElement, forwardRef, useId } from "react";
-import { Label } from "../common/ui/label";
-import { Input } from "../common/ui/input";
-import InputErrors from "./input-errors";
 import { type LucideIcon } from "lucide-react";
+import { type ReactElement, forwardRef, useId } from "react";
+
 import { cn } from "~/util/utils";
+
+import { Input } from "../common/ui/input";
+import { Label } from "../common/ui/label";
+import InputErrors from "./input-errors";
 
 export type FormFieldProps = {
   errors?: Array<string> | null;

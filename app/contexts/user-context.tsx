@@ -1,10 +1,10 @@
 import type { DataFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
+import { useLoaderData } from "@remix-run/react";
 import type { ReactNode } from "react";
 import { createContext, useContext } from "react";
 
 import { getUser } from "~/services/user.server";
-import { useLoaderData } from "@remix-run/react";
 
 type UserContextType = {
   userId: string | null;

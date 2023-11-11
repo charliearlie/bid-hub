@@ -1,4 +1,5 @@
 import { Link } from "@remix-run/react";
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -7,7 +8,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "~/components/common/ui/dropdown-menu";
+
 import type { UserType as User } from "~/util/types";
+
 import { Button } from "../common/ui/button";
 
 type Props = {

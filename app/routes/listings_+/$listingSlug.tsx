@@ -1,13 +1,16 @@
 import { json, type DataFunctionArgs, MetaFunction } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
 import invariant from "tiny-invariant";
-import { Button } from "~/components/common/ui/button";
+
 import { getListingBySlug } from "~/services/listings.server";
+
+import { Button } from "~/components/common/ui/button";
 import Card from "~/components/common/ui/card/card";
 import CardContent from "~/components/common/ui/card/card-content";
 import CardHeader from "~/components/common/ui/card/card-header";
-import { invariantResponse } from "~/util/utils";
 import { ErrorBoundaryComponent } from "~/components/error-boundary";
+
+import { invariantResponse } from "~/util/utils";
 
 export const meta: MetaFunction<typeof loader, {}> = ({ data }) => {
   return [

@@ -14,12 +14,12 @@ import {
   useLoaderData,
 } from "@remix-run/react";
 
+import { ErrorBoundaryComponent } from "./components/error-boundary";
 import SharedHeader from "./components/header/shared-header";
 import { logout } from "./services/session.server";
 import { getUser } from "./services/user.server";
 import styles from "./styles/app.css";
 import { getEnv } from "./util/env.server";
-import { ErrorBoundaryComponent } from "./components/error-boundary";
 
 export const meta: MetaFunction = () => {
   return [

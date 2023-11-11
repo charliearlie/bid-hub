@@ -3,7 +3,9 @@ import { UploadApiResponse } from "cloudinary";
 import { PlusIcon } from "lucide-react";
 import React, { ChangeEvent, useState } from "react";
 import { z } from "zod";
+
 import { FileSchema } from "~/services/schemas.server";
+
 import { cn } from "~/util/utils";
 
 export const ImageUploadAvatar = React.forwardRef<
@@ -15,10 +17,13 @@ export const ImageUploadAvatar = React.forwardRef<
   const [previewImage, setPreviewImage] = useState<string | null>(src || null);
   return (
     <>
-      <label>
+      <label aria-label="Change user avatar">
         {previewImage ? (
           <img
-            className={cn("cursor-pointer hover:opacity-80", className)}
+            className={cn(
+              "cursor-pointer object-cover hover:opacity-80",
+              className
+            )}
             {...props}
             src={previewImage}
             ref={ref}

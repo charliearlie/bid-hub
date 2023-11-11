@@ -1,5 +1,5 @@
-import type { ImgHTMLAttributes } from "react";
 import { Link } from "@remix-run/react";
+import type { ImgHTMLAttributes } from "react";
 
 type CardImageProps = {
   to: string;

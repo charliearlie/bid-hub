@@ -1,13 +1,14 @@
-import { Form, Link, useActionData } from "@remix-run/react";
-import { type DataFunctionArgs, json } from "@remix-run/node";
-import { z } from "zod";
 import { useForm } from "@conform-to/react";
 import { getFieldsetConstraint, parse } from "@conform-to/zod";
+import { type DataFunctionArgs, json } from "@remix-run/node";
+import { Form, Link, useActionData } from "@remix-run/react";
+import { z } from "zod";
+
+import { createUserSession } from "~/services/session.server";
+import { checkAvailability, createUser } from "~/services/user.server";
 
 import { Alert, AlertTitle } from "~/components/common/ui/alert";
 import FormField from "~/components/form/form-field";
-import { checkAvailability, createUser } from "~/services/user.server";
-import { createUserSession } from "~/services/session.server";
 import { SubmitButton } from "~/components/form/submit-button";
 
 export const meta = () => {

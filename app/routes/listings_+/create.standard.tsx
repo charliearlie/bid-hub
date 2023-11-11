@@ -1,5 +1,3 @@
-import { useState } from "react";
-import { z } from "zod";
 import { conform, list, useFieldList, useForm } from "@conform-to/react";
 import { getFieldsetConstraint, parse } from "@conform-to/zod";
 import { Item } from "@prisma/client";
@@ -12,7 +10,20 @@ import {
 } from "@remix-run/node";
 import { Form, useActionData, useLoaderData } from "@remix-run/react";
 import { PoundSterlingIcon } from "lucide-react";
+import { useState } from "react";
+import { z } from "zod";
+
+import { createItem, getItemById } from "~/services/item.server";
+import {
+  addListing,
+  getCategoryDropdownOptions,
+} from "~/services/listings.server";
+import { FileSchema } from "~/services/schemas.server";
+import { getUserId } from "~/services/session.server";
+
+import { DatePicker } from "~/components/common/date-picker";
 import { SwitchWithLabel } from "~/components/common/switch-with-label";
+import { Button } from "~/components/common/ui/button";
 import Card from "~/components/common/ui/card/card";
 import CardContent from "~/components/common/ui/card/card-content";
 import { Label } from "~/components/common/ui/label";
@@ -25,16 +36,8 @@ import {
 import FormField from "~/components/form/form-field";
 import FormFieldTextArea from "~/components/form/form-field-text-area";
 import { SubmitButton } from "~/components/form/submit-button";
-import { createItem, getItemById } from "~/services/item.server";
-import {
-  addListing,
-  getCategoryDropdownOptions,
-} from "~/services/listings.server";
-import { getUserId } from "~/services/session.server";
+
 import { uploadImages } from "~/util/cloudinary.server";
-import { DatePicker } from "~/components/common/date-picker";
-import { FileSchema } from "~/services/schemas.server";
-import { Button } from "~/components/common/ui/button";
 
 const MAX_FILE_SIZE = 1024 * 1024 * 5; // 5mb
 const CreateListingSchema = z
