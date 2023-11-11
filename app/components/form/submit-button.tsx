@@ -1,8 +1,10 @@
+import { useFormAction, useNavigation } from "@remix-run/react";
 import React from "react";
+
+import { isFormInPendingState } from "~/util/utils";
+
 import { Button, type ButtonProps } from "../common/ui/button";
 import Spinner from "../spinner";
-import { useFormAction, useNavigation } from "@remix-run/react";
-import { isFormInPendingState } from "~/util/utils";
 
 export const SubmitButton = React.forwardRef<
   HTMLButtonElement,

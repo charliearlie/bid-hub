@@ -1,6 +1,4 @@
-import { useState } from "react";
-import { z } from "zod";
-import { conform, useForm } from "@conform-to/react";
+import { conform, list, useFieldList, useForm } from "@conform-to/react";
 import { getFieldsetConstraint, parse } from "@conform-to/zod";
 import { Item } from "@prisma/client";
 import { SelectValue } from "@radix-ui/react-select";
@@ -12,7 +10,20 @@ import {
 } from "@remix-run/node";
 import { Form, useActionData, useLoaderData } from "@remix-run/react";
 import { PoundSterlingIcon } from "lucide-react";
+import { useState } from "react";
+import { z } from "zod";
+
+import { createItem, getItemById } from "~/services/item.server";
+import {
+  addListing,
+  getCategoryDropdownOptions,
+} from "~/services/listings.server";
+import { FileSchema } from "~/services/schemas.server";
+import { getUserId } from "~/services/session.server";
+
+import { DatePicker } from "~/components/common/date-picker";
 import { SwitchWithLabel } from "~/components/common/switch-with-label";
+import { Button } from "~/components/common/ui/button";
 import Card from "~/components/common/ui/card/card";
 import CardContent from "~/components/common/ui/card/card-content";
 import { Label } from "~/components/common/ui/label";
@@ -25,14 +36,8 @@ import {
 import FormField from "~/components/form/form-field";
 import FormFieldTextArea from "~/components/form/form-field-text-area";
 import { SubmitButton } from "~/components/form/submit-button";
-import { createItem, getItemById } from "~/services/item.server";
-import {
-  addListing,
-  getCategoryDropdownOptions,
-} from "~/services/listings.server";
-import { getUserId } from "~/services/session.server";
-import { uploadImage } from "~/util/cloudinary.server";
-import { DatePicker } from "~/components/common/date-picker";
+
+import { uploadImages } from "~/util/cloudinary.server";
 
 const MAX_FILE_SIZE = 1024 * 1024 * 5; // 5mb
 const CreateListingSchema = z
@@ -56,12 +61,7 @@ const CreateListingSchema = z
     minBidIncrement: z.number().max(100).optional(),
     itemId: z.string().optional(),
     endTime: z.string().optional(),
-    image: z
-      .any()
-      .refine(
-        (file) => !file || file?.size <= MAX_FILE_SIZE,
-        `Max file size is 5MB.`
-      ),
+    images: z.array(FileSchema),
   })
   .refine(
     ({ buyItNowPrice, startingBid }) => {
@@ -89,20 +89,15 @@ export const action = async ({ request }: DataFunctionArgs) => {
     createMemoryUploadHandler({ maxPartSize: MAX_FILE_SIZE })
   );
 
-  console.log(formData.get("image"));
-
   const submission = await parse(formData, { schema: CreateListingSchema });
-  console.log("submission", submission);
 
   if (submission.intent !== "submit" || !submission.value) {
     return json({ status: "idle", submission } as const);
   }
 
-  const image = submission.value?.image
-    ? await uploadImage(submission.value.image)
+  const images = submission.value?.images.length
+    ? await uploadImages(submission.value.images)
     : null;
-
-  console.log("image", image);
 
   let newItem: Item | null;
 
@@ -111,8 +106,6 @@ export const action = async ({ request }: DataFunctionArgs) => {
   } else {
     newItem = await createItem(submission.value.itemName);
   }
-
-  console.log("newItem", newItem);
 
   if (!newItem) {
     submission.error[""] = ["We failed to create your item"];
@@ -134,7 +127,7 @@ export const action = async ({ request }: DataFunctionArgs) => {
       buyItNowPrice: listingData.buyItNowPrice || null,
       startingBid: listingData.startingBid || null,
       minBidIncrement: listingData.minBidIncrement || null,
-      images: [image?.secure_url || ""],
+      images: Array.isArray(images) ? images.map((image) => image || "") : [],
       endTime: listingData.endTime,
     },
     newItem,
@@ -163,15 +156,15 @@ export default function CreateListingRoute() {
     onValidate({ formData }) {
       return parse(formData, { schema: CreateListingSchema });
     },
-    defaultValue: { quantity: 1, itemId: "" }, // We will get the item id if it exists
+    defaultValue: { quantity: 1, itemId: "", images: [{}] }, // We will get the item id if it exists
   });
 
-  console.log("actionData", actionData);
+  const images = useFieldList(form.ref, fields.images);
 
   return (
     <Card>
       <CardContent className="md:p-8">
-        <Form method="post" {...form} encType="multipart/form-data">
+        <Form method="post" {...form.props} encType="multipart/form-data">
           <FormField
             label="Title"
             helperText="This is what will be displayed in search results"
@@ -227,12 +220,26 @@ export default function CreateListingRoute() {
               {...conform.input(fields.buyItNowPrice)}
             />
           </div>
-          <FormField
-            label="Image"
-            accept="image/*"
-            type="file"
-            {...conform.input(fields.image)}
-          />
+          <span className="text-[8px]">
+            * This will be a component which takes multiple images eventually
+          </span>
+          {images.map((image) => (
+            <FormField
+              label="Image"
+              accept="image/*"
+              type="file"
+              {...conform.input(image)}
+            />
+          ))}
+          <div className="flex justify-end">
+            <Button
+              className="self-end"
+              variant="outline"
+              {...list.insert(fields.images.name, {})}
+            >
+              Add another image
+            </Button>
+          </div>
           <SwitchWithLabel
             label="Auction"
             checked={isAuction}

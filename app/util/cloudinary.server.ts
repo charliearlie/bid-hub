@@ -1,7 +1,7 @@
 import { writeAsyncIterableToWritable } from "@remix-run/node";
 import cloudinary from "cloudinary";
 
-enum UPLOAD_PRESET_ENUM {
+export enum UPLOAD_PRESET_ENUM {
   bidhubAvatar = "bidhub_avatar",
   bidhubItem = "bidhub_item",
 }
@@ -16,32 +16,49 @@ async function* createAsyncIterable(data: Uint8Array) {
   yield data;
 }
 
-export async function uploadImage(
-  file: File,
+export async function uploadImages(
+  files: File | File[],
   preset: UPLOAD_PRESET_ENUM = UPLOAD_PRESET_ENUM.bidhubItem
 ) {
-  if (!file) return;
+  const filesArray = Array.isArray(files) ? files : [files]; // Ensure files is an array
 
-  const buffer = await file.arrayBuffer();
-  const data = new Uint8Array(buffer);
-  const iterableData = createAsyncIterable(data);
-  const uploadPromise = new Promise(async (resolve, reject) => {
-    const uploadStream = cloudinary.v2.uploader.upload_stream(
-      {
-        folder: "bidhub",
-        upload_preset: preset,
-      },
-      (error, result) => {
-        if (error) {
-          console.error("error", error);
+  if (!filesArray.length) return [];
+
+  const uploadPromises = filesArray.map(async (file) => {
+    const buffer = await file.arrayBuffer();
+    const data = new Uint8Array(buffer);
+    const iterableData = createAsyncIterable(data);
+
+    return new Promise<cloudinary.UploadApiResponse | null>(
+      async (resolve, reject) => {
+        const uploadStream = cloudinary.v2.uploader.upload_stream(
+          {
+            folder: "bidhub",
+            upload_preset: preset,
+          },
+          (error, result) => {
+            if (error) {
+              console.error("error", error);
+              resolve(null);
+              return;
+            }
+            resolve(result || null);
+          }
+        );
+
+        try {
+          await writeAsyncIterableToWritable(iterableData, uploadStream);
+        } catch (err) {
+          console.error("Error writing to upload stream:", err);
           resolve(null);
-          return;
         }
-        resolve(result);
       }
     );
-    await writeAsyncIterableToWritable(iterableData, uploadStream);
   });
 
-  return uploadPromise as Promise<cloudinary.UploadApiResponse | null>;
+  const results = await Promise.all(uploadPromises);
+
+  return filesArray.length === 1
+    ? results[0]?.secure_url
+    : results.map((result) => result?.secure_url);
 }

@@ -1,7 +1,9 @@
 import type { Item, Listing } from "@prisma/client";
-import { prisma } from "./prisma.server";
-import { getUserById } from "./user.server";
+
 import { buildListingEndDateAndTime, generateSlug } from "~/util/utils";
+
+import { prisma } from "../util/prisma.server";
+import { getUserById } from "./user.server";
 
 export async function getAllListings() {
   return await prisma.listing.findMany();

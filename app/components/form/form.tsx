@@ -1,10 +1,8 @@
-import type { ChangeEvent, ReactNode} from "react";
+import type { FormProps as RemixFormProps } from "@remix-run/react";
+import { Form as RemixForm } from "@remix-run/react";
+import type { ChangeEvent, ReactNode } from "react";
 import React, { useState } from "react";
-import type {
-  FormProps as RemixFormProps} from "@remix-run/react";
-import {
-  Form as RemixForm
-} from "@remix-run/react";
+
 import type { FormFieldProps } from "./form-field";
 import FormField from "./form-field";
 

@@ -1,4 +1,5 @@
 import type { LoaderFunctionArgs } from "@remix-run/node";
+
 import { logout } from "~/services/session.server";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {

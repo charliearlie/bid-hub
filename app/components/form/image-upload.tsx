@@ -1,6 +1,7 @@
-import React, { useId } from "react";
-import { Label } from "../common/ui/label";
 import { UploadCloud } from "lucide-react";
+import React, { useId } from "react";
+
+import { Label } from "../common/ui/label";
 
 enum UPLOAD_PRESET_ENUM {
   bidhubAvatar = "bidhub_avatar",
@@ -31,9 +32,9 @@ export const ImageUpload = React.forwardRef<HTMLInputElement, Props>(
           </div>
         </Label>
         <input className="hidden" type="file" id={id} ref={ref} {...props} />
-        <div className="self-start">
+        {/* <div className="self-start">
           <img height={50} width={50} src="https://picsum.photos/200" />
-        </div>
+        </div> */}
       </div>
     );
   }

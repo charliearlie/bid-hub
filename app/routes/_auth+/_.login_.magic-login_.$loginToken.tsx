@@ -1,7 +1,8 @@
 import { type DataFunctionArgs, json } from "@remix-run/node";
-import { handleMagicLinkLogin } from "~/services/user.server";
-import invariant from "tiny-invariant";
 import { useLoaderData } from "@remix-run/react";
+import invariant from "tiny-invariant";
+
+import { handleMagicLinkLogin } from "~/services/user.server";
 
 export const loader = async ({ params, request }: DataFunctionArgs) => {
   if (request.headers.get("user-agent")?.includes("WhatsApp")) {

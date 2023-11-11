@@ -1,9 +1,11 @@
-import { Form, useActionData } from "@remix-run/react";
-import { json, type DataFunctionArgs } from "@remix-run/node";
-import { z } from "zod";
-import { getFieldsetConstraint, parse } from "@conform-to/zod";
 import { conform, useForm } from "@conform-to/react";
+import { getFieldsetConstraint, parse } from "@conform-to/zod";
+import { json, type DataFunctionArgs } from "@remix-run/node";
+import { Form, useActionData } from "@remix-run/react";
 import { Send } from "lucide-react";
+import { z } from "zod";
+
+import { forgotPassword } from "~/services/user.server";
 
 import {
   Alert,
@@ -11,7 +13,6 @@ import {
   AlertTitle,
 } from "~/components/common/ui/alert";
 import FormField from "~/components/form/form-field";
-import { forgotPassword } from "~/services/user.server";
 import { SubmitButton } from "~/components/form/submit-button";
 
 const ForgotPasswordSchema = z.object({

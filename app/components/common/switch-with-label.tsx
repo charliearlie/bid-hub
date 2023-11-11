@@ -1,7 +1,8 @@
+import type { SwitchProps } from "@radix-ui/react-switch";
 import { useId } from "react";
+
 import { Label } from "./ui/label";
 import { Switch } from "./ui/switch";
-import type { SwitchProps } from "@radix-ui/react-switch";
 
 type Props = {
   id?: string;

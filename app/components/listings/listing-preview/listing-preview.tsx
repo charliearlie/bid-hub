@@ -1,8 +1,10 @@
 import { Link } from "@remix-run/react";
+
 import { Badge } from "~/components/common/ui/badge";
 import Card from "~/components/common/ui/card/card";
 import CardContent from "~/components/common/ui/card/card-content";
 import CardImage from "~/components/common/ui/card/card-image";
+
 import type { ListingPreviewType } from "~/util/types";
 
 type ListingPreviewProps = {
