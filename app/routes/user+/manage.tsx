@@ -110,8 +110,6 @@ export default function ManageUserRoute() {
     },
   });
 
-  console.log("actionData", actionData);
-
   const userData = useFieldset(form.ref, fields.personalDetails);
   const addresses = useFieldList(form.ref, fields.addresses);
 

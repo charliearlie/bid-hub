@@ -51,8 +51,9 @@ export const ImageUploadAvatar = React.forwardRef<
               );
 
               const image = await res.json();
-              console.log(image);
-              setPreviewImage(image.secure_url);
+              if (image.secure_url) {
+                setPreviewImage(image.secure_url);
+              }
             } else {
               setPreviewImage(null);
             }
