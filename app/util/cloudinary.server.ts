@@ -56,5 +56,9 @@ export async function uploadImages(
     );
   });
 
-  return Promise.all(uploadPromises);
+  const results = await Promise.all(uploadPromises);
+
+  return filesArray.length === 1
+    ? results[0]?.secure_url
+    : results.map((result) => result?.secure_url);
 }

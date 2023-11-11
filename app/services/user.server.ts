@@ -169,6 +169,17 @@ export const createUser = async (user: RegisterForm) => {
   return { id: newUser.id, email: newUser.email };
 };
 
+export async function updateUserAvatar(avatarUrl: string, userId: string) {
+  return await prisma.user.update({
+    where: {
+      id: userId,
+    },
+    data: {
+      avatarUrl,
+    },
+  });
+}
+
 export async function updateUserAddresses(
   addresses: z.infer<typeof AddressFieldsetSchema>[],
   userId: string

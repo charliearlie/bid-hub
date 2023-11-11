@@ -2,12 +2,9 @@ import { z } from "zod";
 
 const MAX_FILE_SIZE = 1024 * 1024 * 5; // 5mb
 
-export const FileSchema = z
-  .any()
-  .refine(
-    (file) => !file || file?.size <= MAX_FILE_SIZE,
-    `Max file size is 5MB.`
-  );
+export const FileSchema = z.any().refine((file) => {
+  return !file || file?.size <= MAX_FILE_SIZE;
+}, `Max file size is 5MB.`);
 
 export const AddressFieldsetSchema = z.object({
   addressLine1: z.string().min(3).max(100),

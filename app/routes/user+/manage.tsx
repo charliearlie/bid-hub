@@ -23,6 +23,7 @@ import {
 import {
   getUser,
   updateUserAddresses,
+  updateUserAvatar,
   updateUserPersonalDetails,
 } from "~/services/user.server";
 import { UPLOAD_PRESET_ENUM, uploadImages } from "~/util/cloudinary.server";
@@ -33,12 +34,18 @@ import { Separator } from "~/components/common/ui/separator";
 import { SubmitButton } from "~/components/form/submit-button";
 import { Button } from "~/components/common/ui/button";
 import FormField from "~/components/form/form-field";
+import { ImageUploadAvatar } from "~/components/form/image-upload-avatar";
 
 const ManageUserFormSchema = z.object({
   personalDetails: PersonalDetailsFieldsetSchema,
   addresses: z.array(AddressFieldsetSchema),
   email: z.string().email(),
-  avatarImage: FileSchema,
+  password: z
+    .string({
+      required_error: "Please enter your password to update your profile",
+    })
+    .min(8),
+  avatarImage: z.string().optional(),
 });
 
 export const action = async ({ request }: ActionFunctionArgs) => {
@@ -49,16 +56,13 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     return json({ status: "idle", submission } as const);
   }
 
-  const image = submission.value?.avatarImage
-    ? await uploadImages(
-        submission.value.avatarImage,
-        UPLOAD_PRESET_ENUM.bidhubAvatar
-      )
-    : null;
-
   const user = await getUser(request);
   if (!user) {
     throw new Response("User not logged in", { status: 404 });
+  }
+
+  if (typeof submission.value.avatarImage === "string") {
+    await updateUserAvatar(submission.value.avatarImage, user.id);
   }
 
   const updatedUserAddresses = await updateUserAddresses(
@@ -74,7 +78,6 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   // todo: add good error/success messages
   return json({
     status: updatedUserAddresses && updatedUser ? "success" : "error",
-    image,
     submission,
   } as const);
 };
@@ -109,6 +112,8 @@ export default function ManageUserRoute() {
     },
   });
 
+  console.log("actionData", actionData);
+
   const userData = useFieldset(form.ref, fields.personalDetails);
   const addresses = useFieldList(form.ref, fields.addresses);
 
@@ -118,12 +123,24 @@ export default function ManageUserRoute() {
       <Card>
         <CardContent className="md:p-8">
           <Form method="post" {...form.props}>
-            <FormField
-              label="Email"
-              {...conform.input(fields.email, { type: "email" })}
-              disabled
-              helperText="Contact support to change your email address"
-            />
+            <div className="flex flex-col items-center justify-between gap-4 lg:flex-row lg:items-start lg:gap-8">
+              <ImageUploadAvatar
+                className="h-[172px] w-[172px] basis-1/4 rounded-lg"
+                src={user.avatarUrl || undefined}
+                fieldProps={{ ...conform.input(fields.avatarImage) }}
+              />
+              <div className="flex w-full flex-col gap-0.5 lg:basis-3/4">
+                <FormField
+                  label="Email"
+                  {...conform.input(fields.email, { type: "email" })}
+                  helperText="Contact support to change your email address"
+                />
+                <FormField
+                  label="Password"
+                  {...conform.input(fields.password, { type: "password" })}
+                />
+              </div>
+            </div>
             <UserDetailsFieldset user={userData} />
             <Separator />
             <h3 className="py-4 text-lg font-semibold">Addresses</h3>

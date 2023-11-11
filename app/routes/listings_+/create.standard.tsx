@@ -124,9 +124,7 @@ export const action = async ({ request }: DataFunctionArgs) => {
       buyItNowPrice: listingData.buyItNowPrice || null,
       startingBid: listingData.startingBid || null,
       minBidIncrement: listingData.minBidIncrement || null,
-      images: images?.length
-        ? images.map((image) => image?.secure_url || "")
-        : [],
+      images: Array.isArray(images) ? images.map((image) => image || "") : [],
       endTime: listingData.endTime,
     },
     newItem,
