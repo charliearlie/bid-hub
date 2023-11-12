@@ -915,6 +915,14 @@ h2 {
   height: 15rem;
 }
 
+.h-24 {
+  height: 6rem;
+}
+
+.h-\[300px\] {
+  height: 300px;
+}
+
 .max-h-8 {
   max-height: 2rem;
 }
@@ -999,6 +1007,18 @@ h2 {
   width: 44px;
 }
 
+.w-24 {
+  width: 6rem;
+}
+
+.w-\[300px\] {
+  width: 300px;
+}
+
+.w-48 {
+  width: 12rem;
+}
+
 .min-w-\[8rem\] {
   min-width: 8rem;
 }
@@ -1021,6 +1041,10 @@ h2 {
 
 .max-w-lg {
   max-width: 32rem;
+}
+
+.max-w-5xl {
+  max-width: 64rem;
 }
 
 .flex-1 {
@@ -1351,6 +1375,10 @@ h2 {
 
 .border-destructive {
   border-color: hsl(var(--destructive));
+}
+
+.border-border {
+  border-color: hsl(var(--border));
 }
 
 .bg-accent {
