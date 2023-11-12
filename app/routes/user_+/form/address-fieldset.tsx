@@ -2,7 +2,7 @@ import { FieldConfig, conform, useFieldset } from "@conform-to/react";
 import { useRef } from "react";
 import { z } from "zod";
 
-import { AddressFieldsetSchema } from "~/services/schemas.server";
+import { AddressFieldsetSchema } from "~/services/zod-schemas";
 
 import FormField from "~/components/form/form-field";
 

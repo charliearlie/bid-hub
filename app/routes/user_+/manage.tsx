@@ -17,7 +17,7 @@ import { z } from "zod";
 import {
   AddressFieldsetSchema,
   PersonalDetailsFieldsetSchema,
-} from "~/services/schemas.server";
+} from "~/services/zod-schemas";
 import {
   getUser,
   updateUserAddresses,
@@ -120,50 +120,52 @@ export default function ManageUserRoute() {
   const hasAddressStored = user.addresses.length > 0;
   if (user) {
     return (
-      <Card>
-        <CardContent className="md:p-8">
-          <Form method="post" {...form.props}>
-            <div className="flex flex-col items-center justify-between gap-4 lg:flex-row lg:items-start lg:gap-8">
-              <ImageUploadAvatar
-                className="h-[172px] w-[172px] basis-1/4 rounded-lg"
-                src={user.avatarUrl || undefined}
-                fieldProps={{ ...conform.input(fields.avatarImage) }}
-              />
-              <div className="flex w-full flex-col gap-0.5 lg:basis-3/4">
-                <FormField
-                  label="Email"
-                  {...conform.input(fields.email, { type: "email" })}
-                  helperText="Contact support to change your email address"
+      <main className="container mx-auto max-w-3xl p-4">
+        <Card>
+          <CardContent className="md:p-8">
+            <Form method="post" {...form.props}>
+              <div className="flex flex-col items-center justify-between gap-4 lg:flex-row lg:items-start lg:gap-8">
+                <ImageUploadAvatar
+                  className="h-[172px] w-[172px] basis-1/4 rounded-lg"
+                  src={user.avatarUrl || undefined}
+                  fieldProps={{ ...conform.input(fields.avatarImage) }}
                 />
-                <FormField
-                  label="Password"
-                  {...conform.input(fields.password, { type: "password" })}
-                />
+                <div className="flex w-full flex-col gap-0.5 lg:basis-3/4">
+                  <FormField
+                    label="Email"
+                    {...conform.input(fields.email, { type: "email" })}
+                    helperText="Contact support to change your email address"
+                  />
+                  <FormField
+                    label="Password"
+                    {...conform.input(fields.password, { type: "password" })}
+                  />
+                </div>
               </div>
-            </div>
-            <UserDetailsFieldset user={userData} />
-            <Separator />
-            <h3 className="py-4 text-lg font-semibold">Addresses</h3>
-            {addresses.map((address, index) => (
-              <>
-                {index > 0 && <Separator />}
-                <AddressFieldset key={address.id} address={address} />
-              </>
-            ))}
-            <div className="flex justify-center py-2">
-              {hasAddressStored && (
-                <Button
-                  variant="outline"
-                  {...list.insert(fields.addresses.name, {})}
-                >
-                  Add address
-                </Button>
-              )}
-            </div>
-            <SubmitButton>Save changes</SubmitButton>
-          </Form>
-        </CardContent>
-      </Card>
+              <UserDetailsFieldset user={userData} />
+              <Separator />
+              <h3 className="py-4 text-lg font-semibold">Addresses</h3>
+              {addresses.map((address, index) => (
+                <>
+                  {index > 0 && <Separator />}
+                  <AddressFieldset key={address.id} address={address} />
+                </>
+              ))}
+              <div className="flex justify-center py-2">
+                {hasAddressStored && (
+                  <Button
+                    variant="outline"
+                    {...list.insert(fields.addresses.name, {})}
+                  >
+                    Add address
+                  </Button>
+                )}
+              </div>
+              <SubmitButton>Save changes</SubmitButton>
+            </Form>
+          </CardContent>
+        </Card>
+      </main>
     );
   }
 }
