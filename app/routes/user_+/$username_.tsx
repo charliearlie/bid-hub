@@ -45,7 +45,7 @@ export default function UserProfileRoute() {
               <p>Role: {role}</p>
               <p>Joined: {new Date(createdAt).toLocaleDateString()}</p>
               {canEdit && (
-                <Button asChild variant="outline">
+                <Button asChild variant="secondary">
                   <Link to="/user/manage">Edit your profile</Link>
                 </Button>
               )}
