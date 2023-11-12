@@ -4,7 +4,7 @@ import { PlusIcon } from "lucide-react";
 import React, { ChangeEvent, useState } from "react";
 import { z } from "zod";
 
-import { FileSchema } from "~/services/schemas.server";
+import { FileSchema } from "~/services/zod-schemas";
 
 import { cn } from "~/util/utils";
 

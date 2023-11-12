@@ -18,7 +18,7 @@ import {
   addListing,
   getCategoryDropdownOptions,
 } from "~/services/listings.server";
-import { FileSchema } from "~/services/schemas.server";
+import { FileSchema } from "~/services/zod-schemas";
 import { getUserId } from "~/services/session.server";
 
 import { DatePicker } from "~/components/common/date-picker";
