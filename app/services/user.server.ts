@@ -15,7 +15,7 @@ import { prisma } from "../util/prisma.server";
 import {
   AddressFieldsetSchema,
   PersonalDetailsFieldsetSchema,
-} from "./schemas.server";
+} from "./zod-schemas";
 
 export const checkAvailability = async (email: string, username: string) => {
   const emailUsages = await prisma.user.count({ where: { email } });

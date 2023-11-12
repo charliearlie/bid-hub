@@ -10,6 +10,7 @@ import { checkAvailability, createUser } from "~/services/user.server";
 import { Alert, AlertTitle } from "~/components/common/ui/alert";
 import FormField from "~/components/form/form-field";
 import { SubmitButton } from "~/components/form/submit-button";
+import { UserUsernameFieldSchema } from "~/services/zod-schemas";
 
 export const meta = () => {
   return [{ title: "Register for Bidhub" }];
@@ -17,11 +18,7 @@ export const meta = () => {
 
 const RegisterFormSchema = z.object({
   email: z.string().email({ message: "Email must be a valid email address" }),
-  username: z
-    .string({
-      required_error: "Username is required",
-    })
-    .min(3, "Username must be at least 3 characters"),
+  username: UserUsernameFieldSchema,
   password: z
     .string({
       required_error: "Password is required",

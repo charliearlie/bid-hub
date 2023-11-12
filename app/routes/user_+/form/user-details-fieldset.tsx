@@ -1,7 +1,7 @@
 import { Fieldset, conform } from "@conform-to/react";
 import { z } from "zod";
 
-import { PersonalDetailsFieldsetSchema } from "~/services/schemas.server";
+import { PersonalDetailsFieldsetSchema } from "~/services/zod-schemas";
 
 import FormField from "~/components/form/form-field";
 

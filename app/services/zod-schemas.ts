@@ -27,3 +27,11 @@ export const UserSchema = z.object({
   personalDetails: PersonalDetailsFieldsetSchema,
   addresses: z.array(AddressFieldsetSchema),
 });
+
+export const UserUsernameFieldSchema = z.string({
+  required_error: "Username is required",
+})
+.min(3, "Username must be at least 3 characters")
+.refine((username) => !/\s/.test(username), {
+  message: "Username must not contain spaces",
+});
