@@ -21,7 +21,7 @@ export function init() {
 
   if (parsed.success === false) {
     console.error(
-      "❌ Invalid environment variables:",
+      "Invalid environment variables:",
       parsed.error.flatten().fieldErrors
     );
 

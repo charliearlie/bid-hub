@@ -1,7 +1,7 @@
 import { conform, useForm } from "@conform-to/react";
 import { getFieldsetConstraint, parse } from "@conform-to/zod";
 import { redirect, json, type DataFunctionArgs } from "@remix-run/node";
-import { Form, useActionData, useSearchParams } from "@remix-run/react";
+import { Form, Link, useActionData, useSearchParams } from "@remix-run/react";
 import { ArrowRight, Send } from "lucide-react";
 import { z } from "zod";
 
@@ -15,6 +15,7 @@ import {
   AlertDescription,
   AlertTitle,
 } from "~/components/common/ui/alert";
+import { Button } from "~/components/common/ui/button";
 import FormField from "~/components/form/form-field";
 import { SubmitButton } from "~/components/form/submit-button";
 
@@ -116,12 +117,14 @@ export default function LoginIdentifierRoute() {
           <SubmitButton name={conform.INTENT} value="magic" variant="secondary">
             Send magic link {<Send size={16} />}
           </SubmitButton>
-          {/* <Link
-            className="px-0 pb-2 font-semibold text-accent-foreground hover:text-slate-500"
-            to="/forgot-password"
-          >
-            Forgot your username or email?
-          </Link> */}
+          <Button asChild variant="outline">
+            <Link
+              className="px-0 pb-2 font-semibold text-accent-foreground hover:text-slate-500"
+              to="/forgot-password"
+            >
+              Forgot your username or email?
+            </Link>
+          </Button>
         </div>
       </Form>
     </div>
