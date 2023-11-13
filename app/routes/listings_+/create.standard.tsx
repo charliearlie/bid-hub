@@ -33,8 +33,8 @@ import {
   SelectItem,
   SelectTrigger,
 } from "~/components/common/ui/select";
-import FormField from "~/components/form/form-field";
-import FormFieldTextArea from "~/components/form/form-field-text-area";
+import { FormField } from "~/components/form/form-field";
+import { FormFieldTextArea } from "~/components/form/form-field-text-area";
 import { SubmitButton } from "~/components/form/submit-button";
 
 import { uploadImages } from "~/util/cloudinary.server";

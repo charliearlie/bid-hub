@@ -16,7 +16,7 @@ import {
   AlertTitle,
 } from "~/components/common/ui/alert";
 import { Button } from "~/components/common/ui/button";
-import FormField from "~/components/form/form-field";
+import { FormField } from "~/components/form/form-field";
 import { SubmitButton } from "~/components/form/submit-button";
 
 const LoginIdentifierSchema = z.object({

@@ -1,11 +1,11 @@
 import { type LucideIcon } from "lucide-react";
 import { type ReactElement, forwardRef, useId } from "react";
 
-import { cn } from "~/util/utils";
+import { Input } from "~/components/common/ui/input";
+import { Label } from "~/components/common/ui/label";
+import { InputErrors } from "~/components/form/input-errors";
 
-import { Input } from "../common/ui/input";
-import { Label } from "../common/ui/label";
-import InputErrors from "./input-errors";
+import { cn } from "~/util/utils";
 
 export type FormFieldProps = {
   errors?: Array<string> | null;
@@ -16,7 +16,7 @@ export type FormFieldProps = {
 
 type Props = FormFieldProps & React.HTMLProps<HTMLInputElement>;
 
-const FormField = forwardRef<HTMLInputElement, Props>(
+export const FormField = forwardRef<HTMLInputElement, Props>(
   (
     { errors, helperText, Icon, label, name, type, ...props },
     ref
@@ -61,5 +61,3 @@ const FormField = forwardRef<HTMLInputElement, Props>(
 );
 
 FormField.displayName = "FormField";
-
-export default FormField;

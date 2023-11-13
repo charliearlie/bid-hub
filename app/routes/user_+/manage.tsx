@@ -29,7 +29,7 @@ import { Button } from "~/components/common/ui/button";
 import Card from "~/components/common/ui/card/card";
 import CardContent from "~/components/common/ui/card/card-content";
 import { Separator } from "~/components/common/ui/separator";
-import FormField from "~/components/form/form-field";
+import { FormField } from "~/components/form/form-field";
 import { ImageUploadAvatar } from "~/components/form/image-upload-avatar";
 import { SubmitButton } from "~/components/form/submit-button";
 

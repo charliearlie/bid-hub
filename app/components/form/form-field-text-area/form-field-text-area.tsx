@@ -1,8 +1,8 @@
 import { type ReactElement, forwardRef, useId } from "react";
 
-import { Label } from "../common/ui/label";
-import { Textarea } from "../common/ui/textarea";
-import InputErrors from "./input-errors";
+import { Label } from "~/components/common/ui/label";
+import { Textarea } from "~/components/common/ui/textarea";
+import { InputErrors } from "~/components/form/input-errors";
 
 export type FormFieldTextAreaProps = {
   errors?: Array<string> | null;
@@ -14,7 +14,7 @@ export type FormFieldTextAreaProps = {
 
 type Props = FormFieldTextAreaProps & React.HTMLProps<HTMLTextAreaElement>;
 
-const FormFieldTextArea = forwardRef<HTMLTextAreaElement, Props>(
+export const FormFieldTextArea = forwardRef<HTMLTextAreaElement, Props>(
   ({ errors, label, name, ...props }, ref): ReactElement => {
     const id = useId();
     const textAreaId = `${id}-${name}`;
@@ -44,5 +44,3 @@ const FormFieldTextArea = forwardRef<HTMLTextAreaElement, Props>(
 );
 
 FormFieldTextArea.displayName = "FormFieldTextArea";
-
-export default FormFieldTextArea;
