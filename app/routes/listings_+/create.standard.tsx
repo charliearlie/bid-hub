@@ -18,10 +18,10 @@ import {
   addListing,
   getCategoryDropdownOptions,
 } from "~/services/listings.server";
-import { FileSchema } from "~/services/zod-schemas";
 import { getUserId } from "~/services/session.server";
+import { FileSchema } from "~/services/zod-schemas";
 
-import { DatePicker } from "~/components/common/date-picker";
+import { DatePicker } from "~/components/common/date-picker/date-picker";
 import { SwitchWithLabel } from "~/components/common/switch-with-label";
 import { Button } from "~/components/common/ui/button";
 import Card from "~/components/common/ui/card/card";
@@ -156,7 +156,7 @@ export default function CreateListingRoute() {
     onValidate({ formData }) {
       return parse(formData, { schema: CreateListingSchema });
     },
-    defaultValue: { quantity: 1, itemId: "", images: [{}] }, // We will get the item id if it exists
+    defaultValue: { quantity: 1, itemId: "", images: [] }, // We will get the item id if it exists
   });
 
   const images = useFieldList(form.ref, fields.images);
@@ -237,7 +237,7 @@ export default function CreateListingRoute() {
               variant="outline"
               {...list.insert(fields.images.name, {})}
             >
-              Add another image
+              {images.length === 0 ? "Add image" : "Add another image"}
             </Button>
           </div>
           <SwitchWithLabel
