@@ -15,15 +15,15 @@ import { Form, useActionData, useLoaderData } from "@remix-run/react";
 import { z } from "zod";
 
 import {
-  AddressFieldsetSchema,
-  PersonalDetailsFieldsetSchema,
-} from "~/services/zod-schemas";
-import {
   getUser,
   updateUserAddresses,
   updateUserAvatar,
   updateUserPersonalDetails,
 } from "~/services/user.server";
+import {
+  AddressFieldsetSchema,
+  PersonalDetailsFieldsetSchema,
+} from "~/services/zod-schemas";
 
 import { Button } from "~/components/common/ui/button";
 import Card from "~/components/common/ui/card/card";
@@ -54,7 +54,10 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData();
   const submission = parse(formData, { schema: ManageUserFormSchema });
 
+  console.log(submission);
+
   if (submission.intent !== "submit" || !submission.value) {
+    console.log("should be returning json");
     return json({ status: "idle", submission } as const);
   }
 
@@ -101,7 +104,9 @@ export default function ManageUserRoute() {
     constraint: getFieldsetConstraint(ManageUserFormSchema),
     lastSubmission: actionData?.submission,
     onValidate({ formData }) {
-      return parse(formData, { schema: ManageUserFormSchema });
+      const eggs = parse(formData, { schema: ManageUserFormSchema });
+      console.log("Eggs", eggs);
+      return eggs;
     },
     shouldValidate: "onBlur",
     defaultValue: {
@@ -110,14 +115,14 @@ export default function ManageUserRoute() {
         firstName: user.personalDetails?.firstName || "",
         lastName: user.personalDetails?.lastName || "",
       },
-      addresses: user.addresses.length ? user.addresses : [{}],
+      addresses: user.addresses.length ? user.addresses : [],
     },
   });
 
   const userData = useFieldset(form.ref, fields.personalDetails);
   const addresses = useFieldList(form.ref, fields.addresses);
 
-  const hasAddressStored = user.addresses.length > 0;
+  console.log("Action data", actionData);
   if (user) {
     return (
       <main className="container mx-auto max-w-3xl p-4">
@@ -139,6 +144,7 @@ export default function ManageUserRoute() {
                   <FormField
                     label="Password"
                     {...conform.input(fields.password, { type: "password" })}
+                    errors={fields.password.errors}
                   />
                 </div>
               </div>
@@ -146,20 +152,18 @@ export default function ManageUserRoute() {
               <Separator />
               <h3 className="py-4 text-lg font-semibold">Addresses</h3>
               {addresses.map((address, index) => (
-                <>
+                <div key={address.id}>
                   {index > 0 && <Separator />}
-                  <AddressFieldset key={address.id} address={address} />
-                </>
+                  <AddressFieldset address={address} />
+                </div>
               ))}
               <div className="flex justify-center py-2">
-                {hasAddressStored && (
-                  <Button
-                    variant="outline"
-                    {...list.insert(fields.addresses.name, {})}
-                  >
-                    Add address
-                  </Button>
-                )}
+                <Button
+                  variant="outline"
+                  {...list.insert(fields.addresses.name, {})}
+                >
+                  Add address
+                </Button>
               </div>
               <SubmitButton>Save changes</SubmitButton>
             </Form>
