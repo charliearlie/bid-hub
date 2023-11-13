@@ -18,7 +18,7 @@ import { ErrorBoundaryComponent } from "./components/error-boundary";
 import SharedHeader from "./components/header/shared-header";
 import { logout } from "./services/session.server";
 import { getUser } from "./services/user.server";
-import styles from "./styles/app.css";
+import "./styles/app.css";
 import { getEnv } from "./util/env.server";
 
 export const meta: MetaFunction = () => {
@@ -33,7 +33,6 @@ export const meta: MetaFunction = () => {
 
 export function links() {
   return [
-    { rel: "stylesheet", href: styles },
     { rel: "preconnect", href: "https://fonts.googleapis.com" },
     { rel: "preconnect", href: "https://fonts.gstatic.com" },
     {
@@ -68,8 +67,8 @@ function Document({ children }: { children: React.ReactNode }) {
       <body className="bg-accent text-foreground dark:bg-background">
         {children}
         <ScrollRestoration />
-        <Scripts />
         <LiveReload />
+        <Scripts />
       </body>
     </html>
   );
