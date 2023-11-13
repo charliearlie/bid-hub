@@ -1,5 +1,6 @@
 import { getErrorMessage } from "./error-boundary";
 
+// These tests below don't really do anything but gives us a foundation to build on
 describe("getErrorMessage", () => {
   it("returns the error message if it is a string", () => {
     const errorMessage = "This is an error message";
