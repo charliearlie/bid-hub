@@ -14,7 +14,7 @@ import { createUserSession } from "~/services/session.server";
 import { getUserByUsernameOrEmail, login } from "~/services/user.server";
 
 import { Alert, AlertTitle } from "~/components/common/ui/alert";
-import FormField from "~/components/form/form-field";
+import { FormField } from "~/components/form/form-field";
 import { SubmitButton } from "~/components/form/submit-button";
 
 const LoginChallengeSchema = z.object({

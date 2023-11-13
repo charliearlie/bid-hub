@@ -18,8 +18,8 @@ import {
   addListing,
   getCategoryDropdownOptions,
 } from "~/services/listings.server";
-import { FileSchema } from "~/services/zod-schemas";
 import { getUserId } from "~/services/session.server";
+import { FileSchema } from "~/services/zod-schemas";
 
 import { DatePicker } from "~/components/common/date-picker";
 import { SwitchWithLabel } from "~/components/common/switch-with-label";
@@ -33,8 +33,8 @@ import {
   SelectItem,
   SelectTrigger,
 } from "~/components/common/ui/select";
-import FormField from "~/components/form/form-field";
-import FormFieldTextArea from "~/components/form/form-field-text-area";
+import { FormField } from "~/components/form/form-field";
+import { FormFieldTextArea } from "~/components/form/form-field-text-area";
 import { SubmitButton } from "~/components/form/submit-button";
 
 import { uploadImages } from "~/util/cloudinary.server";
@@ -156,7 +156,7 @@ export default function CreateListingRoute() {
     onValidate({ formData }) {
       return parse(formData, { schema: CreateListingSchema });
     },
-    defaultValue: { quantity: 1, itemId: "", images: [{}] }, // We will get the item id if it exists
+    defaultValue: { quantity: 1, itemId: "", images: [] }, // We will get the item id if it exists
   });
 
   const images = useFieldList(form.ref, fields.images);
@@ -237,7 +237,7 @@ export default function CreateListingRoute() {
               variant="outline"
               {...list.insert(fields.images.name, {})}
             >
-              Add another image
+              {images.length === 0 ? "Add image" : "Add another image"}
             </Button>
           </div>
           <SwitchWithLabel

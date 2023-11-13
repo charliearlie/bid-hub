@@ -1,5 +1,6 @@
 import { Link } from "@remix-run/react";
 
+import { Button } from "~/components/common/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,13 +12,11 @@ import {
 
 import type { UserType as User } from "~/util/types";
 
-import { Button } from "../common/ui/button";
-
 type Props = {
   className: string;
   user: User | null;
 };
-export default function UserDropDown({ className, user }: Props) {
+export function UserDropDown({ className, user }: Props) {
   if (!user) {
     return (
       <div className={className}>

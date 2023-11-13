@@ -2,7 +2,7 @@ type Props = {
   errors?: Array<string> | null;
   id: string;
 };
-export default function InputErrors({ errors, id }: Props) {
+export function InputErrors({ errors, id }: Props) {
   if (!errors?.length) return null;
   return (
     <ul id={id} className="list-inside">

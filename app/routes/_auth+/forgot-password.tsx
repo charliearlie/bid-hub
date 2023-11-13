@@ -12,7 +12,7 @@ import {
   AlertDescription,
   AlertTitle,
 } from "~/components/common/ui/alert";
-import FormField from "~/components/form/form-field";
+import { FormField } from "~/components/form/form-field";
 import { SubmitButton } from "~/components/form/submit-button";
 
 const ForgotPasswordSchema = z.object({

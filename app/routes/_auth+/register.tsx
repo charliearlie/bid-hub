@@ -6,11 +6,11 @@ import { z } from "zod";
 
 import { createUserSession } from "~/services/session.server";
 import { checkAvailability, createUser } from "~/services/user.server";
+import { UserUsernameFieldSchema } from "~/services/zod-schemas";
 
 import { Alert, AlertTitle } from "~/components/common/ui/alert";
-import FormField from "~/components/form/form-field";
+import { FormField } from "~/components/form/form-field";
 import { SubmitButton } from "~/components/form/submit-button";
-import { UserUsernameFieldSchema } from "~/services/zod-schemas";
 
 export const meta = () => {
   return [{ title: "Register for Bidhub" }];
