@@ -21,7 +21,7 @@ import {
 import { getUserId } from "~/services/session.server";
 import { FileSchema } from "~/services/zod-schemas";
 
-import { DatePicker } from "~/components/common/date-picker/date-picker";
+import { DatePicker } from "~/components/common/date-picker";
 import { SwitchWithLabel } from "~/components/common/switch-with-label";
 import { Button } from "~/components/common/ui/button";
 import Card from "~/components/common/ui/card/card";
