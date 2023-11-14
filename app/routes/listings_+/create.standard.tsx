@@ -165,6 +165,9 @@ export default function CreateListingRoute() {
     <Card>
       <CardContent className="md:p-8">
         <Form method="post" {...form.props} encType="multipart/form-data">
+          <button type="submit" className="hidden">
+            Submit
+          </button>
           <FormField
             label="Title"
             helperText="This is what will be displayed in search results"

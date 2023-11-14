@@ -3,6 +3,7 @@ import { getFieldsetConstraint, parse } from "@conform-to/zod";
 import { json, type DataFunctionArgs } from "@remix-run/node";
 import { Form, useActionData } from "@remix-run/react";
 import { Send } from "lucide-react";
+import { HoneypotInputs } from "remix-utils/honeypot/react";
 import { z } from "zod";
 
 import { forgotPassword } from "~/services/user.server";
@@ -95,6 +96,7 @@ export default function ForgotPasswordRoute() {
           errors={fields.email.errors}
           {...conform.input(fields.email, { type: "email" })}
         />
+        <HoneypotInputs />
         <div className="mt-2 flex justify-center">
           <SubmitButton className="w-full">
             <span className="flex gap-1">
