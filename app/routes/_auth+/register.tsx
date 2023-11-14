@@ -39,7 +39,6 @@ export async function action({ request }: DataFunctionArgs) {
         data.username
       );
 
-      // Should this be in the action?
       if (!availabilityCheck.available) {
         if (!availabilityCheck.properties.email) {
           ctx.addIssue({
