@@ -24,7 +24,7 @@ model User {
   likes           Like[]
   listings        Listing[]
   payments        Payment[]
-  twoFa           TwoFactorAuth?
+  twoFactorAuth   TwoFactorAuth?
   personalDetails UserPersonalDetails?
 }
 
