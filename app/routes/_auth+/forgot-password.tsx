@@ -16,6 +16,8 @@ import {
 import { FormField } from "~/components/form/form-field";
 import { SubmitButton } from "~/components/form/submit-button";
 
+import { checkForHoneypot } from "~/util/honeypot.server";
+
 const ForgotPasswordSchema = z.object({
   email: z
     .string({
@@ -30,6 +32,7 @@ export const meta = () => {
 
 export const action = async ({ request }: DataFunctionArgs) => {
   const formData = await request.formData();
+  checkForHoneypot(formData);
 
   const submission = parse(formData, { schema: ForgotPasswordSchema });
 
