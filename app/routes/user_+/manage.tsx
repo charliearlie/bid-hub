@@ -54,8 +54,6 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData();
   const submission = parse(formData, { schema: ManageUserFormSchema });
 
-  console.log(submission);
-
   if (submission.intent !== "submit" || !submission.value) {
     console.log("should be returning json");
     return json({ status: "idle", submission } as const);
@@ -120,7 +118,6 @@ export default function ManageUserRoute() {
   const userData = useFieldset(form.ref, fields.personalDetails);
   const addresses = useFieldList(form.ref, fields.addresses);
 
-  console.log("Action data", actionData);
   if (user) {
     return (
       <main className="container mx-auto max-w-3xl p-4">
