@@ -16,8 +16,21 @@ pnpm install
 ```
 
 If the `pnpm install` doesn't show anything to do with Prisma, then also run
+
 ```sh
-pnpm dlx prisma generate
+pnpm db:generate
 ```
 
-Will update with more...
+Run the application
+
+```sh
+pnpn dev
+```
+
+### View and manipulate database data
+
+Data can be viewed in Prisma's studio. To do this run:
+
+```sh
+pnpm db:studio
+```
