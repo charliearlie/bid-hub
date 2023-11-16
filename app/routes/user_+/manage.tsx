@@ -111,9 +111,7 @@ export default function ManageUserRoute() {
     constraint: getFieldsetConstraint(ManageUserFormSchema),
     lastSubmission: actionData?.submission,
     onValidate({ formData }) {
-      const eggs = parse(formData, { schema: ManageUserFormSchema });
-      console.log("Eggs", eggs);
-      return eggs;
+      return parse(formData, { schema: ManageUserFormSchema });
     },
     shouldValidate: "onBlur",
     defaultValue: {

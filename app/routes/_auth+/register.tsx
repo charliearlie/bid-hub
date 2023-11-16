@@ -2,6 +2,7 @@ import { useForm } from "@conform-to/react";
 import { getFieldsetConstraint, parse } from "@conform-to/zod";
 import { type DataFunctionArgs, json } from "@remix-run/node";
 import { Form, Link, useActionData } from "@remix-run/react";
+import { HoneypotInputs } from "remix-utils/honeypot/react";
 import { z } from "zod";
 
 import { createUserSession } from "~/services/session.server";
@@ -11,6 +12,8 @@ import { UserUsernameFieldSchema } from "~/services/zod-schemas";
 import { Alert, AlertTitle } from "~/components/common/ui/alert";
 import { FormField } from "~/components/form/form-field";
 import { SubmitButton } from "~/components/form/submit-button";
+
+import { checkForHoneypot } from "~/util/honeypot.server";
 
 export const meta = () => {
   return [{ title: "Register for Bidhub" }];
@@ -28,6 +31,7 @@ const RegisterFormSchema = z.object({
 
 export async function action({ request }: DataFunctionArgs) {
   const formData = await request.formData();
+  checkForHoneypot(formData);
   const submission = await parse(formData, {
     schema: RegisterFormSchema.superRefine(async (data, ctx) => {
       const availabilityCheck = await checkAvailability(
@@ -115,6 +119,7 @@ export default function RegisterRoute() {
           type="password"
           errors={fields.password.errors}
         />
+        <HoneypotInputs />
         <div className="flex justify-between">
           <Link
             className="px-0 py-2 font-semibold text-accent-foreground hover:text-slate-500"
