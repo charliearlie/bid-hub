@@ -2,6 +2,9 @@
   "name": "bidhub",
   "private": true,
   "sideEffects": false,
+  "prisma": {
+    "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
+  },
   "scripts": {
     "build": "pnpm run build:css && remix build",
     "build:css": "tailwindcss -m -i ./styles/tailwind.css -o app/styles/app.css --minify",
