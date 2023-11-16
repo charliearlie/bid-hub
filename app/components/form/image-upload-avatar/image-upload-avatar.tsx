@@ -1,5 +1,4 @@
 import { FieldConfig } from "@conform-to/react";
-import { UploadApiResponse } from "cloudinary";
 import { PlusIcon } from "lucide-react";
 import React, { ChangeEvent, useState } from "react";
 import { z } from "zod";
@@ -41,34 +40,21 @@ export const ImageUploadAvatar = React.forwardRef<
         <input
           type="file"
           className="sr-only"
+          {...fieldProps}
           onChange={async (event: ChangeEvent<HTMLInputElement>) => {
             const file = event.target.files?.[0];
             if (file) {
-              const data = new FormData();
-              data.append("file", file);
-              data.append("upload_preset", "bidhub_user_avatar");
-
-              const res = await fetch(
-                "https://api.cloudinary.com/v1_1/bidhub/image/upload",
-                {
-                  method: "POST",
-                  body: data,
-                }
-              );
-
-              const image: UploadApiResponse = await res.json();
-              if (image.secure_url) {
-                setPreviewImage(image.secure_url);
-              }
+              const reader = new FileReader();
+              reader.onloadend = () => {
+                setPreviewImage(reader.result as string);
+              };
+              reader.readAsDataURL(file);
             } else {
               setPreviewImage(null);
             }
           }}
         />
       </label>
-      {previewImage && (
-        <input type="hidden" {...fieldProps} value={previewImage} />
-      )}
     </>
   );
 });
