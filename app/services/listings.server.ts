@@ -45,7 +45,7 @@ export async function addListing(
       buyItNowPrice,
       description,
       endTime,
-      images: Array.isArray(images) ? images : [images],
+      images,
       minBidIncrement,
       quantity,
       startingBid,
