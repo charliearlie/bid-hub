@@ -2,7 +2,7 @@ import { writeAsyncIterableToWritable } from "@remix-run/node";
 import cloudinary from "cloudinary";
 
 export enum UPLOAD_PRESET_ENUM {
-  bidhubAvatar = "bidhub_avatar",
+  bidhubAvatar = "bidhub_user_avatar",
   bidhubItem = "bidhub_item",
 }
 

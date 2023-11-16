@@ -128,8 +128,7 @@ export default function ManageUserRoute() {
 
   const userData = useFieldset(form.ref, fields.personalDetails);
   const addresses = useFieldList(form.ref, fields.addresses);
-
-  console.log("Action data", actionData);
+  
   if (user) {
     return (
       <main className="container mx-auto max-w-3xl p-4">
