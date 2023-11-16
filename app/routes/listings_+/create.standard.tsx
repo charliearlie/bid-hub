@@ -37,7 +37,7 @@ import { FormField } from "~/components/form/form-field";
 import { FormFieldTextArea } from "~/components/form/form-field-text-area";
 import { SubmitButton } from "~/components/form/submit-button";
 
-import { uploadImages } from "~/util/cloudinary.server";
+import { UPLOAD_PRESET_ENUM, uploadImages } from "~/util/cloudinary.server";
 
 const MAX_FILE_SIZE = 1024 * 1024 * 5; // 5mb
 const CreateListingSchema = z
@@ -95,9 +95,20 @@ export const action = async ({ request }: DataFunctionArgs) => {
     return json({ status: "idle", submission } as const);
   }
 
-  const images = submission.value?.images.length
+  const hasAtLeastOneImage = !!submission.value.images.length;
+
+  const images = hasAtLeastOneImage
     ? await uploadImages(submission.value.images)
-    : null;
+    : [];
+
+  console.log("images", images);
+
+  const thumbnail = hasAtLeastOneImage
+    ? ((await uploadImages(
+        submission.value.images[0],
+        UPLOAD_PRESET_ENUM.bidhubListingThumbnail
+      )) as string)
+    : "";
 
   let newItem: Item | null;
 
@@ -127,8 +138,9 @@ export const action = async ({ request }: DataFunctionArgs) => {
       buyItNowPrice: listingData.buyItNowPrice || null,
       startingBid: listingData.startingBid || null,
       minBidIncrement: listingData.minBidIncrement || null,
-      images: Array.isArray(images) ? images.map((image) => image || "") : [],
+      images,
       endTime: listingData.endTime,
+      thumbnail,
     },
     newItem,
     [listingData.categoryId],
