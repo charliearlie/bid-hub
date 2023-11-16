@@ -101,14 +101,12 @@ export const action = async ({ request }: DataFunctionArgs) => {
     ? await uploadImages(submission.value.images)
     : [];
 
-  console.log("images", images);
-
-  const thumbnail = hasAtLeastOneImage
-    ? ((await uploadImages(
+  const [thumbnail] = hasAtLeastOneImage
+    ? await uploadImages(
         submission.value.images[0],
         UPLOAD_PRESET_ENUM.bidhubListingThumbnail
-      )) as string)
-    : "";
+      )
+    : [];
 
   let newItem: Item | null;
 
@@ -118,7 +116,7 @@ export const action = async ({ request }: DataFunctionArgs) => {
     newItem = await createItem(submission.value.itemName);
   }
 
-  if (!newItem) {
+  if (!newItem || !thumbnail) {
     submission.error[""] = ["We failed to create your item"];
     return json({ status: "error", submission } as const);
   }
@@ -138,7 +136,7 @@ export const action = async ({ request }: DataFunctionArgs) => {
       buyItNowPrice: listingData.buyItNowPrice || null,
       startingBid: listingData.startingBid || null,
       minBidIncrement: listingData.minBidIncrement || null,
-      images,
+      images: images.filter((image) => Boolean(image)) as string[],
       endTime: listingData.endTime,
       thumbnail,
     },

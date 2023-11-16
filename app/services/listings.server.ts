@@ -18,7 +18,8 @@ type ListingSubSet = Pick<
   | "startingBid"
   | "minBidIncrement"
   | "thumbnail"
-> & { endTime?: string; images: string[] | string };
+  | "images"
+> & { endTime?: string };
 
 export async function addListing(
   {

@@ -59,13 +59,9 @@ export async function uploadImages(
 
   const results = await Promise.all(uploadPromises);
 
-  if (results.length > 0) {
-    return filesArray.length === 1
-      ? results.find((result) => result !== null)?.secure_url
-      : results
-          .filter((result) => result !== null)
-          .map((result) => result?.secure_url);
-  }
-
-  return [];
+  return results.length > 0
+    ? results
+        .filter((result) => result !== null)
+        .map((result) => result?.secure_url)
+    : [];
 }
