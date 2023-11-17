@@ -22,6 +22,7 @@ import {
 } from "~/services/user.server";
 import {
   AddressFieldsetSchema,
+  FileSchema,
   PersonalDetailsFieldsetSchema,
 } from "~/services/zod-schemas";
 
@@ -29,10 +30,11 @@ import { Button } from "~/components/common/ui/button";
 import Card from "~/components/common/ui/card/card";
 import CardContent from "~/components/common/ui/card/card-content";
 import { Separator } from "~/components/common/ui/separator";
-import FormField from "~/components/form/form-field";
+import { FormField } from "~/components/form/form-field";
 import { ImageUploadAvatar } from "~/components/form/image-upload-avatar";
 import { SubmitButton } from "~/components/form/submit-button";
 
+import { UPLOAD_PRESET_ENUM, uploadImages } from "~/util/cloudinary.server";
 import { invariantResponse } from "~/util/utils";
 
 import { AddressFieldset } from "./form/address-fieldset";
@@ -47,27 +49,32 @@ const ManageUserFormSchema = z.object({
       required_error: "Please enter your password to update your profile",
     })
     .min(8),
-  avatarImage: z.string().optional(),
+  avatarImage: FileSchema.optional(),
 });
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData();
   const submission = parse(formData, { schema: ManageUserFormSchema });
 
-  console.log(submission);
-
   if (submission.intent !== "submit" || !submission.value) {
     console.log("should be returning json");
     return json({ status: "idle", submission } as const);
   }
+
+  const avatarImage = submission.value?.avatarImage
+    ? await uploadImages(
+        submission.value.avatarImage,
+        UPLOAD_PRESET_ENUM.bidhubAvatar
+      )
+    : null;
 
   const user = await getUser(request);
   if (!user) {
     throw new Response("User not logged in", { status: 404 });
   }
 
-  if (typeof submission.value.avatarImage === "string") {
-    await updateUserAvatar(submission.value.avatarImage, user.id);
+  if (typeof avatarImage === "string") {
+    await updateUserAvatar(avatarImage, user.id);
   }
 
   const updatedUserAddresses = await updateUserAddresses(
@@ -104,9 +111,7 @@ export default function ManageUserRoute() {
     constraint: getFieldsetConstraint(ManageUserFormSchema),
     lastSubmission: actionData?.submission,
     onValidate({ formData }) {
-      const eggs = parse(formData, { schema: ManageUserFormSchema });
-      console.log("Eggs", eggs);
-      return eggs;
+      return parse(formData, { schema: ManageUserFormSchema });
     },
     shouldValidate: "onBlur",
     defaultValue: {
@@ -121,14 +126,13 @@ export default function ManageUserRoute() {
 
   const userData = useFieldset(form.ref, fields.personalDetails);
   const addresses = useFieldList(form.ref, fields.addresses);
-
-  console.log("Action data", actionData);
+  
   if (user) {
     return (
       <main className="container mx-auto max-w-3xl p-4">
         <Card>
           <CardContent className="md:p-8">
-            <Form method="post" {...form.props}>
+            <Form method="post" encType="multipart/form-data" {...form.props}>
               <div className="flex flex-col items-center justify-between gap-4 lg:flex-row lg:items-start lg:gap-8">
                 <ImageUploadAvatar
                   className="h-[172px] w-[172px] basis-1/4 rounded-lg"

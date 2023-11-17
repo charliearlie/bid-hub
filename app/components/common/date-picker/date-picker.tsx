@@ -4,6 +4,7 @@ import * as React from "react";
 
 import { Button } from "~/components/common/ui/button";
 import { Calendar } from "~/components/common/ui/calendar";
+import { Input } from "~/components/common/ui/input";
 import {
   Popover,
   PopoverContent,
@@ -11,8 +12,6 @@ import {
 } from "~/components/common/ui/popover";
 
 import { cn } from "~/util/utils";
-
-import { Input } from "./ui/input";
 
 type Props = {
   name: string;

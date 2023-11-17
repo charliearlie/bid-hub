@@ -3,6 +3,7 @@ import { getFieldsetConstraint, parse } from "@conform-to/zod";
 import { redirect, json, type DataFunctionArgs } from "@remix-run/node";
 import { Form, Link, useActionData, useSearchParams } from "@remix-run/react";
 import { ArrowRight, Send } from "lucide-react";
+import { HoneypotInputs } from "remix-utils/honeypot/react";
 import { z } from "zod";
 
 import {
@@ -16,8 +17,10 @@ import {
   AlertTitle,
 } from "~/components/common/ui/alert";
 import { Button } from "~/components/common/ui/button";
-import FormField from "~/components/form/form-field";
+import { FormField } from "~/components/form/form-field";
 import { SubmitButton } from "~/components/form/submit-button";
+
+import { checkForHoneypot } from "~/util/honeypot.server";
 
 const LoginIdentifierSchema = z.object({
   emailOrUsername: z.string({
@@ -35,6 +38,7 @@ export const meta = () => {
 
 export async function action({ request }: DataFunctionArgs) {
   const formData = await request.formData();
+  checkForHoneypot(formData);
 
   const submission = parse(formData, { schema: LoginIdentifierSchema });
 
@@ -110,6 +114,7 @@ export default function LoginIdentifierRoute() {
           readOnly
           hidden
         />
+        <HoneypotInputs />
         <div className="flex flex-col gap-4">
           <SubmitButton name={conform.INTENT} value="submit" variant="default">
             Next {<ArrowRight size={16} />}
