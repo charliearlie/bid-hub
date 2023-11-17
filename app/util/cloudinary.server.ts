@@ -4,6 +4,7 @@ import cloudinary from "cloudinary";
 export enum UPLOAD_PRESET_ENUM {
   bidhubAvatar = "bidhub_user_avatar",
   bidhubItem = "bidhub_item",
+  bidhubListingThumbnail = "bidhub_listing_thumbnail",
 }
 
 cloudinary.v2.config({
@@ -58,7 +59,9 @@ export async function uploadImages(
 
   const results = await Promise.all(uploadPromises);
 
-  return filesArray.length === 1
-    ? results[0]?.secure_url
-    : results.map((result) => result?.secure_url);
+  return results.length > 0
+    ? results
+        .filter((result) => result !== null)
+        .map((result) => result?.secure_url)
+    : [];
 }

@@ -3,10 +3,7 @@ import React, { useId } from "react";
 
 import { Label } from "~/components/common/ui/label";
 
-enum UPLOAD_PRESET_ENUM {
-  bidhubAvatar = "bidhub_avatar",
-  bidhubItem = "bidhub_item",
-}
+import { UPLOAD_PRESET_ENUM } from "~/util/cloudinary.server";
 
 type ImageUploadProps = {
   uploadPreset?: UPLOAD_PRESET_ENUM;

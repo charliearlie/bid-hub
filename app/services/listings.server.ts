@@ -17,6 +17,7 @@ type ListingSubSet = Pick<
   | "buyItNowPrice"
   | "startingBid"
   | "minBidIncrement"
+  | "thumbnail"
   | "images"
 > & { endTime?: string };
 
@@ -30,6 +31,7 @@ export async function addListing(
     startingBid,
     title,
     endTime: _endtime,
+    thumbnail,
   }: ListingSubSet,
   item: Item,
   categoryIds: string[],
@@ -68,6 +70,7 @@ export async function addListing(
         })),
       },
       slug: generateSlug(title),
+      thumbnail,
     },
   });
 

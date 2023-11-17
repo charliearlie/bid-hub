@@ -45,10 +45,10 @@ export type ListingPreviewType = Pick<
   | "id"
   | "highestBidValue"
   | "buyItNowPrice"
-  | "images"
   | "slug"
   | "startingBid"
   | "title"
+  | "thumbnail"
 >;
 
 type ItemPreviewType = Pick<Item, "name" | "description">;

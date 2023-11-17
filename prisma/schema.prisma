@@ -36,7 +36,7 @@ model UserPersonalDetails {
   updatedAt   DateTime @updatedAt
   id          String   @id @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   userId      String   @unique @db.Uuid
-  user        User     @relation(fields: [userId], references: [id])
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model ForgotPassword {
@@ -52,11 +52,11 @@ model MagicLogin {
 }
 
 model TwoFactorAuth {
-  id             String   @id @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  enabled        Boolean
-  secret         String
-  user           User     @relation(fields: [userId], references: [id])
-  userId         String   @unique @db.Uuid
+  id      String  @id @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  enabled Boolean
+  secret  String
+  userId  String  @unique @db.Uuid
+  user    User    @relation(fields: [userId], references: [id])
 }
 
 model Listing {
@@ -77,12 +77,13 @@ model Listing {
   itemId          String                 @db.Uuid
   description     String
   condition       Condition?
+  thumbnail       String                 @default("https://picsum.photos/200")
   Bid             Bid[]
   categories      CategoriesOnListings[]
   comments        Comment[]
   likes           Like[]
   item            Item                   @relation(fields: [itemId], references: [id])
-  seller          User                   @relation(fields: [sellerId], references: [id], onDelete: Cascade)
+  seller          User                   @relation(fields: [sellerId], references: [id])
 }
 
 model Item {
@@ -103,6 +104,7 @@ model Category {
   id              String                 @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   parentId        String?                @db.Uuid
   label           String?
+  slug            String                 @unique
   items           CategoriesOnItems[]
   listings        CategoriesOnListings[]
   parentCategory  Category?              @relation("ChildCategories", fields: [parentId], references: [id])
@@ -112,8 +114,8 @@ model Category {
 model CategoriesOnItems {
   itemId     String   @db.Uuid
   categoryId String   @db.Uuid
-  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
-  item       Item     @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  category   Category @relation(fields: [categoryId], references: [id])
+  item       Item     @relation(fields: [itemId], references: [id])
 
   @@id([itemId, categoryId])
 }
@@ -121,8 +123,8 @@ model CategoriesOnItems {
 model CategoriesOnListings {
   listingId  String   @db.Uuid
   categoryId String   @db.Uuid
-  category   Category @relation(fields: [categoryId], references: [id])
-  listing    Listing  @relation(fields: [listingId], references: [id])
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  listing    Listing  @relation(fields: [listingId], references: [id], onDelete: Cascade)
 
   @@id([listingId, categoryId])
 }

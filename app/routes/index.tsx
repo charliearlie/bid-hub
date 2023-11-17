@@ -24,6 +24,7 @@ export const loader = async () => {
       images,
       slug,
       startingBid,
+      thumbnail,
       title,
     } = listing;
     return {
@@ -33,6 +34,7 @@ export const loader = async () => {
       images,
       slug,
       startingBid,
+      thumbnail,
       title,
     };
   });
