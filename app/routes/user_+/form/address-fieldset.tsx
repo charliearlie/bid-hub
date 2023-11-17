@@ -4,7 +4,7 @@ import { z } from "zod";
 
 import { AddressFieldsetSchema } from "~/services/zod-schemas";
 
-import FormField from "~/components/form/form-field";
+import { FormField } from "~/components/form/form-field";
 
 type Props = {
   address: FieldConfig<z.infer<typeof AddressFieldsetSchema>>;

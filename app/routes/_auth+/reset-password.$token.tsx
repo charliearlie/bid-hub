@@ -11,7 +11,7 @@ import {
 } from "~/services/user.server";
 
 import { Alert, AlertTitle } from "~/components/common/ui/alert";
-import FormField from "~/components/form/form-field";
+import { FormField } from "~/components/form/form-field";
 import { SubmitButton } from "~/components/form/submit-button";
 
 import { invariantResponse } from "~/util/utils";

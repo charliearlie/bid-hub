@@ -12,16 +12,21 @@ type ListingPreviewProps = {
 };
 
 export default function ListingPreview({ listing }: ListingPreviewProps) {
-  const { buyItNowPrice, highestBidValue, slug, startingBid, title } = listing;
+  const {
+    buyItNowPrice,
+    highestBidValue,
+    slug,
+    startingBid,
+    thumbnail,
+    title,
+  } = listing;
   const auctionPrice = highestBidValue || startingBid || null;
-
-  const firstImage = listing.images?.[0];
 
   return (
     <Card>
       <CardImage
         to={`/listings/${slug}`}
-        src={firstImage ? firstImage : "https://picsum.photos/200"}
+        src={thumbnail || "https://picsum.photos/200"}
         alt={title}
       />
       <CardContent>

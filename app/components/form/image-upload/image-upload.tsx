@@ -1,12 +1,9 @@
 import { UploadCloud } from "lucide-react";
 import React, { useId } from "react";
 
-import { Label } from "../common/ui/label";
+import { Label } from "~/components/common/ui/label";
 
-enum UPLOAD_PRESET_ENUM {
-  bidhubAvatar = "bidhub_avatar",
-  bidhubItem = "bidhub_item",
-}
+import { UPLOAD_PRESET_ENUM } from "~/util/cloudinary.server";
 
 type ImageUploadProps = {
   uploadPreset?: UPLOAD_PRESET_ENUM;
@@ -39,18 +36,3 @@ export const ImageUpload = React.forwardRef<HTMLInputElement, Props>(
     );
   }
 );
-
-// export default function ImageUpload({
-//   uploadPreset = UPLOAD_PRESET_ENUM.bidhubItem,
-//   ...props
-// }: Props) {
-//   return (
-//     <input
-//       type="file"
-//       onChange={uploadImage}
-//       {...props}
-//     />
-//   );
-// }
-
-// file:-mx-3 file:-my-[0.32rem] file:overflow-hidden file:rounded-none file:border-0 file:border-solid file:border-inherit file:bg-neutral-100 file:px-3 file:py-[0.32rem] file:text-neutral-700 file:transition file:duration-150 file:ease-in-out file:[border-inline-end-width:1px] file:[margin-inline-end:0.75rem] hover:file:bg-neutral-200

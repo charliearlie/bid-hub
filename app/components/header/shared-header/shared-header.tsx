@@ -4,16 +4,16 @@ import BurgerSVG from "~/styles/svg/burger";
 import CloseSVG from "~/styles/svg/close";
 import SearchSVG from "~/styles/svg/search";
 
-import type { UserType as User } from "~/util/types";
+import { Input } from "~/components/common/ui/input";
+import { UserDropDown } from "~/components/header/user-dropdown";
 
-import { Input } from "../common/ui/input";
-import UserDropDown from "./user-dropdown";
+import type { UserType as User } from "~/util/types";
 
 type Props = {
   user: User | null;
 };
 
-export default function SharedHeader({ user }: Props) {
+export function SharedHeader({ user }: Props) {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
 
   const navigation = [

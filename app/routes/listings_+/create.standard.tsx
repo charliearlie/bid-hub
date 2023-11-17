@@ -18,8 +18,8 @@ import {
   addListing,
   getCategoryDropdownOptions,
 } from "~/services/listings.server";
-import { FileSchema } from "~/services/zod-schemas";
 import { getUserId } from "~/services/session.server";
+import { FileSchema } from "~/services/zod-schemas";
 
 import { DatePicker } from "~/components/common/date-picker";
 import { SwitchWithLabel } from "~/components/common/switch-with-label";
@@ -33,11 +33,11 @@ import {
   SelectItem,
   SelectTrigger,
 } from "~/components/common/ui/select";
-import FormField from "~/components/form/form-field";
-import FormFieldTextArea from "~/components/form/form-field-text-area";
+import { FormField } from "~/components/form/form-field";
+import { FormFieldTextArea } from "~/components/form/form-field-text-area";
 import { SubmitButton } from "~/components/form/submit-button";
 
-import { uploadImages } from "~/util/cloudinary.server";
+import { UPLOAD_PRESET_ENUM, uploadImages } from "~/util/cloudinary.server";
 
 const MAX_FILE_SIZE = 1024 * 1024 * 5; // 5mb
 const CreateListingSchema = z
@@ -95,9 +95,18 @@ export const action = async ({ request }: DataFunctionArgs) => {
     return json({ status: "idle", submission } as const);
   }
 
-  const images = submission.value?.images.length
+  const hasAtLeastOneImage = !!submission.value.images.length;
+
+  const images = hasAtLeastOneImage
     ? await uploadImages(submission.value.images)
-    : null;
+    : [];
+
+  const [thumbnail] = hasAtLeastOneImage
+    ? await uploadImages(
+        submission.value.images[0],
+        UPLOAD_PRESET_ENUM.bidhubListingThumbnail
+      )
+    : [];
 
   let newItem: Item | null;
 
@@ -107,7 +116,7 @@ export const action = async ({ request }: DataFunctionArgs) => {
     newItem = await createItem(submission.value.itemName);
   }
 
-  if (!newItem) {
+  if (!newItem || !thumbnail) {
     submission.error[""] = ["We failed to create your item"];
     return json({ status: "error", submission } as const);
   }
@@ -127,8 +136,9 @@ export const action = async ({ request }: DataFunctionArgs) => {
       buyItNowPrice: listingData.buyItNowPrice || null,
       startingBid: listingData.startingBid || null,
       minBidIncrement: listingData.minBidIncrement || null,
-      images: Array.isArray(images) ? images.map((image) => image || "") : [],
+      images: images.filter((image) => Boolean(image)) as string[],
       endTime: listingData.endTime,
+      thumbnail,
     },
     newItem,
     [listingData.categoryId],
@@ -156,7 +166,7 @@ export default function CreateListingRoute() {
     onValidate({ formData }) {
       return parse(formData, { schema: CreateListingSchema });
     },
-    defaultValue: { quantity: 1, itemId: "", images: [{}] }, // We will get the item id if it exists
+    defaultValue: { quantity: 1, itemId: "", images: [] }, // We will get the item id if it exists
   });
 
   const images = useFieldList(form.ref, fields.images);
@@ -165,6 +175,9 @@ export default function CreateListingRoute() {
     <Card>
       <CardContent className="md:p-8">
         <Form method="post" {...form.props} encType="multipart/form-data">
+          <button type="submit" className="hidden">
+            Submit
+          </button>
           <FormField
             label="Title"
             helperText="This is what will be displayed in search results"
@@ -237,7 +250,7 @@ export default function CreateListingRoute() {
               variant="outline"
               {...list.insert(fields.images.name, {})}
             >
-              Add another image
+              {images.length === 0 ? "Add image" : "Add another image"}
             </Button>
           </div>
           <SwitchWithLabel
