@@ -78,12 +78,12 @@ export async function addListing(
 }
 
 export const getListingBySlug = async (slug: string) => {
-  const item = await prisma.listing.findUnique({
+  const listing = await prisma.listing.findUnique({
     where: { slug },
-    include: { item: true },
+    include: { item: true, categories: true },
   });
 
-  return item;
+  return listing;
 };
 
 export const getListingsByCategory = async (categoryId: string) => {
@@ -113,3 +113,16 @@ export const getCategoryDropdownOptions = async () => {
     label: category.name,
   }));
 };
+
+export async function getCategoryAndParents(categoryId: string) {
+  const result = await prisma.category.findUniqueOrThrow({
+    where: {
+      id: categoryId,
+    },
+    include: {
+      parentCategory: true,
+    },
+  });
+
+  return result;
+}
