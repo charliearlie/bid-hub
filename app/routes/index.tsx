@@ -45,7 +45,7 @@ export default function Index() {
   const loaderData = useLoaderData<typeof loader>();
 
   return (
-    <main>
+    <main className="bg-background">
       <img
         className="h-48 w-full object-cover md:h-96 lg:h-[32rem]"
         src="https://res.cloudinary.com/bidhub/image/upload/v1678720975/bidhub/Valkyrie-AMR-Pro_08_169.jpg"

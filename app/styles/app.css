@@ -975,6 +975,10 @@ h2 {
   height: 5rem;
 }
 
+.h-64 {
+  height: 16rem;
+}
+
 .max-h-8 {
   max-height: 2rem;
 }
