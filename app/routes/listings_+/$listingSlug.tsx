@@ -36,7 +36,6 @@ export async function loader({ params }: DataFunctionArgs) {
     listing?.categories[0].categoryId || ""
   );
 
-  console.log("categories", category);
   invariantResponse(listing, "Listing not found", {
     status: 404,
   });
