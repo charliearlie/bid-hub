@@ -18,7 +18,10 @@ export const ListingAdditionalDetailsSection = () => {
             <AccordionItem value={String(num)}>
               <AccordionTrigger>Features</AccordionTrigger>
               <AccordionContent>
-                This item has no features. it's shite
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+                eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
+                enim ad minim veniam, quis nostrud exercitation ullamco laboris
+                nisi ut aliquip ex ea commodo consequat.
               </AccordionContent>
             </AccordionItem>
           </Accordion>
