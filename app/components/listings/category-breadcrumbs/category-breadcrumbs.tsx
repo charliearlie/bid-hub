@@ -18,29 +18,17 @@ export const CategoryBreadcrumbs = ({
     <nav aria-label="Breadcrumb" className="mx-auto max-w-7xl pb-8">
       <ol role="list" className="flex items-center space-x-4">
         {parentCategory && (
-          <li key={parentCategory.id}>
-            <div className="flex items-center">
-              <Link
-                to={`../categories/${parentCategory.slug}`}
-                className="mr-4 text-sm font-semibold"
-              >
-                {parentCategory.name}
-              </Link>
-              <SlashIcon className="text-accent" />
-            </div>
-          </li>
+          <CategoryBreadcrumb
+            id={parentCategory.id}
+            name={parentCategory.name}
+            slug={parentCategory.slug}
+          />
         )}
-        <li key={category.id}>
-          <div className="flex items-center">
-            <Link
-              to={`../categories/${category.slug}`}
-              className="mr-4 text-sm font-semibold"
-            >
-              {category.name}
-            </Link>
-            <SlashIcon className="text-accent" />
-          </div>
-        </li>
+        <CategoryBreadcrumb
+          id={category.id}
+          name={category.name}
+          slug={category.slug}
+        />
         <li className="text-sm">
           <Link
             to={slug}
@@ -52,5 +40,27 @@ export const CategoryBreadcrumbs = ({
         </li>
       </ol>
     </nav>
+  );
+};
+
+type CategoryBreadcrumbProps = {
+  id: string;
+  name: string;
+  slug: string;
+};
+
+const CategoryBreadcrumb = ({ id, name, slug }: CategoryBreadcrumbProps) => {
+  return (
+    <li key={id}>
+      <div className="flex items-center">
+        <Link
+          to={`../categories/${slug}`}
+          className="mr-4 text-sm font-semibold"
+        >
+          {name}
+        </Link>
+        <SlashIcon className="text-accent" />
+      </div>
+    </li>
   );
 };
