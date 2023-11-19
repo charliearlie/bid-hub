@@ -13,13 +13,16 @@ import {
   ScrollRestoration,
   useLoaderData,
 } from "@remix-run/react";
+import styles from "~/styles/app.css";
+import fontStylesheet from "~/styles/font.css";
 
-import { ErrorBoundaryComponent } from "./components/error-boundary";
-import { SharedHeader } from "./components/header/shared-header";
-import { logout } from "./services/session.server";
-import { getUser } from "./services/user.server";
-import styles from "./styles/app.css";
-import { getEnv } from "./util/env.server";
+import { logout } from "~/services/session.server";
+import { getUser } from "~/services/user.server";
+
+import { ErrorBoundaryComponent } from "~/components/error-boundary";
+import { SharedHeader } from "~/components/header/shared-header";
+
+import { getEnv } from "~/util/env.server";
 
 export const meta: MetaFunction = () => {
   return [
@@ -34,12 +37,7 @@ export const meta: MetaFunction = () => {
 export function links() {
   return [
     { rel: "stylesheet", href: styles },
-    { rel: "preconnect", href: "https://fonts.googleapis.com" },
-    { rel: "preconnect", href: "https://fonts.gstatic.com" },
-    {
-      rel: "stylesheet",
-      href: "https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&display=swap",
-    },
+    { rel: "stylesheet", href: fontStylesheet },
     {
       rel: "icon",
       href: "https://fav.farm/👨🏻‍⚖️",

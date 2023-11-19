@@ -33,7 +33,7 @@ export const CategoryBreadcrumbs = ({
           <Link
             to={slug}
             aria-current="page"
-            className="font-medium opacity-60"
+            className="font-medium opacity-60 hover:opacity-100"
           >
             {title}
           </Link>
@@ -55,7 +55,7 @@ const CategoryBreadcrumb = ({ id, name, slug }: CategoryBreadcrumbProps) => {
       <div className="flex items-center">
         <Link
           to={`../categories/${slug}`}
-          className="mr-4 text-sm font-semibold"
+          className="mr-4 text-sm font-semibold hover:opacity-80"
         >
           {name}
         </Link>
