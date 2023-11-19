@@ -13,14 +13,16 @@ import {
   ScrollRestoration,
   useLoaderData,
 } from "@remix-run/react";
+import styles from "~/styles/app.css";
+import fontStylesheet from "~/styles/font.css";
 
-import { ErrorBoundaryComponent } from "./components/error-boundary";
-import { SharedHeader } from "./components/header/shared-header";
-import { logout } from "./services/session.server";
-import { getUser } from "./services/user.server";
-import styles from "./styles/app.css";
-import fontStylesheet from "./styles/font.css";
-import { getEnv } from "./util/env.server";
+import { logout } from "~/services/session.server";
+import { getUser } from "~/services/user.server";
+
+import { ErrorBoundaryComponent } from "~/components/error-boundary";
+import { SharedHeader } from "~/components/header/shared-header";
+
+import { getEnv } from "~/util/env.server";
 
 export const meta: MetaFunction = () => {
   return [
