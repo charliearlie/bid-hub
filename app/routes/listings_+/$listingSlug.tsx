@@ -25,6 +25,10 @@ export const meta: MetaFunction<typeof loader, {}> = ({ data }) => {
       name: "description",
       content: data?.listing.description,
     },
+    {
+      property: "og:image",
+      content: data?.listing.thumbnail,
+    },
   ];
 };
 
