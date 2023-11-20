@@ -20,7 +20,7 @@ import { invariantResponse } from "~/util/utils";
 
 export const meta: MetaFunction<typeof loader, {}> = ({ data }) => {
   return [
-    { title: `${data?.listing.title} | Website` },
+    { title: `${data?.listing.title} | Bidhub` },
     {
       name: "description",
       content: data?.listing.description,
