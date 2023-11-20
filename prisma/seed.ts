@@ -355,10 +355,22 @@ async function seed() {
         },
       },
       slug: "costa-rican-sloth-brand-new",
-      images: [
-        "https://res.cloudinary.com/bidhub/image/upload/c_fit,h_1080,w_1920/v1698951537/bidhub/bdwhjjsjjsiw5yij3mdb.jpg",
-        "https://thespongeclub.com/wp-content/uploads/2022/08/spongebob-not-normal-e1661340467476.png",
-      ],
+      images: {
+        create: [
+          {
+            altText: "Sloth hanging from branch",
+            imageUrl:
+              "https://res.cloudinary.com/bidhub/image/upload/c_fit,h_1080,w_1920/v1698951537/bidhub/bdwhjjsjjsiw5yij3mdb.jpg",
+            publicId: "bidhub/bdwhjjsjjsiw5yij3mdb",
+          },
+          {
+            altText: "SpongeBob SquarePants",
+            imageUrl:
+              "https://res.cloudinary.com/bidhub/image/upload/v1700494508/spongebob-not-normal-e1661340467476.webp",
+            publicId: "spongebob-not-normal-e1661340467476",
+          },
+        ],
+      },
       thumbnail:
         "https://res.cloudinary.com/bidhub/image/upload/c_fit,h_1080,w_1920/v1698951537/bidhub/bdwhjjsjjsiw5yij3mdb.jpg",
       quantity: 1,
@@ -390,10 +402,22 @@ async function seed() {
         },
       },
       slug: "nike-geo-merlin",
-      images: [
-        "https://res.cloudinary.com/bidhub/image/upload/c_fit,h_1080,w_1920/v1699311088/bidhub/agcn68q3odmyt9gbwk39.webp",
-        "https://thespongeclub.com/wp-content/uploads/2022/08/spongebob-not-normal-e1661340467476.png",
-      ],
+      images: {
+        create: [
+          {
+            altText: "Nike Geo Merlin ball face on",
+            imageUrl:
+              "https://res.cloudinary.com/bidhub/image/upload/v1699311088/bidhub/agcn68q3odmyt9gbwk39.webp",
+            publicId: "bidhub/agcn68q3odmyt9gbwk39",
+          },
+          {
+            altText: "SpongeBob SquarePants",
+            imageUrl:
+              "https://res.cloudinary.com/bidhub/image/upload/v1700494508/spongebob-not-normal-e1661340467476.webp",
+            publicId: "spongebob-not-normal-e1661340467476",
+          },
+        ],
+      },
       thumbnail:
         "https://res.cloudinary.com/bidhub/image/upload/c_fit,h_1080,w_1920/v1699311088/bidhub/agcn68q3odmyt9gbwk39.webp",
       quantity: 1,
@@ -422,10 +446,22 @@ async function seed() {
         },
       },
       slug: "spiderman-2-for-ps5",
-      images: [
-        "https://res.cloudinary.com/bidhub/image/upload/q_auto:eco/v1699308955/bidhub/lpgmice7lu5mf9rcbhmv.jpg",
-        "https://thespongeclub.com/wp-content/uploads/2022/08/spongebob-not-normal-e1661340467476.png",
-      ],
+      images: {
+        create: [
+          {
+            altText: "Spider-Man 2 PS5 game cover",
+            imageUrl:
+              "https://res.cloudinary.com/bidhub/image/upload/v1699308955/bidhub/lpgmice7lu5mf9rcbhmv.png",
+            publicId: "bidhub/lpgmice7lu5mf9rcbhmv",
+          },
+          {
+            altText: "SpongeBob SquarePants",
+            imageUrl:
+              "https://res.cloudinary.com/bidhub/image/upload/v1700494508/spongebob-not-normal-e1661340467476.webp",
+            publicId: "spongebob-not-normal-e1661340467476",
+          },
+        ],
+      },
       thumbnail:
         "https://res.cloudinary.com/bidhub/image/upload/q_auto:eco/v1699308955/bidhub/lpgmice7lu5mf9rcbhmv.jpg",
       quantity: 15,
@@ -454,10 +490,22 @@ async function seed() {
         },
       },
       slug: "tom-ford-extreme-noir-parfum",
-      images: [
-        "https://res.cloudinary.com/bidhub/image/upload/c_fit,h_1080,w_1920/v1699377321/bidhub/iznh0glxdtvkziv8di2e.jpg",
-        "https://thespongeclub.com/wp-content/uploads/2022/08/spongebob-not-normal-e1661340467476.png",
-      ],
+      images: {
+        create: [
+          {
+            altText: "Tom Ford Extreme Noir Parfum packaging and bottle",
+            imageUrl:
+              "https://res.cloudinary.com/bidhub/image/upload/v1699377321/bidhub/iznh0glxdtvkziv8di2e.jpg",
+            publicId: "bidhub/iznh0glxdtvkziv8di2e",
+          },
+          {
+            altText: "SpongeBob SquarePants",
+            imageUrl:
+              "https://res.cloudinary.com/bidhub/image/upload/v1700494508/spongebob-not-normal-e1661340467476.webp",
+            publicId: "spongebob-not-normal-e1661340467476",
+          },
+        ],
+      },
       thumbnail:
         "https://res.cloudinary.com/bidhub/image/upload/c_fit,h_1080,w_1920/v1699377321/bidhub/iznh0glxdtvkziv8di2e.jpg",
       quantity: 100,
@@ -486,10 +534,22 @@ async function seed() {
         },
       },
       slug: "nike-air-force-1-low-prm-halloween-2023",
-      images: [
-        "https://res.cloudinary.com/bidhub/image/upload/f_webp,fl_awebp,q_auto/v1699310491/bidhub/tprf9vyfexz6gc4g05dm",
-        "https://thespongeclub.com/wp-content/uploads/2022/08/spongebob-not-normal-e1661340467476.png",
-      ],
+      images: {
+        create: [
+          {
+            altText: "Nike Air Force 1 Halloween placed on rocks",
+            imageUrl:
+              "https://res.cloudinary.com/bidhub/image/upload/v1699310491/bidhub/tprf9vyfexz6gc4g05dm.png",
+            publicId: "bidhub/tprf9vyfexz6gc4g05dm",
+          },
+          {
+            altText: "SpongeBob SquarePants",
+            imageUrl:
+              "https://res.cloudinary.com/bidhub/image/upload/v1700494508/spongebob-not-normal-e1661340467476.webp",
+            publicId: "spongebob-not-normal-e1661340467476",
+          },
+        ],
+      },
       thumbnail:
         "https://res.cloudinary.com/bidhub/image/upload/f_webp,fl_awebp,q_auto/v1699310491/bidhub/tprf9vyfexz6gc4g05dm",
       quantity: 5,
@@ -521,10 +581,22 @@ async function seed() {
         },
       },
       slug: "air-jordan-1-og",
-      images: [
-        "https://res.cloudinary.com/bidhub/image/upload/f_webp,fl_awebp,q_auto/v1699310312/bidhub/buepvcfyvdz4kahlb88q",
-        "https://thespongeclub.com/wp-content/uploads/2022/08/spongebob-not-normal-e1661340467476.png",
-      ],
+      images: {
+        create: [
+          {
+            altText: "Air Jordan 1 OG with a plain white background",
+            imageUrl:
+              "https://res.cloudinary.com/bidhub/image/upload/v1699310312/bidhub/buepvcfyvdz4kahlb88q.jpg",
+            publicId: "bidhub/buepvcfyvdz4kahlb88q",
+          },
+          {
+            altText: "SpongeBob SquarePants",
+            imageUrl:
+              "https://res.cloudinary.com/bidhub/image/upload/v1700494508/spongebob-not-normal-e1661340467476.webp",
+            publicId: "spongebob-not-normal-e1661340467476",
+          },
+        ],
+      },
       thumbnail:
         "https://res.cloudinary.com/bidhub/image/upload/f_webp,fl_awebp,q_auto/v1699310312/bidhub/buepvcfyvdz4kahlb88q",
       quantity: 1,
@@ -553,10 +625,23 @@ async function seed() {
         },
       },
       slug: "specialized-bicycle",
-      images: [
-        "https://res.cloudinary.com/bidhub/image/upload/c_fit,h_1080,w_1920/v1699378328/bidhub/nnfxgogio06o0fskykfo.webp",
-        "https://thespongeclub.com/wp-content/uploads/2022/08/spongebob-not-normal-e1661340467476.png",
-      ],
+      images: {
+        create: [
+          {
+            altText:
+              "Black Specialized Bicycle side on with a plain white background",
+            imageUrl:
+              "https://res.cloudinary.com/bidhub/image/upload/v1699378328/bidhub/nnfxgogio06o0fskykfo.webp",
+            publicId: "bidhub/nnfxgogio06o0fskykfo",
+          },
+          {
+            altText: "SpongeBob SquarePants",
+            imageUrl:
+              "https://res.cloudinary.com/bidhub/image/upload/v1700494508/spongebob-not-normal-e1661340467476.webp",
+            publicId: "spongebob-not-normal-e1661340467476",
+          },
+        ],
+      },
       thumbnail:
         "https://res.cloudinary.com/bidhub/image/upload/c_fit,h_1080,w_1920/v1699378328/bidhub/nnfxgogio06o0fskykfo.webp",
       quantity: 1,
@@ -587,12 +672,24 @@ async function seed() {
         },
       },
       slug: "trench-coat",
-      images: [
-        "https://res.cloudinary.com/bidhub/image/upload/c_fit,h_1080,w_1920/v1699378484/bidhub/ik6w9j6qjvz5fzq5nq0r.jpg",
-        "https://thespongeclub.com/wp-content/uploads/2022/08/spongebob-not-normal-e1661340467476.png",
-      ],
+      images: {
+        create: [
+          {
+            altText: "Beige trench coat with slight dirt patches",
+            imageUrl:
+              "https://res.cloudinary.com/bidhub/image/upload/v1700502973/bidhub/drsdupwa94efhpmfibsq.webp",
+            publicId: "bidhub/drsdupwa94efhpmfibsq",
+          },
+          {
+            altText: "SpongeBob SquarePants",
+            imageUrl:
+              "https://res.cloudinary.com/bidhub/image/upload/v1700494508/spongebob-not-normal-e1661340467476.webp",
+            publicId: "spongebob-not-normal-e1661340467476",
+          },
+        ],
+      },
       thumbnail:
-        "https://res.cloudinary.com/bidhub/image/upload/c_fit,h_1080,w_1920/v1699378484/bidhub/ik6w9j6qjvz5fzq5nq0r.jpg",
+        "https://res.cloudinary.com/bidhub/image/upload/t_Site-preview/v1700502973/bidhub/drsdupwa94efhpmfibsq.webp",
       quantity: 1,
     },
   });
@@ -618,10 +715,23 @@ async function seed() {
         },
       },
       slug: "nicholas-latifi-racing-helmet",
-      images: [
-        "https://res.cloudinary.com/bidhub/image/upload/c_fit,h_1080,w_1920/v1698965417/bidhub/owwvzcl6lynvnv7hfrt3.webp",
-        "https://thespongeclub.com/wp-content/uploads/2022/08/spongebob-not-normal-e1661340467476.png",
-      ],
+      images: {
+        create: [
+          {
+            altText:
+              "Side on view of a 2021 helmet, race worn by Nicholas Latifi",
+            imageUrl:
+              "https://res.cloudinary.com/bidhub/image/upload/c_fit,h_1080,w_1920/v1698965417/bidhub/owwvzcl6lynvnv7hfrt3.webp",
+            publicId: "bidhub/owwvzcl6lynvnv7hfrt3",
+          },
+          {
+            altText: "SpongeBob SquarePants",
+            imageUrl:
+              "https://res.cloudinary.com/bidhub/image/upload/v1700494508/spongebob-not-normal-e1661340467476.webp",
+            publicId: "spongebob-not-normal-e1661340467476",
+          },
+        ],
+      },
       thumbnail:
         "https://res.cloudinary.com/bidhub/image/upload/c_fit,h_1080,w_1920/v1698965417/bidhub/owwvzcl6lynvnv7hfrt3.webp",
     },

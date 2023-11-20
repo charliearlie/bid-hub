@@ -60,32 +60,32 @@ model TwoFactorAuth {
 }
 
 model Listing {
-  createdAt       DateTime               @default(now()) @db.Timestamptz(6)
-  updatedAt       DateTime               @default(now()) @updatedAt @db.Timestamptz(6)
-  quantity        Int                    @default(1)
+  createdAt       DateTime       @default(now()) @db.Timestamptz(6)
+  updatedAt       DateTime       @default(now()) @updatedAt @db.Timestamptz(6)
+  quantity        Int            @default(1)
   highestBidValue Int?
-  startTime       DateTime?              @db.Timestamptz(6)
-  endTime         DateTime?              @db.Timestamptz(6)
+  startTime       DateTime?      @db.Timestamptz(6)
+  endTime         DateTime?      @db.Timestamptz(6)
   buyItNowPrice   Int?
-  minBidIncrement Int?                   @default(50)
-  images          String[]
-  slug            String                 @unique
+  minBidIncrement Int?           @default(50)
+  images          ListingImage[]
+  slug            String         @unique
   title           String
   startingBid     Int?
-  id              String                 @id @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  sellerId        String                 @db.Uuid
-  itemId          String                 @db.Uuid
+  id              String         @id @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  sellerId        String         @db.Uuid
+  itemId          String         @db.Uuid
   description     String
   condition       Condition?
-  thumbnail       String                 @default("https://picsum.photos/200")
+  thumbnail       String         @default("https://picsum.photos/200")
   Bid             Bid[]
-  category        Category               @relation(fields: [categoryId], references: [id])
-  categoryId      String                 @db.Uuid
+  category        Category       @relation(fields: [categoryId], references: [id])
+  categoryId      String         @db.Uuid
   comments        Comment[]
   rating          Int?
   likes           Like[]
-  item            Item                   @relation(fields: [itemId], references: [id])
-  seller          User                   @relation(fields: [sellerId], references: [id])
+  item            Item           @relation(fields: [itemId], references: [id])
+  seller          User           @relation(fields: [sellerId], references: [id])
 }
 
 model Item {
@@ -95,20 +95,29 @@ model Item {
   material    String?
   colour      String?
   image       String?
-  id          String              @id @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  brandId     String?             @db.Uuid
+  id          String    @id @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  brandId     String?   @db.Uuid
   listings    Listing[]
+}
+
+model ListingImage {
+  id        String  @id @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  listingId String  @db.Uuid
+  listing   Listing @relation(fields: [listingId], references: [id])
+  publicId  String
+  imageUrl  String
+  altText   String?
 }
 
 model Category {
   name            String
-  id              String                 @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  parentId        String?                @db.Uuid
+  id              String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  parentId        String?    @db.Uuid
   label           String?
-  slug            String                 @unique
+  slug            String     @unique
   listings        Listing[]
-  parentCategory  Category?              @relation("ChildCategories", fields: [parentId], references: [id])
-  childCategories Category[]             @relation("ChildCategories")
+  parentCategory  Category?  @relation("ChildCategories", fields: [parentId], references: [id])
+  childCategories Category[] @relation("ChildCategories")
 }
 
 model Brand {
