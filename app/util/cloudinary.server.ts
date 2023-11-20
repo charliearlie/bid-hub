@@ -1,6 +1,8 @@
 import { writeAsyncIterableToWritable } from "@remix-run/node";
 import cloudinary from "cloudinary";
 
+import { CoreImageType } from "./types";
+
 export enum UPLOAD_PRESET_ENUM {
   bidhubAvatar = "bidhub_user_avatar",
   bidhubItem = "bidhub_item",
@@ -61,7 +63,31 @@ export async function uploadImages(
 
   return results.length > 0
     ? results
-        .filter((result) => result !== null)
-        .map((result) => result?.secure_url)
+        .filter((result) => Boolean(result))
+        .map(
+          (result) =>
+            ({
+              altText: "Will implement",
+              imageUrl: result?.secure_url,
+              publicId: result?.public_id,
+            } as CoreImageType)
+        )
     : [];
+}
+
+export async function optimiseImageForBrowser(
+  image: CoreImageType,
+  options: cloudinary.TransformationOptions | cloudinary.ConfigAndUrlOptions = {
+    quality: "auto",
+    format: "webp",
+    fetch_format: "auto",
+    secure: true,
+    height: 800,
+    width: 800,
+    crop: "fit",
+  }
+) {
+  const optimisedImage = cloudinary.v2.url(image.publicId, options);
+
+  return { ...image, imageUrl: optimisedImage };
 }

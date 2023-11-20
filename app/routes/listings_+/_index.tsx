@@ -17,8 +17,24 @@ export const loader = async () => {
   }
 
   const listingPreviewData = listings.map((listing) => {
-    const { buyItNowPrice, highestBidValue, id, images, slug, title } = listing;
-    return { buyItNowPrice, highestBidValue, id, images, slug, title };
+    const {
+      buyItNowPrice,
+      highestBidValue,
+      id,
+      images,
+      slug,
+      thumbnail,
+      title,
+    } = listing;
+    return {
+      buyItNowPrice,
+      highestBidValue,
+      id,
+      images,
+      slug,
+      thumbnail,
+      title,
+    };
   });
   return json({ listings: listingPreviewData });
 };

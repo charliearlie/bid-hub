@@ -1,12 +1,13 @@
 import type { Item, Listing } from "@prisma/client";
 
+import { CoreImageType } from "~/util/types";
 import { buildListingEndDateAndTime, generateSlug } from "~/util/utils";
 
 import { prisma } from "../util/prisma.server";
 import { getUserById } from "./user.server";
 
 export async function getAllListings() {
-  return await prisma.listing.findMany();
+  return await prisma.listing.findMany({ include: { images: true } });
 }
 
 type ListingSubSet = Pick<
@@ -18,9 +19,8 @@ type ListingSubSet = Pick<
   | "startingBid"
   | "minBidIncrement"
   | "thumbnail"
-  | "images"
   | "categoryId"
-> & { endTime?: string };
+> & { endTime?: string; images: CoreImageType[] };
 
 export async function addListing(
   {
@@ -46,7 +46,6 @@ export async function addListing(
       buyItNowPrice,
       description,
       endTime,
-      images,
       minBidIncrement,
       quantity,
       startingBid,
@@ -66,6 +65,11 @@ export async function addListing(
           id: categoryId,
         },
       },
+      images: {
+        create: images.map((image) => ({
+          ...image,
+        })),
+      },
       slug: generateSlug(title),
       thumbnail,
     },
@@ -75,7 +79,7 @@ export async function addListing(
 }
 
 export const getListingBySlug = async (slug: string) => {
-  const listing = await prisma.listing.findUnique({
+  const listing = await prisma.listing.findUniqueOrThrow({
     where: { slug },
     include: {
       item: true,
@@ -85,6 +89,13 @@ export const getListingBySlug = async (slug: string) => {
           avatarUrl: true,
           feedbackScore: true,
           username: true,
+        },
+      },
+      images: {
+        select: {
+          altText: true,
+          imageUrl: true,
+          publicId: true,
         },
       },
     },

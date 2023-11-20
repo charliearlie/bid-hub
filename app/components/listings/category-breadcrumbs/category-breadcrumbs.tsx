@@ -22,6 +22,7 @@ export const CategoryBreadcrumbs = ({
             id={parentCategory.id}
             name={parentCategory.name}
             slug={parentCategory.slug}
+            isParent
           />
         )}
         <CategoryBreadcrumb
@@ -45,13 +46,19 @@ export const CategoryBreadcrumbs = ({
 
 type CategoryBreadcrumbProps = {
   id: string;
+  isParent?: boolean;
   name: string;
   slug: string;
 };
 
-const CategoryBreadcrumb = ({ id, name, slug }: CategoryBreadcrumbProps) => {
+const CategoryBreadcrumb = ({
+  id,
+  isParent,
+  name,
+  slug,
+}: CategoryBreadcrumbProps) => {
   return (
-    <li key={id}>
+    <li key={id} className={isParent ? "hidden sm:block" : ""}>
       <div className="flex items-center">
         <Link
           to={`../categories/${slug}`}
