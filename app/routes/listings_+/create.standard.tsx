@@ -136,8 +136,8 @@ export const action = async ({ request }: DataFunctionArgs) => {
       buyItNowPrice: listingData.buyItNowPrice || null,
       startingBid: listingData.startingBid || null,
       minBidIncrement: listingData.minBidIncrement || null,
-      images: images.filter((image) => Boolean(image)) as string[],
-      thumbnail,
+      images,
+      thumbnail: thumbnail.imageUrl,
     },
     newItem,
     userId

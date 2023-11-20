@@ -1,4 +1,4 @@
-import { User, Item, Listing } from "@prisma/client";
+import { User, Item, Listing, ListingImage } from "@prisma/client";
 
 export type RegisterForm = {
   username: string;
@@ -42,13 +42,7 @@ export type ReplaceDateProperties<T> = Omit<T, "createdAt" | "updatedAt"> & {
 
 export type ListingPreviewType = Pick<
   Listing,
-  | "id"
-  | "highestBidValue"
-  | "buyItNowPrice"
-  | "slug"
-  | "startingBid"
-  | "title"
-  | "thumbnail"
+  "id" | "highestBidValue" | "buyItNowPrice" | "slug" | "title" | "thumbnail"
 >;
 
 type ItemPreviewType = Pick<Item, "name" | "description">;
@@ -57,3 +51,8 @@ export type ItemListingPreviewType = ListingPreviewType & ItemPreviewType;
 
 export type ItemType = ReplaceDateProperties<Item>;
 export type UserType = ReplaceDateProperties<User>;
+
+export type CoreImageType = Pick<
+  ListingImage,
+  "altText" | "imageUrl" | "publicId"
+>;

@@ -16,6 +16,7 @@ import { ImageGalleryTabs } from "~/components/listings/image-gallery-tabs";
 import { ListingAdditionalDetailsSection } from "~/components/listings/listing-additional-details-section/listing-additional-details-section";
 import { SellerDetails } from "~/components/listings/seller-details";
 
+import { optimiseImageForBrowser } from "~/util/cloudinary.server";
 import { invariantResponse } from "~/util/utils";
 
 export const meta: MetaFunction<typeof loader, {}> = ({ data }) => {
@@ -42,7 +43,14 @@ export async function loader({ params }: DataFunctionArgs) {
 
   const category = await getCategoryAndParents(listing.categoryId);
 
-  return json({ category, listing });
+  const optimisedListingImages = await Promise.all(
+    listing.images.map((image) => optimiseImageForBrowser(image))
+  );
+
+  return json({
+    category,
+    listing: { ...listing, images: optimisedListingImages },
+  });
 }
 
 export default function ListingSlugRoute() {
@@ -53,7 +61,7 @@ export default function ListingSlugRoute() {
   return (
     <main className="container mx-auto max-w-screen-xl p-4">
       <Card>
-        <div className="mx-auto max-w-2xl py-16 px-2 sm:py-8 sm:px-6 lg:max-w-7xl lg:px-8">
+        <div className="mx-auto max-w-2xl px-2 py-8 sm:px-6 lg:max-w-7xl lg:px-8">
           <CategoryBreadcrumbs
             category={{
               id: category.id,
@@ -84,11 +92,13 @@ export default function ListingSlugRoute() {
                 <SellerDetails {...seller} />
               </div>
               <form className="mt-6">
-                <div className="sm:flex-col1 mt-10 flex items-center">
-                  <Button type="submit">Add to bag</Button>
-
+                <div className="mt-10 flex items-center">
+                  <Button className="basis-4/5 sm:basis-2/4" type="submit">
+                    Add to bag
+                  </Button>
                   <button
                     type="button"
+                    name="favourite"
                     className="group ml-4 flex items-center justify-center rounded-md py-3 px-3 text-accent"
                   >
                     <HeartIcon
@@ -99,7 +109,6 @@ export default function ListingSlugRoute() {
                   </button>
                 </div>
               </form>
-
               <ListingAdditionalDetailsSection />
             </div>
           </div>
