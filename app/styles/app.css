@@ -1043,6 +1043,10 @@ h2 {
   width: 3rem;
 }
 
+.w-11 {
+  width: 2.75rem;
+}
+
 .min-w-\[8rem\] {
   min-width: 8rem;
 }
@@ -1502,6 +1506,10 @@ h2 {
   fill: hsl(var(--primary));
 }
 
+.fill-destructive {
+  fill: hsl(var(--destructive));
+}
+
 .object-cover {
   -o-object-fit: cover;
      object-fit: cover;
@@ -1603,6 +1611,11 @@ h2 {
 .py-1 {
   padding-top: 0.25rem;
   padding-bottom: 0.25rem;
+}
+
+.py-16 {
+  padding-top: 4rem;
+  padding-bottom: 4rem;
 }
 
 .pt-6 {
@@ -2220,8 +2233,16 @@ h2 {
   fill: hsl(var(--destructive));
 }
 
+.group:hover .group-hover\:fill-accent {
+  fill: hsl(var(--accent));
+}
+
 .group:hover .group-hover\:text-destructive {
   color: hsl(var(--destructive));
+}
+
+.group:hover .group-hover\:text-foreground {
+  color: hsl(var(--foreground));
 }
 
 .group:hover .group-hover\:opacity-100 {
@@ -2501,8 +2522,16 @@ h2 {
     background-color: hsl(var(--background));
   }
 
+  .dark\:fill-accent {
+    fill: hsl(var(--accent));
+  }
+
   .dark\:text-accent {
     color: hsl(var(--accent));
+  }
+
+  .dark\:text-destructive {
+    color: hsl(var(--destructive));
   }
 }
 
@@ -2545,6 +2574,10 @@ h2 {
 
   .sm\:w-16 {
     width: 4rem;
+  }
+
+  .sm\:w-14 {
+    width: 3.5rem;
   }
 
   .sm\:basis-2\/4 {
@@ -2615,6 +2648,11 @@ h2 {
   .sm\:px-0 {
     padding-left: 0px;
     padding-right: 0px;
+  }
+
+  .sm\:py-8 {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
   }
 
   .sm\:text-left {

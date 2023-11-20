@@ -104,6 +104,20 @@ export const getListingBySlug = async (slug: string) => {
   return listing;
 };
 
+export const doesUserLikeListing = async (
+  userId: string,
+  listingId: string
+) => {
+  const result = await prisma.like.findFirst({
+    where: {
+      listingId,
+      userId,
+    },
+  });
+
+  return Boolean(result);
+};
+
 export const getListingsByCategory = async (categoryId: string) => {
   const listings = await prisma.listing.findMany({
     where: {
@@ -140,3 +154,34 @@ export async function getCategoryAndParents(categoryId: string) {
 
   return result;
 }
+
+export const toggleLikeOnListing = async (
+  listingId: string,
+  userId: string
+) => {
+  const like = await prisma.like.findFirst({
+    where: {
+      listingId,
+      userId,
+    },
+  });
+
+  const userLikesListing = !!like;
+
+  if (userLikesListing) {
+    await prisma.like.delete({
+      where: {
+        id: like.id,
+      },
+    });
+  } else {
+    await prisma.like.create({
+      data: {
+        listingId,
+        userId,
+      },
+    });
+  }
+
+  return !userLikesListing;
+};
