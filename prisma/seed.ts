@@ -1,13 +1,16 @@
+import { faker } from "@faker-js/faker";
 import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-async function main() {
+async function seed() {
   const user1 = await prisma.user.create({
     data: {
       email: "Bob@bob.com",
       password: "password",
       username: "Bob",
+      avatarUrl:
+        "https://res.cloudinary.com/bidhub/image/upload/v1700434074/bidhub/bzszxsa0p4eqspmvkhl9.webp",
     },
   });
 
@@ -16,6 +19,9 @@ async function main() {
       email: "jimmy@jimmy.com",
       password: "password",
       username: "Jimmy",
+      feedbackScore: 3,
+      avatarUrl:
+        "https://res.cloudinary.com/bidhub/image/upload/v1700434134/bidhub/vgnzfshat6trm2wb8n1e.jpg",
     },
   });
 
@@ -24,6 +30,9 @@ async function main() {
       email: "carl@carl.com",
       password: "password",
       username: "Carl",
+      feedbackScore: 5,
+      avatarUrl:
+        "https://res.cloudinary.com/bidhub/image/upload/v1700434135/bidhub/tw2k8naxhfmdxukawwe8.jpg",
     },
   });
 
@@ -335,13 +344,9 @@ async function main() {
           id: sloth.id,
         },
       },
-      categories: {
-        create: {
-          category: {
-            connect: {
-              id: exoticPets.id,
-            },
-          },
+      category: {
+        connect: {
+          id: exoticPets.id,
         },
       },
       seller: {
@@ -352,9 +357,11 @@ async function main() {
       slug: "costa-rican-sloth-brand-new",
       images: [
         "https://res.cloudinary.com/bidhub/image/upload/c_fit,h_1080,w_1920/v1698951537/bidhub/bdwhjjsjjsiw5yij3mdb.jpg",
+        "https://thespongeclub.com/wp-content/uploads/2022/08/spongebob-not-normal-e1661340467476.png",
       ],
       thumbnail:
         "https://res.cloudinary.com/bidhub/image/upload/c_fit,h_1080,w_1920/v1698951537/bidhub/bdwhjjsjjsiw5yij3mdb.jpg",
+      quantity: 1,
     },
   });
 
@@ -372,13 +379,9 @@ async function main() {
           id: nikeGeoMerlin.id,
         },
       },
-      categories: {
-        create: {
-          category: {
-            connect: {
-              id: footballBalls.id,
-            },
-          },
+      category: {
+        connect: {
+          id: footballBalls.id,
         },
       },
       seller: {
@@ -389,9 +392,11 @@ async function main() {
       slug: "nike-geo-merlin",
       images: [
         "https://res.cloudinary.com/bidhub/image/upload/c_fit,h_1080,w_1920/v1699311088/bidhub/agcn68q3odmyt9gbwk39.webp",
+        "https://thespongeclub.com/wp-content/uploads/2022/08/spongebob-not-normal-e1661340467476.png",
       ],
       thumbnail:
         "https://res.cloudinary.com/bidhub/image/upload/c_fit,h_1080,w_1920/v1699311088/bidhub/agcn68q3odmyt9gbwk39.webp",
+      quantity: 1,
     },
   });
 
@@ -406,26 +411,24 @@ async function main() {
           id: spiderman2Ps5.id,
         },
       },
-      categories: {
-        create: {
-          category: {
-            connect: {
-              id: playstation5Games.id,
-            },
-          },
+      category: {
+        connect: {
+          id: playstation5Games.id,
         },
       },
       seller: {
         connect: {
-          id: user1.id,
+          id: user3.id,
         },
       },
       slug: "spiderman-2-for-ps5",
       images: [
         "https://res.cloudinary.com/bidhub/image/upload/q_auto:eco/v1699308955/bidhub/lpgmice7lu5mf9rcbhmv.jpg",
+        "https://thespongeclub.com/wp-content/uploads/2022/08/spongebob-not-normal-e1661340467476.png",
       ],
       thumbnail:
         "https://res.cloudinary.com/bidhub/image/upload/q_auto:eco/v1699308955/bidhub/lpgmice7lu5mf9rcbhmv.jpg",
+      quantity: 15,
     },
   });
 
@@ -440,26 +443,24 @@ async function main() {
           id: tomFordExtremeNoir.id,
         },
       },
-      categories: {
-        create: {
-          category: {
-            connect: {
-              id: fragrances.id,
-            },
-          },
+      category: {
+        connect: {
+          id: fragrances.id,
         },
       },
       seller: {
         connect: {
-          id: user1.id,
+          id: user3.id,
         },
       },
       slug: "tom-ford-extreme-noir-parfum",
       images: [
         "https://res.cloudinary.com/bidhub/image/upload/c_fit,h_1080,w_1920/v1699377321/bidhub/iznh0glxdtvkziv8di2e.jpg",
+        "https://thespongeclub.com/wp-content/uploads/2022/08/spongebob-not-normal-e1661340467476.png",
       ],
       thumbnail:
         "https://res.cloudinary.com/bidhub/image/upload/c_fit,h_1080,w_1920/v1699377321/bidhub/iznh0glxdtvkziv8di2e.jpg",
+      quantity: 100,
     },
   });
 
@@ -474,13 +475,9 @@ async function main() {
           id: halloweenAirForce1.id,
         },
       },
-      categories: {
-        create: {
-          category: {
-            connect: {
-              id: mensTrainers.id,
-            },
-          },
+      category: {
+        connect: {
+          id: mensTrainers.id,
         },
       },
       seller: {
@@ -491,9 +488,11 @@ async function main() {
       slug: "nike-air-force-1-low-prm-halloween-2023",
       images: [
         "https://res.cloudinary.com/bidhub/image/upload/f_webp,fl_awebp,q_auto/v1699310491/bidhub/tprf9vyfexz6gc4g05dm",
+        "https://thespongeclub.com/wp-content/uploads/2022/08/spongebob-not-normal-e1661340467476.png",
       ],
       thumbnail:
         "https://res.cloudinary.com/bidhub/image/upload/f_webp,fl_awebp,q_auto/v1699310491/bidhub/tprf9vyfexz6gc4g05dm",
+      quantity: 5,
     },
   });
 
@@ -511,13 +510,9 @@ async function main() {
           id: airJordan1Og.id,
         },
       },
-      categories: {
-        create: {
-          category: {
-            connect: {
-              id: mensTrainers.id,
-            },
-          },
+      category: {
+        connect: {
+          id: mensTrainers.id,
         },
       },
       seller: {
@@ -528,9 +523,11 @@ async function main() {
       slug: "air-jordan-1-og",
       images: [
         "https://res.cloudinary.com/bidhub/image/upload/f_webp,fl_awebp,q_auto/v1699310312/bidhub/buepvcfyvdz4kahlb88q",
+        "https://thespongeclub.com/wp-content/uploads/2022/08/spongebob-not-normal-e1661340467476.png",
       ],
       thumbnail:
         "https://res.cloudinary.com/bidhub/image/upload/f_webp,fl_awebp,q_auto/v1699310312/bidhub/buepvcfyvdz4kahlb88q",
+      quantity: 1,
     },
   });
 
@@ -545,13 +542,9 @@ async function main() {
           id: specializedBicycle.id,
         },
       },
-      categories: {
-        create: {
-          category: {
-            connect: {
-              id: bicycles.id,
-            },
-          },
+      category: {
+        connect: {
+          id: bicycles.id,
         },
       },
       seller: {
@@ -562,17 +555,18 @@ async function main() {
       slug: "specialized-bicycle",
       images: [
         "https://res.cloudinary.com/bidhub/image/upload/c_fit,h_1080,w_1920/v1699378328/bidhub/nnfxgogio06o0fskykfo.webp",
+        "https://thespongeclub.com/wp-content/uploads/2022/08/spongebob-not-normal-e1661340467476.png",
       ],
       thumbnail:
         "https://res.cloudinary.com/bidhub/image/upload/c_fit,h_1080,w_1920/v1699378328/bidhub/nnfxgogio06o0fskykfo.webp",
+      quantity: 1,
     },
   });
 
   await prisma.listing.create({
     data: {
       title: "Trench Coat",
-      description:
-        "Trench Coat. I have had this for 5 years and I am looking to sell it to a collector.",
+      description: faker.commerce.productDescription(),
       minBidIncrement: 5,
       startingBid: 30,
       highestBidValue: 70,
@@ -582,26 +576,24 @@ async function main() {
           id: trenchCoat.id,
         },
       },
-      categories: {
-        create: {
-          category: {
-            connect: {
-              id: mensJacketsAndCoats.id,
-            },
-          },
+      category: {
+        connect: {
+          id: mensJacketsAndCoats.id,
         },
       },
       seller: {
         connect: {
-          id: user2.id,
+          id: user3.id,
         },
       },
       slug: "trench-coat",
       images: [
         "https://res.cloudinary.com/bidhub/image/upload/c_fit,h_1080,w_1920/v1699378484/bidhub/ik6w9j6qjvz5fzq5nq0r.jpg",
+        "https://thespongeclub.com/wp-content/uploads/2022/08/spongebob-not-normal-e1661340467476.png",
       ],
       thumbnail:
         "https://res.cloudinary.com/bidhub/image/upload/c_fit,h_1080,w_1920/v1699378484/bidhub/ik6w9j6qjvz5fzq5nq0r.jpg",
+      quantity: 1,
     },
   });
 
@@ -615,13 +607,9 @@ async function main() {
           id: nicholasLatifiRacingHelmet.id,
         },
       },
-      categories: {
-        create: {
-          category: {
-            connect: {
-              id: footballMemorabilia.id,
-            },
-          },
+      category: {
+        connect: {
+          id: footballMemorabilia.id,
         },
       },
       seller: {
@@ -632,6 +620,7 @@ async function main() {
       slug: "nicholas-latifi-racing-helmet",
       images: [
         "https://res.cloudinary.com/bidhub/image/upload/c_fit,h_1080,w_1920/v1698965417/bidhub/owwvzcl6lynvnv7hfrt3.webp",
+        "https://thespongeclub.com/wp-content/uploads/2022/08/spongebob-not-normal-e1661340467476.png",
       ],
       thumbnail:
         "https://res.cloudinary.com/bidhub/image/upload/c_fit,h_1080,w_1920/v1698965417/bidhub/owwvzcl6lynvnv7hfrt3.webp",
@@ -639,7 +628,7 @@ async function main() {
   });
 }
 
-main()
+seed()
   .then(async () => {
     await prisma.$disconnect();
   })

@@ -79,8 +79,10 @@ model Listing {
   condition       Condition?
   thumbnail       String                 @default("https://picsum.photos/200")
   Bid             Bid[]
-  categories      CategoriesOnListings[]
+  category        Category               @relation(fields: [categoryId], references: [id])
+  categoryId      String                 @db.Uuid
   comments        Comment[]
+  rating          Int?
   likes           Like[]
   item            Item                   @relation(fields: [itemId], references: [id])
   seller          User                   @relation(fields: [sellerId], references: [id])
@@ -95,7 +97,6 @@ model Item {
   image       String?
   id          String              @id @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   brandId     String?             @db.Uuid
-  categories  CategoriesOnItems[]
   listings    Listing[]
 }
 
@@ -105,28 +106,9 @@ model Category {
   parentId        String?                @db.Uuid
   label           String?
   slug            String                 @unique
-  items           CategoriesOnItems[]
-  listings        CategoriesOnListings[]
+  listings        Listing[]
   parentCategory  Category?              @relation("ChildCategories", fields: [parentId], references: [id])
   childCategories Category[]             @relation("ChildCategories")
-}
-
-model CategoriesOnItems {
-  itemId     String   @db.Uuid
-  categoryId String   @db.Uuid
-  category   Category @relation(fields: [categoryId], references: [id])
-  item       Item     @relation(fields: [itemId], references: [id])
-
-  @@id([itemId, categoryId])
-}
-
-model CategoriesOnListings {
-  listingId  String   @db.Uuid
-  categoryId String   @db.Uuid
-  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
-  listing    Listing  @relation(fields: [listingId], references: [id], onDelete: Cascade)
-
-  @@id([listingId, categoryId])
 }
 
 model Brand {
