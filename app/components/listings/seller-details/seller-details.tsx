@@ -25,7 +25,7 @@ export const SellerDetails = ({
         <div className="flex items-center">
           <div>
             <img
-              className="inline-block h-11 w-[3.2rem] rounded-full sm:h-14 sm:w-[3.9rem]"
+              className="inline-block h-11 w-11 rounded-lg sm:h-14 sm:w-14"
               src={avatar}
               alt=""
             />
