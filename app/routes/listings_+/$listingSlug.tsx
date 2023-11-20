@@ -46,7 +46,9 @@ export async function action({ request }: DataFunctionArgs) {
   invariant(typeof listingId === "string", "Expected listingId in form data");
 
   if (intent === "favourite") {
-    await toggleLikeOnListing(listingId, currentUserId);
+    if (currentUserId) {
+      await toggleLikeOnListing(listingId, currentUserId!);
+    }
     return json({ success: true } as const);
   }
 
@@ -70,7 +72,9 @@ export async function loader({ params, request }: DataFunctionArgs) {
     listing.images.map((image) => optimiseImageForBrowser(image))
   );
 
-  const userLikesListing = await doesUserLikeListing(currentUserId, listing.id);
+  const userLikesListing = currentUserId
+    ? await doesUserLikeListing(currentUserId, listing.id)
+    : false;
 
   return json({
     category,
