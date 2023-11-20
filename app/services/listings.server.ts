@@ -19,11 +19,13 @@ type ListingSubSet = Pick<
   | "minBidIncrement"
   | "thumbnail"
   | "images"
+  | "categoryId"
 > & { endTime?: string };
 
 export async function addListing(
   {
     buyItNowPrice,
+    categoryId,
     description,
     images,
     minBidIncrement,
@@ -34,7 +36,6 @@ export async function addListing(
     thumbnail,
   }: ListingSubSet,
   item: Item,
-  categoryIds: string[],
   userId: string
 ) {
   const user = await getUserById(userId);
@@ -60,14 +61,10 @@ export async function addListing(
           id: item.id,
         },
       },
-      categories: {
-        create: categoryIds.map((categoryId) => ({
-          category: {
-            connect: {
-              id: categoryId,
-            },
-          },
-        })),
+      category: {
+        connect: {
+          id: categoryId,
+        },
       },
       slug: generateSlug(title),
       thumbnail,
@@ -80,7 +77,17 @@ export async function addListing(
 export const getListingBySlug = async (slug: string) => {
   const listing = await prisma.listing.findUnique({
     where: { slug },
-    include: { item: true, categories: true },
+    include: {
+      item: true,
+      category: true,
+      seller: {
+        select: {
+          avatarUrl: true,
+          feedbackScore: true,
+          username: true,
+        },
+      },
+    },
   });
 
   return listing;
@@ -89,11 +96,7 @@ export const getListingBySlug = async (slug: string) => {
 export const getListingsByCategory = async (categoryId: string) => {
   const listings = await prisma.listing.findMany({
     where: {
-      categories: {
-        some: {
-          categoryId,
-        },
-      },
+      categoryId,
     },
   });
 

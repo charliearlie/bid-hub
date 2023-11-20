@@ -137,11 +137,9 @@ export const action = async ({ request }: DataFunctionArgs) => {
       startingBid: listingData.startingBid || null,
       minBidIncrement: listingData.minBidIncrement || null,
       images: images.filter((image) => Boolean(image)) as string[],
-      endTime: listingData.endTime,
       thumbnail,
     },
     newItem,
-    [listingData.categoryId],
     userId
   );
 
