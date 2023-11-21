@@ -1,12 +1,15 @@
 import { json, type DataFunctionArgs, MetaFunction } from "@remix-run/node";
-import { Link, useLoaderData } from "@remix-run/react";
+import { Link, useFetcher, useLoaderData } from "@remix-run/react";
 import { HeartIcon } from "lucide-react";
 import invariant from "tiny-invariant";
 
 import {
+  doesUserLikeListing,
   getCategoryAndParents,
   getListingBySlug,
+  toggleLikeOnListing,
 } from "~/services/listings.server";
+import { getUserId } from "~/services/session.server";
 
 import { Button } from "~/components/common/ui/button";
 import Card from "~/components/common/ui/card/card";
@@ -17,7 +20,7 @@ import { ListingAdditionalDetailsSection } from "~/components/listings/listing-a
 import { SellerDetails } from "~/components/listings/seller-details";
 
 import { optimiseImageForBrowser } from "~/util/cloudinary.server";
-import { invariantResponse } from "~/util/utils";
+import { cn, invariantResponse } from "~/util/utils";
 
 export const meta: MetaFunction<typeof loader, {}> = ({ data }) => {
   return [
@@ -33,8 +36,30 @@ export const meta: MetaFunction<typeof loader, {}> = ({ data }) => {
   ];
 };
 
-export async function loader({ params }: DataFunctionArgs) {
+export async function action({ request }: DataFunctionArgs) {
+  const currentUserId = await getUserId(request);
+  const formData = await request.formData();
+
+  const listingId = formData.get("listingId");
+  const intent = formData.get("intent");
+
+  invariant(typeof listingId === "string", "Expected listingId in form data");
+
+  if (intent === "favourite") {
+    if (currentUserId) {
+      await toggleLikeOnListing(listingId, currentUserId!);
+    }
+    return json({ success: true } as const);
+  }
+
+  // todo: add to bag
+
+  return json({ success: true } as const);
+}
+
+export async function loader({ params, request }: DataFunctionArgs) {
   invariant(params.listingSlug, "Expected params.listingSlug");
+  const currentUserId = await getUserId(request);
   const listing = await getListingBySlug(params.listingSlug);
 
   invariantResponse(listing, "Listing not found", {
@@ -47,16 +72,28 @@ export async function loader({ params }: DataFunctionArgs) {
     listing.images.map((image) => optimiseImageForBrowser(image))
   );
 
+  const userLikesListing = currentUserId
+    ? await doesUserLikeListing(currentUserId, listing.id)
+    : false;
+
   return json({
     category,
     listing: { ...listing, images: optimisedListingImages },
+    userLikesListing,
   });
 }
 
 export default function ListingSlugRoute() {
-  const { category, listing } = useLoaderData<typeof loader>();
+  const fetcher = useFetcher();
+  const { category, listing, userLikesListing } =
+    useLoaderData<typeof loader>();
 
   const { buyItNowPrice, description, title, images, seller } = listing;
+
+  const likesListing =
+    fetcher.formData?.get("intent") === "favourite"
+      ? !userLikesListing
+      : userLikesListing;
 
   return (
     <main className="container mx-auto max-w-screen-xl p-4">
@@ -91,24 +128,34 @@ export default function ListingSlugRoute() {
               <div className="mt-3">
                 <SellerDetails {...seller} />
               </div>
-              <form className="mt-6">
+              <fetcher.Form method="post" className="mt-6">
                 <div className="mt-10 flex items-center">
-                  <Button className="basis-4/5 sm:basis-2/4" type="submit">
+                  <Button
+                    className="basis-4/5 sm:basis-2/4"
+                    name="intent"
+                    value="bag"
+                    type="submit"
+                  >
                     Add to bag
                   </Button>
                   <button
-                    type="button"
-                    name="favourite"
+                    name="intent"
+                    value="favourite"
                     className="group ml-4 flex items-center justify-center rounded-md py-3 px-3 text-accent"
                   >
                     <HeartIcon
-                      className="h-6 w-6 flex-shrink-0 text-foreground group-hover:fill-destructive group-hover:text-destructive dark:text-accent"
+                      className={cn(
+                        "h-6 w-6 flex-shrink-0 text-foreground group-hover:fill-destructive group-hover:text-destructive dark:text-accent",
+                        likesListing &&
+                          "fill-destructive text-destructive group-hover:fill-accent group-hover:text-foreground dark:text-destructive"
+                      )}
                       aria-hidden="true"
                     />
                     <span className="sr-only">Add to favorites</span>
                   </button>
+                  <input type="hidden" name="listingId" value={listing.id} />
                 </div>
-              </form>
+              </fetcher.Form>
               <ListingAdditionalDetailsSection />
             </div>
           </div>
