@@ -1,3 +1,5 @@
+import { CoreImageType } from "~/types";
+
 import {
   Tabs,
   TabsContent,
@@ -5,7 +7,6 @@ import {
   TabsTrigger,
 } from "~/components/common/ui/tabs";
 
-import { CoreImageType } from "~/util/types";
 import { cn } from "~/util/utils";
 
 type Props = {

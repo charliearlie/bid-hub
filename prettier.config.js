@@ -1,7 +1,8 @@
 module.exports = {
   importOrder: [
-    "^~/services(.*)$",
     "^~/components/(.*)$",
+    "^~/services(.*)$",
+    "^~/types(.*)$",
     "^~/util/(.*)$",
     "^[./]",
   ],

@@ -1,6 +1,6 @@
 import type { Item, Listing } from "@prisma/client";
+import { CoreImageType } from "~/types";
 
-import { CoreImageType } from "~/util/types";
 import { buildListingEndDateAndTime, generateSlug } from "~/util/utils";
 
 import { prisma } from "../util/prisma.server";

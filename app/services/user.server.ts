@@ -3,13 +3,13 @@ import { json } from "@remix-run/node";
 import bcrypt from "bcryptjs";
 import { v4 as uuidv4 } from "uuid";
 import { z } from "zod";
+import type { LoginForm, RegisterForm } from "~/types";
 
 import sendEmail from "~/services/email.server";
 import { createUserSession, getUserId } from "~/services/session.server";
 
 import magicLinkEmailTemplate from "~/util/helpers/email/magic-link-email";
 import resetPasswordEmailTemplate from "~/util/helpers/email/reset-password-email";
-import type { LoginForm, RegisterForm } from "~/util/types";
 
 import { prisma } from "../util/prisma.server";
 import {
@@ -236,6 +236,9 @@ export async function getUserByUsernameOrEmail(usernameOrEmail: string) {
   return await prisma.user.findFirst({
     where: {
       OR: [{ username: usernameOrEmail }, { email: usernameOrEmail }],
+    },
+    include: {
+      feedbackReceived: true,
     },
   });
 }
