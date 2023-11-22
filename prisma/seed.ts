@@ -36,6 +36,36 @@ async function seed() {
     },
   });
 
+  await prisma.user.update({
+    where: {
+      id: user1.id,
+    },
+    data: {
+      feedbackGiven: {
+        create: [
+          {
+            rating: 5,
+            sellerId: user2.id,
+            review: "Great seller, would buy from again",
+          },
+          {
+            rating: 3,
+            sellerId: user3.id,
+            review: "Clothes were great but a bit smelly",
+          },
+        ],
+      },
+      feedbackReceived: {
+        create: [
+          {
+            rating: 2,
+            buyerId: user2.id,
+            review: "Bought from me but paid in pennies",
+          },
+        ],
+      },
+    },
+  });
   const pets = await prisma.category.create({
     data: {
       name: "Pets",

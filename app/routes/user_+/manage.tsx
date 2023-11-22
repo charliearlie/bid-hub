@@ -14,6 +14,14 @@ import {
 import { Form, useActionData, useLoaderData } from "@remix-run/react";
 import { z } from "zod";
 
+import { Button } from "~/components/common/ui/button";
+import Card from "~/components/common/ui/card/card";
+import CardContent from "~/components/common/ui/card/card-content";
+import { Separator } from "~/components/common/ui/separator";
+import { FormField } from "~/components/form/form-field";
+import { ImageUploadAvatar } from "~/components/form/image-upload-avatar";
+import { SubmitButton } from "~/components/form/submit-button";
+
 import {
   getUser,
   updateUserAddresses,
@@ -25,14 +33,6 @@ import {
   FileSchema,
   PersonalDetailsFieldsetSchema,
 } from "~/services/zod-schemas";
-
-import { Button } from "~/components/common/ui/button";
-import Card from "~/components/common/ui/card/card";
-import CardContent from "~/components/common/ui/card/card-content";
-import { Separator } from "~/components/common/ui/separator";
-import { FormField } from "~/components/form/form-field";
-import { ImageUploadAvatar } from "~/components/form/image-upload-avatar";
-import { SubmitButton } from "~/components/form/submit-button";
 
 import { UPLOAD_PRESET_ENUM, uploadImages } from "~/util/cloudinary.server";
 import { invariantResponse } from "~/util/utils";
@@ -60,20 +60,22 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     return json({ status: "idle", submission } as const);
   }
 
-  const avatarImage = submission.value?.avatarImage
+  const [avatarImage] = submission.value?.avatarImage
     ? await uploadImages(
         submission.value.avatarImage,
         UPLOAD_PRESET_ENUM.bidhubAvatar
       )
-    : null;
+    : [];
 
   const user = await getUser(request);
   if (!user) {
     throw new Response("User not logged in", { status: 404 });
   }
 
-  if (typeof avatarImage === "string") {
-    await updateUserAvatar(avatarImage, user.id);
+  console.log("avatarImage", avatarImage);
+
+  if (typeof avatarImage?.imageUrl === "string") {
+    await updateUserAvatar(avatarImage.imageUrl, user.id);
   }
 
   const updatedUserAddresses = await updateUserAddresses(

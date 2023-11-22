@@ -3,10 +3,11 @@ import { json } from "@remix-run/node";
 import bcrypt from "bcryptjs";
 import { v4 as uuidv4 } from "uuid";
 import { z } from "zod";
-import type { LoginForm, RegisterForm } from "~/types";
 
 import sendEmail from "~/services/email.server";
 import { createUserSession, getUserId } from "~/services/session.server";
+
+import type { LoginForm, RegisterForm } from "~/types";
 
 import magicLinkEmailTemplate from "~/util/helpers/email/magic-link-email";
 import resetPasswordEmailTemplate from "~/util/helpers/email/reset-password-email";
@@ -238,7 +239,19 @@ export async function getUserByUsernameOrEmail(usernameOrEmail: string) {
       OR: [{ username: usernameOrEmail }, { email: usernameOrEmail }],
     },
     include: {
-      feedbackReceived: true,
+      feedbackReceived: {
+        select: {
+          rating: true,
+          review: true,
+          createdAt: true,
+          buyer: {
+            select: {
+              avatarUrl: true,
+              username: true,
+            },
+          },
+        },
+      },
     },
   });
 }
