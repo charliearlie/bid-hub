@@ -44,11 +44,6 @@ export type ListingPreviewType = Pick<
   Listing,
   "id" | "highestBidValue" | "buyItNowPrice" | "slug" | "title" | "thumbnail"
 >;
-
-type ItemPreviewType = Pick<Item, "name" | "description">;
-
-export type ItemListingPreviewType = ListingPreviewType & ItemPreviewType;
-
 export type ItemType = ReplaceDateProperties<Item>;
 export type UserType = ReplaceDateProperties<User>;
 
