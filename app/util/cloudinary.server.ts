@@ -1,7 +1,7 @@
 import { writeAsyncIterableToWritable } from "@remix-run/node";
 import cloudinary from "cloudinary";
 
-import { CoreImageType } from "./types";
+import { CoreImageType } from "../types";
 
 export enum UPLOAD_PRESET_ENUM {
   bidhubAvatar = "bidhub_user_avatar",

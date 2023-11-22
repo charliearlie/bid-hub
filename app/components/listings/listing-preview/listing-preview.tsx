@@ -1,6 +1,5 @@
 import { Link } from "@remix-run/react";
-
-import type { ListingPreviewType } from "~/util/types";
+import type { ListingPreviewType } from "~/types";
 
 type ListingPreviewProps = {
   listing: ListingPreviewType;

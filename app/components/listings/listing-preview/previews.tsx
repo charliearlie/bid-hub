@@ -1,6 +1,6 @@
-import { ScrollableRow } from "~/components/common/ui/scrollable-row";
+import type { ListingPreviewType } from "~/types";
 
-import type { ListingPreviewType } from "~/util/types";
+import { ScrollableRow } from "~/components/common/ui/scrollable-row";
 
 import ListingPreview from "./listing-preview";
 
