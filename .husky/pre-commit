@@ -2,3 +2,18 @@
 . "$(dirname -- "$0")/_/husky.sh"
 
 pnpm lint
+
+# Store the current files in routes directory
+before_files=$(git ls-tree --name-only HEAD routes)
+
+# Perform the commit
+files_to_commit=$(git diff --cached --name-only)
+
+# Check if any of the changes include files in the routes directory
+if [[ $files_to_commit == *"routes"* ]]; then
+  echo "Changes in routes directory detected. Regenerating types..."
+  node --require esbuild-register app/scripts/generate-route-types.ts
+  git add types/route-id.d.ts  # Add the generated file to the commit
+else
+  echo "No changes in routes directory. Skipping type generation."
+fi

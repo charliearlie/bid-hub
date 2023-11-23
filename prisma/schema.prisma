@@ -8,24 +8,26 @@ datasource db {
 }
 
 model User {
-  createdAt       DateTime             @default(now())
-  updatedAt       DateTime             @updatedAt
-  username        String               @unique
-  email           String               @unique
-  password        String
-  active          Boolean              @default(true)
-  avatarUrl       String?
-  feedbackScore   Int?
-  role            Role                 @default(USER)
-  id              String               @id @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  addresses       Address[]
-  bids            Bid[]
-  comments        Comment[]
-  likes           Like[]
-  listings        Listing[]
-  payments        Payment[]
-  twoFactorAuth   TwoFactorAuth?
-  personalDetails UserPersonalDetails?
+  createdAt        DateTime             @default(now())
+  updatedAt        DateTime             @updatedAt
+  username         String               @unique
+  email            String               @unique
+  password         String
+  active           Boolean              @default(true)
+  avatarUrl        String?
+  feedbackScore    Int?
+  feedbackReceived UserFeedback[]       @relation("seller")
+  feedbackGiven    UserFeedback[]       @relation("buyer")
+  role             Role                 @default(USER)
+  id               String               @id @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  addresses        Address[]
+  bids             Bid[]
+  comments         Comment[]
+  likes            Like[]
+  listings         Listing[]
+  payments         Payment[]
+  twoFactorAuth    TwoFactorAuth?
+  personalDetails  UserPersonalDetails?
 }
 
 model UserPersonalDetails {
@@ -57,6 +59,18 @@ model TwoFactorAuth {
   secret  String
   userId  String  @unique @db.Uuid
   user    User    @relation(fields: [userId], references: [id])
+}
+
+model UserFeedback {
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  id        String   @id @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  review    String
+  rating    Int
+  sellerId  String   @db.Uuid
+  seller    User     @relation("seller", fields: [sellerId], references: [id])
+  buyerId   String   @db.Uuid
+  buyer     User     @relation("buyer", fields: [buyerId], references: [id])
 }
 
 model Listing {
@@ -138,7 +152,7 @@ model Comment {
 
 model Like {
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  updatedAt DateTime @default(now()) @updatedAt
   id        String   @id @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   userId    String   @db.Uuid
   listingId String   @db.Uuid
