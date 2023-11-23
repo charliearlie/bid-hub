@@ -10,12 +10,12 @@ import {
 } from "@remix-run/react";
 import { z } from "zod";
 
-import { createUserSession } from "~/services/session.server";
-import { getUserByUsernameOrEmail, login } from "~/services/user.server";
-
 import { Alert, AlertTitle } from "~/components/common/ui/alert";
 import { FormField } from "~/components/form/form-field";
 import { SubmitButton } from "~/components/form/submit-button";
+
+import { createUserSession } from "~/services/session.server";
+import { getUserByUsernameOrEmail, login } from "~/services/user.server";
 
 const LoginChallengeSchema = z.object({
   password: z.string({
@@ -86,10 +86,10 @@ export default function LoginIdentifierRoute() {
   });
 
   return (
-    <div>
-      <h3 className="pb-2 text-center text-lg font-semibold">
+    <div className="flex h-full flex-col gap-8">
+      <h1 className="pb-2 text-center text-lg font-semibold">
         Welcome back {loaderData.username}
-      </h3>
+      </h1>
       {actionData?.status === "error" && (
         <Alert variant="destructive" className="my-2">
           <AlertTitle>{form.error}</AlertTitle>

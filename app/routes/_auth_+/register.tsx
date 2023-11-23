@@ -5,13 +5,13 @@ import { Form, Link, useActionData } from "@remix-run/react";
 import { HoneypotInputs } from "remix-utils/honeypot/react";
 import { z } from "zod";
 
-import { createUserSession } from "~/services/session.server";
-import { checkAvailability, createUser } from "~/services/user.server";
-import { UserUsernameFieldSchema } from "~/services/zod-schemas";
-
 import { Alert, AlertTitle } from "~/components/common/ui/alert";
 import { FormField } from "~/components/form/form-field";
 import { SubmitButton } from "~/components/form/submit-button";
+
+import { createUserSession } from "~/services/session.server";
+import { checkAvailability, createUser } from "~/services/user.server";
+import { UserUsernameFieldSchema } from "~/services/zod-schemas";
 
 import { checkForHoneypot } from "~/util/honeypot.server";
 
@@ -93,8 +93,8 @@ export default function RegisterRoute() {
   });
 
   return (
-    <div>
-      <h2 className="pt-4 pb-8 text-center text-3xl font-bold">Join Bidhub</h2>
+    <div className="flex h-full flex-col gap-8">
+      <h1 className="text-center text-2xl font-bold">Sign up to Bidhub</h1>
       <Form className="" method="post" {...form.props}>
         {actionData?.status === "error" && (
           <Alert variant="destructive">

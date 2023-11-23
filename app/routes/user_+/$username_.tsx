@@ -3,7 +3,7 @@ import { Link, Outlet, useLoaderData } from "@remix-run/react";
 
 import { RatingStars } from "~/components/common/star-rating/star-rating";
 import { Button } from "~/components/common/ui/button";
-import Card from "~/components/common/ui/card/card";
+import { Card } from "~/components/common/ui/card/card";
 import CardContent from "~/components/common/ui/card/card-content";
 import { Separator } from "~/components/common/ui/separator";
 import { ErrorBoundaryComponent } from "~/components/error-boundary";
