@@ -20,7 +20,10 @@ export const SellerDetails = ({
   return (
     <div>
       <Separator />
-      <Link to={`/user/${username}`} className="group block flex-shrink-0 py-2">
+      <Link
+        to={`/user/${username}/reviews`}
+        className="group block flex-shrink-0 py-2"
+      >
         <div className="flex items-center">
           <div>
             <img
