@@ -72,8 +72,6 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     throw new Response("User not logged in", { status: 404 });
   }
 
-  console.log("avatarImage", avatarImage);
-
   if (typeof avatarImage?.imageUrl === "string") {
     await updateUserAvatar(avatarImage.imageUrl, user.id);
   }
