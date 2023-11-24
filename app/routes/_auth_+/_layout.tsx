@@ -19,9 +19,8 @@ export default function LoginRegisterRoute() {
     <main className="-mt-8 flex h-[calc(100vh-84px)] flex-col flex-wrap content-center justify-center gap-4 bg-accent pt-16 dark:bg-background sm:mt-0 sm:pt-0">
       <HoneypotProvider {...honeypotProps}>
         <div className="w-full max-w-md px-2 sm:px-0">
-          <h2>I want to change this text based on the child route</h2>
           <Card className="min-h-[480px] border-none shadow-none sm:min-h-min sm:border sm:border-solid sm:shadow-sm">
-            <div className="grid grid-cols-2 items-center overflow-hidden rounded-md border sm:border-none">
+            <div className="grid grid-cols-2 items-center overflow-hidden border sm:border-none">
               <TabNavLink to="/login" className="text-center font-semibold">
                 Log in
               </TabNavLink>
