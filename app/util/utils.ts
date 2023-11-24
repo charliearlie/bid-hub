@@ -1,12 +1,6 @@
 import { SerializeFrom } from "@remix-run/node";
-import {
-  Navigation,
-  useFormAction,
-  useNavigation,
-  useRouteLoaderData,
-} from "@remix-run/react";
+import { Navigation, useRouteLoaderData } from "@remix-run/react";
 import { type ClassValue, clsx } from "clsx";
-import { useEffect } from "react";
 import { twMerge } from "tailwind-merge";
 import { v4 as uuidv4 } from "uuid";
 
@@ -33,48 +27,6 @@ export function invariantResponse(
       { status: 400, ...responseInit }
     );
   }
-}
-
-type UseIsSubmittingOptions = {
-  formAction?: string;
-  formMethod?: "DELETE" | "GET" | "PATCH" | "PUT" | "POST";
-};
-export function useIsSubmitting({
-  formAction,
-  formMethod = "POST",
-}: UseIsSubmittingOptions) {
-  const contextualFormAction = useFormAction();
-  const navigation = useNavigation();
-
-  return (
-    navigation.state === "submitting" &&
-    navigation.formAction === (formAction ?? contextualFormAction) &&
-    navigation.formMethod === formMethod
-  );
-}
-
-export function useFocusInvalidForm(
-  formElement: HTMLFormElement | null,
-  hasErrors: boolean
-) {
-  useEffect(() => {
-    if (!hasErrors) {
-      return;
-    }
-
-    if (formElement) {
-      if (formElement.matches('[aria-invalid="true"]')) {
-        formElement.focus();
-        return;
-      }
-
-      const invalidElement = formElement.querySelector('[aria-invalid="true"]');
-
-      if (invalidElement instanceof HTMLElement) {
-        invalidElement.focus();
-      }
-    }
-  }, [hasErrors, formElement]);
 }
 
 export function isFormInPendingState(

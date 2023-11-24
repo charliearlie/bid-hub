@@ -209,9 +209,13 @@ export default function CreateListingRoute() {
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Select category" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="h-48">
                 {categoryDropdownOptions.map((option) => (
-                  <SelectItem key={option.value} value={option.value}>
+                  <SelectItem
+                    className="cursor-pointer"
+                    key={option.value}
+                    value={option.value}
+                  >
                     {option.label}
                   </SelectItem>
                 ))}
