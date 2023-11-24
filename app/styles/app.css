@@ -1019,6 +1019,14 @@ h2 {
   min-height: 420px;
 }
 
+.min-h-\[400px\] {
+  min-height: 400px;
+}
+
+.min-h-\[450px\] {
+  min-height: 450px;
+}
+
 .w-4 {
   width: 1rem;
 }
@@ -1449,6 +1457,11 @@ h2 {
 .rounded-t-lg {
   border-top-left-radius: var(--radius);
   border-top-right-radius: var(--radius);
+}
+
+.rounded-t-md {
+  border-top-left-radius: calc(var(--radius) - 2px);
+  border-top-right-radius: calc(var(--radius) - 2px);
 }
 
 .border-2 {
@@ -2664,6 +2677,11 @@ h2 {
 
   .sm\:h-14 {
     height: 3.5rem;
+  }
+
+  .sm\:min-h-min {
+    min-height: -moz-min-content;
+    min-height: min-content;
   }
 
   .sm\:w-auto {
