@@ -3,6 +3,14 @@ import { Link, useFetcher, useLoaderData } from "@remix-run/react";
 import { HeartIcon } from "lucide-react";
 import invariant from "tiny-invariant";
 
+import { Button } from "~/components/common/ui/button";
+import { Card } from "~/components/common/ui/card";
+import { ErrorBoundaryComponent } from "~/components/error-boundary";
+import { CategoryBreadcrumbs } from "~/components/listings/category-breadcrumbs";
+import { ImageGalleryTabs } from "~/components/listings/image-gallery-tabs";
+import { ListingAdditionalDetailsSection } from "~/components/listings/listing-additional-details-section/listing-additional-details-section";
+import { SellerDetails } from "~/components/listings/seller-details";
+
 import {
   doesUserLikeListing,
   getCategoryAndParents,
@@ -10,14 +18,6 @@ import {
   toggleLikeOnListing,
 } from "~/services/listings.server";
 import { getUserId } from "~/services/session.server";
-
-import { Button } from "~/components/common/ui/button";
-import Card from "~/components/common/ui/card/card";
-import { ErrorBoundaryComponent } from "~/components/error-boundary";
-import { CategoryBreadcrumbs } from "~/components/listings/category-breadcrumbs";
-import { ImageGalleryTabs } from "~/components/listings/image-gallery-tabs";
-import { ListingAdditionalDetailsSection } from "~/components/listings/listing-additional-details-section/listing-additional-details-section";
-import { SellerDetails } from "~/components/listings/seller-details";
 
 import { optimiseImageForBrowser } from "~/util/cloudinary.server";
 import { cn, invariantResponse } from "~/util/utils";

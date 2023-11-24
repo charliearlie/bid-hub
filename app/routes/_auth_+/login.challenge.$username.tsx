@@ -10,12 +10,13 @@ import {
 } from "@remix-run/react";
 import { z } from "zod";
 
-import { createUserSession } from "~/services/session.server";
-import { getUserByUsernameOrEmail, login } from "~/services/user.server";
-
 import { Alert, AlertTitle } from "~/components/common/ui/alert";
+import { Button } from "~/components/common/ui/button";
 import { FormField } from "~/components/form/form-field";
 import { SubmitButton } from "~/components/form/submit-button";
+
+import { createUserSession } from "~/services/session.server";
+import { getUserByUsernameOrEmail, login } from "~/services/user.server";
 
 const LoginChallengeSchema = z.object({
   password: z.string({
@@ -86,16 +87,16 @@ export default function LoginIdentifierRoute() {
   });
 
   return (
-    <div>
-      <h3 className="pb-2 text-center text-lg font-semibold">
+    <div className="flex h-full flex-col gap-8">
+      <h1 className="pb-2 text-center text-lg font-semibold">
         Welcome back {loaderData.username}
-      </h3>
+      </h1>
       {actionData?.status === "error" && (
         <Alert variant="destructive" className="my-2">
           <AlertTitle>{form.error}</AlertTitle>
         </Alert>
       )}
-      <Form className="" method="post" {...form.props}>
+      <Form className="flex flex-col" method="post" {...form.props}>
         <FormField
           label="Password"
           errors={fields.password.errors}
@@ -108,18 +109,18 @@ export default function LoginIdentifierRoute() {
           readOnly
           hidden
         />
-        <div className="flex items-center justify-between">
-          <Link
-            className="px-0 pb-2 font-semibold text-accent-foreground hover:text-slate-500"
-            to="/forgot-password"
-          >
-            Forgot your password?
-          </Link>
-          <SubmitButton name="login" variant="default">
-            Log in
-          </SubmitButton>
-        </div>
+        <SubmitButton name="login" variant="default">
+          Log in
+        </SubmitButton>
       </Form>
+      <Button asChild variant="outline">
+        <Link
+          className="px-0 pb-2 font-semibold text-accent-foreground hover:text-slate-500"
+          to="/forgot-password"
+        >
+          Forgot your password?
+        </Link>
+      </Button>
     </div>
   );
 }

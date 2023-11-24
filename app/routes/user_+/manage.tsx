@@ -15,7 +15,7 @@ import { Form, useActionData, useLoaderData } from "@remix-run/react";
 import { z } from "zod";
 
 import { Button } from "~/components/common/ui/button";
-import Card from "~/components/common/ui/card/card";
+import { Card } from "~/components/common/ui/card/card";
 import CardContent from "~/components/common/ui/card/card-content";
 import { Separator } from "~/components/common/ui/separator";
 import { FormField } from "~/components/form/form-field";

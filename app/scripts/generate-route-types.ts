@@ -24,7 +24,7 @@ async function main() {
   let ids = routes.flatMap((route) => iteration(route));
 
   await writeFile(
-    resolve("./types/route-id.d.ts"),
+    resolve("./app/types/route-id.d.ts"),
     `export type RouteId = ${ids.map((id) => `"${id}"`).join(" | ")}`
   );
 }

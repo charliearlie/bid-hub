@@ -1,17 +1,17 @@
 import { useForm } from "@conform-to/react";
 import { getFieldsetConstraint, parse } from "@conform-to/zod";
 import { type DataFunctionArgs, json } from "@remix-run/node";
-import { Form, Link, useActionData } from "@remix-run/react";
+import { Form, useActionData } from "@remix-run/react";
 import { HoneypotInputs } from "remix-utils/honeypot/react";
 import { z } from "zod";
-
-import { createUserSession } from "~/services/session.server";
-import { checkAvailability, createUser } from "~/services/user.server";
-import { UserUsernameFieldSchema } from "~/services/zod-schemas";
 
 import { Alert, AlertTitle } from "~/components/common/ui/alert";
 import { FormField } from "~/components/form/form-field";
 import { SubmitButton } from "~/components/form/submit-button";
+
+import { createUserSession } from "~/services/session.server";
+import { checkAvailability, createUser } from "~/services/user.server";
+import { UserUsernameFieldSchema } from "~/services/zod-schemas";
 
 import { checkForHoneypot } from "~/util/honeypot.server";
 
@@ -93,9 +93,9 @@ export default function RegisterRoute() {
   });
 
   return (
-    <div>
-      <h2 className="pt-4 pb-8 text-center text-3xl font-bold">Join Bidhub</h2>
-      <Form className="" method="post" {...form.props}>
+    <div className="flex h-full flex-col gap-8">
+      <h1 className="text-center text-2xl font-bold">Sign up to Bidhub</h1>
+      <Form className="flex flex-col" method="post" {...form.props}>
         {actionData?.status === "error" && (
           <Alert variant="destructive">
             <AlertTitle>{actionData?.error}</AlertTitle>
@@ -120,17 +120,9 @@ export default function RegisterRoute() {
           errors={fields.password.errors}
         />
         <HoneypotInputs />
-        <div className="flex justify-between">
-          <Link
-            className="px-0 py-2 font-semibold text-accent-foreground hover:text-slate-500"
-            to="/login"
-          >
-            Already registered?
-          </Link>
-          <SubmitButton className="w-25" variant="default">
-            Sign up
-          </SubmitButton>
-        </div>
+        <SubmitButton className="w-25" variant="default">
+          Sign up
+        </SubmitButton>
       </Form>
     </div>
   );
