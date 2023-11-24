@@ -1,5 +1,6 @@
 import { Link } from "@remix-run/react";
 import { ChevronRight } from "lucide-react";
+import { useUser } from "~/contexts/user-context";
 
 import { RatingStars } from "~/components/common/star-rating/star-rating";
 import { Separator } from "~/components/common/ui/separator";
@@ -7,23 +8,29 @@ import { Separator } from "~/components/common/ui/separator";
 type Props = {
   avatarUrl: string | null;
   feedbackScore: number | null;
+  listingSlug?: string;
   username: string;
 };
 
 export const SellerDetails = ({
   avatarUrl,
   feedbackScore,
+  listingSlug,
   username,
 }: Props) => {
   const avatar =
     avatarUrl || "https://avatars.githubusercontent.com/u/10001?v=4";
+  const { username: loggedInUsername } = useUser();
+  const isLoggedInUser = loggedInUsername === username;
+
+  const ctaText = isLoggedInUser ? "Edit listing" : "View seller profile";
+  const ctaUrl = isLoggedInUser
+    ? `/listings/${listingSlug}/edit`
+    : `/user/${username}/reviews`;
   return (
     <div>
       <Separator />
-      <Link
-        to={`/user/${username}/reviews`}
-        className="group block flex-shrink-0 py-2"
-      >
+      <Link to={ctaUrl} className="group block flex-shrink-0 py-2">
         <div className="flex items-center">
           <div>
             <img
@@ -38,7 +45,7 @@ export const SellerDetails = ({
               <RatingStars rating={feedbackScore} />
             </div>
             <span className="flex gap-2 text-sm opacity-80 group-hover:opacity-100 sm:text-base">
-              View seller profile <ChevronRight />
+              {ctaText} <ChevronRight />
             </span>
           </div>
         </div>

@@ -16,13 +16,15 @@ import {
 import styles from "~/styles/app.css";
 import fontStylesheet from "~/styles/font.css";
 
-import { logout } from "~/services/session.server";
-import { getUser } from "~/services/user.server";
-
 import { ErrorBoundaryComponent } from "~/components/error-boundary";
 import { SharedHeader } from "~/components/header/shared-header";
 
+import { logout } from "~/services/session.server";
+import { getUser } from "~/services/user.server";
+
 import { getEnv } from "~/util/env.server";
+
+import { UserProvider } from "./contexts/user-context";
 
 export const meta: MetaFunction = () => {
   return [
@@ -77,8 +79,10 @@ export default function App() {
   const { ENV, user } = useLoaderData<typeof loader>();
   return (
     <Document>
-      <SharedHeader user={user} />
-      <Outlet />
+      <UserProvider username={user?.username} userId={user?.id}>
+        <SharedHeader user={user} />
+        <Outlet />
+      </UserProvider>
       <script
         dangerouslySetInnerHTML={{
           __html: `window.ENV = ${JSON.stringify(ENV)}`,

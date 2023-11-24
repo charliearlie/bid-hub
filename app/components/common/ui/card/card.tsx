@@ -6,7 +6,6 @@ export const Card = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, children, ...props }, ref) => {
-  console.log("className", className);
   return (
     <div
       className={cn(

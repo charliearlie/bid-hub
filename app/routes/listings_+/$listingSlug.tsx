@@ -126,7 +126,7 @@ export default function ListingSlugRoute() {
                 <div className="space-y-6 text-base">{description}</div>
               </div>
               <div className="mt-3">
-                <SellerDetails {...seller} />
+                <SellerDetails {...seller} listingSlug={listing.slug} />
               </div>
               <fetcher.Form method="post" className="mt-6">
                 <div className="mt-10 flex items-center">

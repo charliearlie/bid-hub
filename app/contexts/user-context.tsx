@@ -1,37 +1,32 @@
-import type { DataFunctionArgs } from "@remix-run/node";
-import { json } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
 import type { ReactNode } from "react";
 import { createContext, useContext } from "react";
 
-import { getUser } from "~/services/user.server";
-
 type UserContextType = {
-  userId: string | null;
+  userId?: string;
+  username?: string;
 };
 
 type UserProviderProps = {
+  userId?: string;
+  username?: string;
   children: ReactNode;
 };
 
 const UserContext = createContext<UserContextType | null>(null);
 
-export const loader = async ({ request }: DataFunctionArgs) => {
-  const user = await getUser(request);
-  if (user) {
-    return json(user.id);
-  }
-};
-
-export const UserProvider = ({ children }: UserProviderProps) => {
-  const userId = useLoaderData<typeof loader>();
-
+export const UserProvider = ({
+  children,
+  userId,
+  username,
+}: UserProviderProps) => {
   return (
-    <UserContext.Provider value={{ userId }}>{children}</UserContext.Provider>
+    <UserContext.Provider value={{ userId, username }}>
+      {children}
+    </UserContext.Provider>
   );
 };
 
-export const useUserId = () => {
-  const { userId } = useContext(UserContext) as UserContextType;
-  return userId;
+export const useUser = () => {
+  const user = useContext(UserContext) as UserContextType;
+  return user;
 };
