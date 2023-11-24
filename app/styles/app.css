@@ -987,6 +987,14 @@ h2 {
   height: 420px;
 }
 
+.h-2\.5 {
+  height: 0.625rem;
+}
+
+.h-24 {
+  height: 6rem;
+}
+
 .max-h-8 {
   max-height: 2rem;
 }
@@ -1099,6 +1107,10 @@ h2 {
   width: 3rem;
 }
 
+.w-2\.5 {
+  width: 0.625rem;
+}
+
 .min-w-\[8rem\] {
   min-width: 8rem;
 }
@@ -1205,6 +1217,10 @@ h2 {
 
 .cursor-pointer {
   cursor: pointer;
+}
+
+.touch-none {
+  touch-action: none;
 }
 
 .select-none {
@@ -1454,6 +1470,10 @@ h2 {
   border-radius: calc(var(--radius) - 4px);
 }
 
+.rounded-\[inherit\] {
+  border-radius: inherit;
+}
+
 .rounded-t-lg {
   border-top-left-radius: var(--radius);
   border-top-right-radius: var(--radius);
@@ -1518,6 +1538,14 @@ h2 {
 
 .border-destructive {
   border-color: hsl(var(--destructive));
+}
+
+.border-l-transparent {
+  border-left-color: transparent;
+}
+
+.border-t-transparent {
+  border-top-color: transparent;
 }
 
 .bg-accent {
@@ -1648,6 +1676,10 @@ h2 {
 
 .p-2 {
   padding: 0.5rem;
+}
+
+.p-\[1px\] {
+  padding: 1px;
 }
 
 .py-4 {
