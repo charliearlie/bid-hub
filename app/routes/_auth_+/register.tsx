@@ -1,7 +1,7 @@
 import { useForm } from "@conform-to/react";
 import { getFieldsetConstraint, parse } from "@conform-to/zod";
 import { type DataFunctionArgs, json } from "@remix-run/node";
-import { Form, Link, useActionData } from "@remix-run/react";
+import { Form, useActionData } from "@remix-run/react";
 import { HoneypotInputs } from "remix-utils/honeypot/react";
 import { z } from "zod";
 
@@ -95,7 +95,7 @@ export default function RegisterRoute() {
   return (
     <div className="flex h-full flex-col gap-8">
       <h1 className="text-center text-2xl font-bold">Sign up to Bidhub</h1>
-      <Form className="" method="post" {...form.props}>
+      <Form className="flex flex-col" method="post" {...form.props}>
         {actionData?.status === "error" && (
           <Alert variant="destructive">
             <AlertTitle>{actionData?.error}</AlertTitle>
@@ -120,17 +120,9 @@ export default function RegisterRoute() {
           errors={fields.password.errors}
         />
         <HoneypotInputs />
-        <div className="flex justify-between">
-          <Link
-            className="px-0 py-2 font-semibold text-accent-foreground hover:text-slate-500"
-            to="/login"
-          >
-            Already registered?
-          </Link>
-          <SubmitButton className="w-25" variant="default">
-            Sign up
-          </SubmitButton>
-        </div>
+        <SubmitButton className="w-25" variant="default">
+          Sign up
+        </SubmitButton>
       </Form>
     </div>
   );

@@ -11,6 +11,7 @@ import {
 import { z } from "zod";
 
 import { Alert, AlertTitle } from "~/components/common/ui/alert";
+import { Button } from "~/components/common/ui/button";
 import { FormField } from "~/components/form/form-field";
 import { SubmitButton } from "~/components/form/submit-button";
 
@@ -95,7 +96,7 @@ export default function LoginIdentifierRoute() {
           <AlertTitle>{form.error}</AlertTitle>
         </Alert>
       )}
-      <Form className="" method="post" {...form.props}>
+      <Form className="flex flex-col" method="post" {...form.props}>
         <FormField
           label="Password"
           errors={fields.password.errors}
@@ -108,18 +109,18 @@ export default function LoginIdentifierRoute() {
           readOnly
           hidden
         />
-        <div className="flex items-center justify-between">
-          <Link
-            className="px-0 pb-2 font-semibold text-accent-foreground hover:text-slate-500"
-            to="/forgot-password"
-          >
-            Forgot your password?
-          </Link>
-          <SubmitButton name="login" variant="default">
-            Log in
-          </SubmitButton>
-        </div>
+        <SubmitButton name="login" variant="default">
+          Log in
+        </SubmitButton>
       </Form>
+      <Button asChild variant="outline">
+        <Link
+          className="px-0 pb-2 font-semibold text-accent-foreground hover:text-slate-500"
+          to="/forgot-password"
+        >
+          Forgot your password?
+        </Link>
+      </Button>
     </div>
   );
 }

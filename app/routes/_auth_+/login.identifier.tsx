@@ -103,7 +103,7 @@ export default function LoginIdentifierRoute() {
       )}
       <div className="flex flex-col items-center gap-4 text-center">
         <h1 className="flex text-xl sm:text-2xl">
-          Enter your username or email to log in to Bidhub
+          Enter your email or username to log in to Bidhub
         </h1>
         <p>
           Or{" "}
@@ -131,7 +131,12 @@ export default function LoginIdentifierRoute() {
           <SubmitButton name={conform.INTENT} value="submit" variant="default">
             Next {<ArrowRight size={16} />}
           </SubmitButton>
-          <SubmitButton name={conform.INTENT} value="magic" variant="secondary">
+          <SubmitButton
+            className="bg-green-800"
+            name={conform.INTENT}
+            value="magic"
+            variant="secondary"
+          >
             Send magic link {<Send size={16} />}
           </SubmitButton>
           <Button asChild variant="outline">
