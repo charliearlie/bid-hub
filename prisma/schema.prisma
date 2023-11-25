@@ -129,6 +129,7 @@ model Category {
   parentId        String?    @db.Uuid
   label           String?
   slug            String     @unique
+  image           String?
   listings        Listing[]
   parentCategory  Category?  @relation("ChildCategories", fields: [parentId], references: [id])
   childCategories Category[] @relation("ChildCategories")
