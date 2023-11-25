@@ -25,6 +25,7 @@ export const getHomepageCategories = async () => {
       name: true,
       slug: true,
     },
+    take: 4,
   });
 
   return categories;
