@@ -11,9 +11,9 @@ import { ImageGalleryTabs } from "~/components/listings/image-gallery-tabs";
 import { ListingAdditionalDetailsSection } from "~/components/listings/listing-additional-details-section/listing-additional-details-section";
 import { SellerDetails } from "~/components/listings/seller-details";
 
+import { getCategoryAndParents } from "~/services/category.server";
 import {
   doesUserLikeListing,
-  getCategoryAndParents,
   getListingBySlug,
   toggleLikeOnListing,
 } from "~/services/listings.server";

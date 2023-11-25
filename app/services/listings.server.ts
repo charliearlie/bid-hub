@@ -1,4 +1,5 @@
 import type { Item, Listing } from "@prisma/client";
+
 import { CoreImageType } from "~/types";
 
 import { buildListingEndDateAndTime, generateSlug } from "~/util/utils";
@@ -22,7 +23,7 @@ type ListingSubSet = Pick<
   | "categoryId"
 > & { endTime?: string; images: CoreImageType[] };
 
-export async function addListing(
+export const addListing = async (
   {
     buyItNowPrice,
     categoryId,
@@ -37,7 +38,7 @@ export async function addListing(
   }: ListingSubSet,
   item: Item,
   userId: string
-) {
+) => {
   const user = await getUserById(userId);
   const endTime = buildListingEndDateAndTime(_endtime);
 
@@ -76,7 +77,7 @@ export async function addListing(
   });
 
   return newListing;
-}
+};
 
 export const getListingBySlug = async (slug: string) => {
   const listing = await prisma.listing.findUniqueOrThrow({
@@ -141,19 +142,6 @@ export const getCategoryDropdownOptions = async () => {
     label: category.name,
   }));
 };
-
-export async function getCategoryAndParents(categoryId: string) {
-  const result = await prisma.category.findUniqueOrThrow({
-    where: {
-      id: categoryId,
-    },
-    include: {
-      parentCategory: true,
-    },
-  });
-
-  return result;
-}
 
 export const toggleLikeOnListing = async (
   listingId: string,

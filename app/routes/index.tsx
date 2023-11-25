@@ -1,9 +1,10 @@
 import { json } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
-
-import { getAllListings } from "~/services/listings.server";
+import { Link, useLoaderData } from "@remix-run/react";
 
 import { Previews } from "~/components/listings";
+
+import { getHomepageCategories } from "~/services/category.server";
+import { getAllListings } from "~/services/listings.server";
 
 export const meta = () => {
   return [{ title: "Bidhub | Buy & sell things" }];
@@ -11,6 +12,7 @@ export const meta = () => {
 
 export const loader = async () => {
   const listings = await getAllListings();
+  const categories = await getHomepageCategories();
 
   if (!listings) {
     throw new Response("listings failed to load", { status: 500 });
@@ -38,7 +40,7 @@ export const loader = async () => {
       title,
     };
   });
-  return json({ listings: listingPreviewData });
+  return json({ listings: listingPreviewData, categories });
 };
 
 export default function Index() {
@@ -61,8 +63,23 @@ export default function Index() {
         </div>
         <div className="bg-accent">
           <div className="mx-auto max-w-screen-xl py-4 px-2 lg:px-4">
-            <h2>Popular items right now</h2>
-            <Previews listings={loaderData.listings.reverse()} />
+            <h2>Popular Categories</h2>
+            <div className="grid grid-cols-2 gap-4 py-4 md:grid-cols-4">
+              {loaderData.categories.map((category) => (
+                <Link
+                  className="flex cursor-pointer flex-col gap-2 hover:opacity-80"
+                  to={`/category/${category.slug}`}
+                  key={category.slug}
+                >
+                  <img
+                    className="rounded-md"
+                    src={category.image || ""}
+                    alt={category.name}
+                  />
+                  <p className="text-center">{category.name}</p>
+                </Link>
+              ))}
+            </div>
           </div>
         </div>
       </div>

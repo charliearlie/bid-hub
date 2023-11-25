@@ -1,6 +1,6 @@
 import { prisma } from "../util/prisma.server";
 
-export async function createItem(name: string) {
+export const createItem = async (name: string) => {
   const newItem = await prisma.item.create({
     data: {
       name,
@@ -8,13 +8,13 @@ export async function createItem(name: string) {
     },
   });
   return newItem;
-}
+};
 
-export async function getItemById(id: string) {
+export const getItemById = async (id: string) => {
   const item = await prisma.item.findUnique({
     where: {
       id,
     },
   });
   return item;
-}
+};
