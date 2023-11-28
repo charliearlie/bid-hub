@@ -1,6 +1,13 @@
 import { faker } from "@faker-js/faker";
 import { PrismaClient } from "@prisma/client";
 
+enum PostageType {
+  STANDARD = "STANDARD",
+  COURIER = "COURIER",
+  NEXT_DAY = "NEXT_DAY",
+  SIGNED_FOR = "SIGNED_FOR",
+}
+
 const prisma = new PrismaClient();
 
 async function seed() {
@@ -363,7 +370,7 @@ async function seed() {
     },
   });
 
-  await prisma.listing.create({
+  const slothListing = await prisma.listing.create({
     data: {
       title: "COSTA RICAN SLOTH - BRAND NEW",
       description:
@@ -383,6 +390,18 @@ async function seed() {
         connect: {
           id: user1.id,
         },
+      },
+      fulfilmentOptions: {
+        create: [
+          {
+            method: PostageType.STANDARD,
+            price: 1,
+          },
+          {
+            method: PostageType.NEXT_DAY,
+            price: 5,
+          },
+        ],
       },
       slug: "costa-rican-sloth-brand-new",
       images: {
@@ -431,6 +450,22 @@ async function seed() {
           id: user1.id,
         },
       },
+      fulfilmentOptions: {
+        create: [
+          {
+            method: PostageType.SIGNED_FOR,
+            price: 0,
+          },
+          {
+            method: PostageType.STANDARD,
+            price: 2,
+          },
+          {
+            method: PostageType.NEXT_DAY,
+            price: 4,
+          },
+        ],
+      },
       slug: "nike-geo-merlin",
       images: {
         create: [
@@ -454,7 +489,7 @@ async function seed() {
     },
   });
 
-  await prisma.listing.create({
+  const spidermanListing = await prisma.listing.create({
     data: {
       title: "Spiderman 2 for PS5",
       description:
@@ -474,6 +509,18 @@ async function seed() {
         connect: {
           id: user3.id,
         },
+      },
+      fulfilmentOptions: {
+        create: [
+          {
+            method: PostageType.COURIER,
+            price: 5,
+          },
+          {
+            method: PostageType.STANDARD,
+            price: 2,
+          },
+        ],
       },
       slug: "spiderman-2-for-ps5",
       images: {
@@ -519,6 +566,18 @@ async function seed() {
           id: user3.id,
         },
       },
+      fulfilmentOptions: {
+        create: [
+          {
+            method: PostageType.SIGNED_FOR,
+            price: 6,
+          },
+          {
+            method: PostageType.COURIER,
+            price: 4,
+          },
+        ],
+      },
       slug: "tom-ford-extreme-noir-parfum",
       images: {
         create: [
@@ -562,6 +621,18 @@ async function seed() {
         connect: {
           id: user2.id,
         },
+      },
+      fulfilmentOptions: {
+        create: [
+          {
+            method: PostageType.NEXT_DAY,
+            price: 10,
+          },
+          {
+            method: PostageType.STANDARD,
+            price: 5,
+          },
+        ],
       },
       slug: "nike-air-force-1-low-prm-halloween-2023",
       images: {
@@ -610,6 +681,22 @@ async function seed() {
           id: user2.id,
         },
       },
+      fulfilmentOptions: {
+        create: [
+          {
+            method: PostageType.COURIER,
+            price: 11,
+          },
+          {
+            method: PostageType.STANDARD,
+            price: 9,
+          },
+          {
+            method: PostageType.NEXT_DAY,
+            price: 15,
+          },
+        ],
+      },
       slug: "air-jordan-1-og",
       images: {
         create: [
@@ -633,7 +720,7 @@ async function seed() {
     },
   });
 
-  await prisma.listing.create({
+  const bikeListing = await prisma.listing.create({
     data: {
       title: "Specialized Bicycle",
       description:
@@ -653,6 +740,18 @@ async function seed() {
         connect: {
           id: user2.id,
         },
+      },
+      fulfilmentOptions: {
+        create: [
+          {
+            method: PostageType.NEXT_DAY,
+            price: 25,
+          },
+          {
+            method: PostageType.STANDARD,
+            price: 15,
+          },
+        ],
       },
       slug: "specialized-bicycle",
       images: {
@@ -701,6 +800,14 @@ async function seed() {
           id: user3.id,
         },
       },
+      fulfilmentOptions: {
+        create: [
+          {
+            method: PostageType,
+            price: 0,
+          },
+        ],
+      },
       slug: "trench-coat",
       images: {
         create: [
@@ -744,6 +851,14 @@ async function seed() {
           id: user2.id,
         },
       },
+      fulfilmentOptions: {
+        create: [
+          {
+            method: PostageType.NEXT_DAY,
+            price: 30,
+          },
+        ],
+      },
       slug: "nicholas-latifi-racing-helmet",
       images: {
         create: [
@@ -764,6 +879,147 @@ async function seed() {
       },
       thumbnail:
         "https://res.cloudinary.com/bidhub/image/upload/c_fit,h_1080,w_1920/v1698965417/bidhub/owwvzcl6lynvnv7hfrt3.webp",
+    },
+  });
+
+  const bobsHouse = await prisma.address.create({
+    data: {
+      name: "Home",
+      addressLine1: faker.location.streetAddress(),
+      cityOrTown: faker.location.city(),
+      country: faker.location.country(),
+      postcode: faker.location.zipCode(),
+      user: {
+        connect: {
+          id: user1.id,
+        },
+      },
+    },
+  });
+
+  const jimmysHouse = await prisma.address.create({
+    data: {
+      name: "Home",
+      addressLine1: faker.location.streetAddress(),
+      cityOrTown: faker.location.city(),
+      country: faker.location.country(),
+      postcode: faker.location.zipCode(),
+      user: {
+        connect: {
+          id: user2.id,
+        },
+      },
+    },
+  });
+
+  const jimmysGirlfriends = await prisma.address.create({
+    data: {
+      name: "Girlfriend's house",
+      addressLine1: faker.location.streetAddress(),
+      cityOrTown: faker.location.city(),
+      country: faker.location.country(),
+      postcode: faker.location.zipCode(),
+      user: {
+        connect: {
+          id: user2.id,
+        },
+      },
+    },
+  });
+
+  await prisma.order.create({
+    data: {
+      buyer: {
+        connect: {
+          id: user2.id,
+        },
+      },
+      seller: {
+        connect: {
+          id: user1.id,
+        },
+      },
+      listing: {
+        connect: {
+          id: slothListing.id,
+        },
+      },
+      fulfilmentDetails: {
+        create: {
+          deliveryAddress: {
+            connect: {
+              id: jimmysHouse.id,
+            },
+          },
+        },
+      },
+      quantity: 1,
+      status: "DELIVERED",
+      totalAmount: 6000,
+    },
+  });
+
+  await prisma.order.create({
+    data: {
+      buyer: {
+        connect: {
+          id: user1.id,
+        },
+      },
+      seller: {
+        connect: {
+          id: user2.id,
+        },
+      },
+      listing: {
+        connect: {
+          id: bikeListing.id,
+        },
+      },
+      fulfilmentDetails: {
+        create: {
+          deliveryAddress: {
+            connect: {
+              id: bobsHouse.id,
+            },
+          },
+        },
+      },
+      quantity: 1,
+      status: "PENDING",
+      totalAmount: 6000,
+    },
+  });
+
+  await prisma.order.create({
+    data: {
+      buyer: {
+        connect: {
+          id: user2.id,
+        },
+      },
+      seller: {
+        connect: {
+          id: user3.id,
+        },
+      },
+      listing: {
+        connect: {
+          id: spidermanListing.id,
+        },
+      },
+      fulfilmentDetails: {
+        create: {
+          deliveryAddress: {
+            connect: {
+              id: jimmysGirlfriends.id,
+            },
+          },
+        },
+      },
+      quantity: 1,
+      status: "PENDING",
+      totalAmount: 6000,
     },
   });
 }
