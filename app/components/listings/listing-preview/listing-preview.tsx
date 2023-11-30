@@ -1,4 +1,5 @@
 import { Link } from "@remix-run/react";
+
 import type { ListingPreviewType } from "~/types";
 
 type ListingPreviewProps = {
@@ -9,7 +10,7 @@ export default function ListingPreview({ listing }: ListingPreviewProps) {
   const { buyItNowPrice, slug, thumbnail, title } = listing;
 
   return (
-    <Link to={`/listings/${slug}`}>
+    <Link prefetch="intent" to={`/listings/${slug}`}>
       <div className="p-2">
         <img
           className="h-64 w-full rounded-lg object-cover"
@@ -18,15 +19,9 @@ export default function ListingPreview({ listing }: ListingPreviewProps) {
         />
         <div className="flex flex-col gap-2 py-2">
           <div className="h-10">
-            <Link
-              prefetch="intent"
-              to={`$/listings/${slug}`}
-              className="hover:opacity-80"
-            >
-              <h3 className="block max-h-8 overflow-hidden text-ellipsis font-medium leading-none">
-                <span className="block font-semibold">{title}</span>
-              </h3>
-            </Link>
+            <h3 className="block max-h-8 overflow-hidden text-ellipsis font-medium leading-none">
+              <span className="block font-semibold">{title}</span>
+            </h3>
           </div>
           <div className="flex justify-between">
             <p className="text-xl">£{buyItNowPrice}</p>
