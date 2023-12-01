@@ -1,4 +1,4 @@
-GitHub Copilot: # Prisma Schema Documentation
+# Prisma Schema Documentation
 
 This is a documentation of the Prisma schema used in our application. The schema defines several models that represent the tables in our PostgreSQL database.
 
