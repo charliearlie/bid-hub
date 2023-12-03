@@ -75,6 +75,8 @@ CREATE TABLE "FulfilmentOption" (
     "id" UUID NOT NULL DEFAULT gen_random_uuid(),
     "method" "PostageType" NOT NULL DEFAULT 'STANDARD',
     "price" INTEGER NOT NULL DEFAULT 5,
+    "minDays" INTEGER NOT NULL DEFAULT 3,
+    "maxDays" INTEGER NOT NULL DEFAULT 5,
     "listingId" UUID NOT NULL,
 
     CONSTRAINT "FulfilmentOption_pkey" PRIMARY KEY ("id")

@@ -115,6 +115,8 @@ model FulfilmentOption {
   id        String      @id @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   method    PostageType @default(STANDARD)
   price     Int         @default(5)
+  minDays   Int         @default(3)
+  maxDays   Int         @default(5)
   listingId String      @db.Uuid
   listing   Listing     @relation(fields: [listingId], references: [id])
 }
