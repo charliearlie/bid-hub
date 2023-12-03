@@ -109,7 +109,7 @@ export const doesUserLikeListing = async (
   userId: string,
   listingId: string
 ) => {
-  const result = await prisma.like.findFirst({
+  const result = await prisma.watch.findFirst({
     where: {
       listingId,
       userId,
@@ -147,23 +147,23 @@ export const toggleLikeOnListing = async (
   listingId: string,
   userId: string
 ) => {
-  const like = await prisma.like.findFirst({
+  const watch = await prisma.watch.findFirst({
     where: {
       listingId,
       userId,
     },
   });
 
-  const userLikesListing = !!like;
+  const userLikesListing = !!watch;
 
   if (userLikesListing) {
-    await prisma.like.delete({
+    await prisma.watch.delete({
       where: {
-        id: like.id,
+        id: watch.id,
       },
     });
   } else {
-    await prisma.like.create({
+    await prisma.watch.create({
       data: {
         listingId,
         userId,
