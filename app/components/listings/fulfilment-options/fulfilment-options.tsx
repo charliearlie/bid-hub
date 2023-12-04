@@ -16,11 +16,13 @@ export const FulfilmentOptions = ({ options }: Props) => {
   return (
     <section aria-labelledby="Delivery options">
       <ul>
-        {options.map((option) => (
-          <li key={option.method}>
-            <Option {...option} />
-          </li>
-        ))}
+        {options
+          .sort((a, b) => a.price - b.price)
+          .map((option) => (
+            <li key={option.method}>
+              <Option {...option} />
+            </li>
+          ))}
       </ul>
     </section>
   );
