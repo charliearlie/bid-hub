@@ -99,6 +99,14 @@ export const getListingBySlug = async (slug: string) => {
           publicId: true,
         },
       },
+      fulfilmentOptions: {
+        select: {
+          minDays: true,
+          maxDays: true,
+          method: true,
+          price: true,
+        },
+      },
     },
   });
 

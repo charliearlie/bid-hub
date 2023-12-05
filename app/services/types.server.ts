@@ -41,3 +41,6 @@ export type ReplaceDateProperties<T> = Omit<T, "createdAt" | "updatedAt"> & {
 };
 
 export type UserType = ReplaceDateProperties<User>;
+
+// A partial type that requires at least one of the keys. These keys can be passed in.
+export type AtLeast<T, K extends keyof T> = Partial<T> & Pick<T, K>;

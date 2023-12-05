@@ -88,7 +88,14 @@ export default function ListingSlugRoute() {
   const { category, listing, userLikesListing } =
     useLoaderData<typeof loader>();
 
-  const { buyItNowPrice, description, title, images, seller } = listing;
+  const {
+    buyItNowPrice,
+    description,
+    fulfilmentOptions,
+    title,
+    images,
+    seller,
+  } = listing;
 
   const likesListing =
     fetcher.formData?.get("intent") === "favourite"
@@ -156,7 +163,9 @@ export default function ListingSlugRoute() {
                   <input type="hidden" name="listingId" value={listing.id} />
                 </div>
               </fetcher.Form>
-              <ListingAdditionalDetailsSection />
+              <ListingAdditionalDetailsSection
+                fulfilmentOptions={fulfilmentOptions}
+              />
             </div>
           </div>
         </div>
