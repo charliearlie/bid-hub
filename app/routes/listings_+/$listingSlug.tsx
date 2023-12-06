@@ -62,8 +62,6 @@ export async function loader({ params, request }: DataFunctionArgs) {
   const currentUserId = await getUserId(request);
   const listing = await getListingBySlug(params.listingSlug);
 
-  console.log("lisintg", listing);
-
   invariantResponse(listing, "Listing not found", {
     status: 404,
   });
