@@ -1,12 +1,7 @@
 import { faker } from "@faker-js/faker";
 import { PrismaClient } from "@prisma/client";
 
-function generateSlug(listingTitle: string) {
-  return listingTitle
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/(^-|-$)+/g, "");
-}
+import { fulfilmentOptions } from "./fixtures";
 
 enum PostageType {
   STANDARD = "STANDARD",
@@ -318,7 +313,7 @@ async function seed() {
       const newCategory = await prisma.category.create({
         data: {
           name: category,
-          slug: generateSlug(category),
+          slug: faker.helpers.slugify(category),
         },
       });
 
@@ -356,9 +351,10 @@ async function seed() {
         faker.number.int({ min: 0, max: cloudinaryImages.length - 1 })
       ];
 
+    const listingName = faker.commerce.productName();
     const listing = await prisma.listing.create({
       data: {
-        title: faker.commerce.productName(),
+        title: listingName,
         description: faker.commerce.productDescription(),
         buyItNowPrice: Math.ceil(Number(faker.commerce.price())),
         item: {
@@ -378,7 +374,7 @@ async function seed() {
             id: sellerId,
           },
         },
-        slug: faker.lorem.slug(),
+        slug: faker.helpers.slugify(listingName),
         thumbnail: image.thumbnail,
         quantity: faker.number.int({ min: 10, max: 1000 }),
         images: {
@@ -416,6 +412,12 @@ async function seed() {
           })),
         },
         numberSold: faker.number.int({ min: 0, max: 100 }),
+        fulfilmentOptions: {
+          create:
+            fulfilmentOptions[
+              faker.number.int({ min: 0, max: fulfilmentOptions.length - 1 })
+            ],
+        },
       },
     });
   }

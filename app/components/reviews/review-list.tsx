@@ -42,7 +42,7 @@ export const ReviewList = ({ reviews }: Props) => {
               <p className="sr-only">{review.rating} out of 5 stars</p>
 
               <div className="prose prose-sm mt-4 max-w-none text-foreground">
-                <p>{review.review}</p>
+                <p>{review.comment}</p>
               </div>
             </div>
           </div>
