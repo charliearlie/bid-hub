@@ -1,4 +1,4 @@
-import { generateSlug } from "./utils";
+import { camelCaseToHumanReadable, generateSlug } from "./utils";
 
 jest.mock("uuid", () => ({
   v4: jest.fn(() => "<uuid>"),
@@ -28,6 +28,29 @@ describe("utils", () => {
       const expectedSlug = "rare-kebab-recipe-<uuid>";
 
       expect(slug).toBe(expectedSlug);
+    });
+  });
+
+  describe("camelCaseToHumanReadable", () => {
+    it("should convert camel case to human readable", () => {
+      const camelCase = "thisIsCamelCase";
+      const humanReadable = "This Is Camel Case";
+
+      expect(camelCaseToHumanReadable(camelCase)).toBe(humanReadable);
+    });
+
+    it("should convert camel case to human readable with numbers", () => {
+      const camelCase = "thisIsCamelCase123";
+      const humanReadable = "This Is Camel Case 123";
+
+      expect(camelCaseToHumanReadable(camelCase)).toBe(humanReadable);
+    });
+
+    it("should convert camel case to human readable with special characters", () => {
+      const camelCase = "thisIsCamelCase!@#$%^&*()";
+      const humanReadable = "This Is Camel Case!@#$%^&*()";
+
+      expect(camelCaseToHumanReadable(camelCase)).toBe(humanReadable);
     });
   });
 });

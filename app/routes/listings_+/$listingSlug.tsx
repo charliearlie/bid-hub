@@ -62,6 +62,8 @@ export async function loader({ params, request }: DataFunctionArgs) {
   const currentUserId = await getUserId(request);
   const listing = await getListingBySlug(params.listingSlug);
 
+  console.log("lisintg", listing);
+
   invariantResponse(listing, "Listing not found", {
     status: 404,
   });
@@ -90,7 +92,9 @@ export default function ListingSlugRoute() {
 
   const {
     buyItNowPrice,
+    clothingOptions,
     description,
+    electricalOptions,
     fulfilmentOptions,
     title,
     images,
@@ -164,6 +168,8 @@ export default function ListingSlugRoute() {
                 </div>
               </fetcher.Form>
               <ListingAdditionalDetailsSection
+                clothingOptions={clothingOptions}
+                electricalOptions={electricalOptions}
                 fulfilmentOptions={fulfilmentOptions}
               />
             </div>

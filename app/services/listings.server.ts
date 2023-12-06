@@ -7,8 +7,11 @@ import { buildListingEndDateAndTime, generateSlug } from "~/util/utils";
 import { prisma } from "../util/prisma.server";
 import { getUserById } from "./user.server";
 
-export async function getAllListings() {
-  return await prisma.listing.findMany({ include: { images: true } });
+export async function getAllListings({ amount }: { amount?: number }) {
+  return await prisma.listing.findMany({
+    include: { images: true },
+    take: amount,
+  });
 }
 
 type ListingSubSet = Pick<
@@ -107,6 +110,16 @@ export const getListingBySlug = async (slug: string) => {
           price: true,
         },
       },
+      clothingOptions: {
+        select: {
+          sizes: true,
+          colours: true,
+          materials: true,
+          fit: true,
+        },
+      },
+      electricalOptions: true,
+      warranty: true,
     },
   });
 

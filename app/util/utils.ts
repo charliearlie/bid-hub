@@ -66,3 +66,11 @@ export function buildListingEndDateAndTime(endDateString?: string) {
 export function useRouteLoaderDataTyped<T = unknown>(routeId: RouteId) {
   return useRouteLoaderData(routeId) as SerializeFrom<T>;
 }
+
+export function camelCaseToHumanReadable(str: string) {
+  const withSpaces = str.replace(/([a-z])([A-Z0-9])/g, "$1 $2");
+
+  const titleCase = withSpaces.charAt(0).toUpperCase() + withSpaces.slice(1);
+
+  return titleCase;
+}

@@ -7,6 +7,7 @@ import {
   json,
   unstable_createMemoryUploadHandler as createMemoryUploadHandler,
   unstable_parseMultipartFormData as parseMultipartFormData,
+  redirect,
 } from "@remix-run/node";
 import { Form, useActionData, useLoaderData } from "@remix-run/react";
 import { PoundSterlingIcon } from "lucide-react";
@@ -148,7 +149,7 @@ export const action = async ({ request }: DataFunctionArgs) => {
     return json({ status: "error", submission } as const);
   }
 
-  return json({ status: "success", listing: newListing, submission } as const);
+  return redirect(`/listings/${newListing.slug}`);
 };
 
 export default function CreateListingRoute() {
