@@ -90,10 +90,9 @@ export default function ListingSlugRoute() {
 
   const {
     buyItNowPrice,
-    clothingOptions,
     description,
-    electricalOptions,
     fulfilmentOptions,
+    productDetails,
     title,
     images,
     seller,
@@ -166,8 +165,7 @@ export default function ListingSlugRoute() {
                 </div>
               </fetcher.Form>
               <ListingAdditionalDetailsSection
-                clothingOptions={clothingOptions}
-                electricalOptions={electricalOptions}
+                productDetails={productDetails}
                 fulfilmentOptions={fulfilmentOptions}
               />
             </div>
