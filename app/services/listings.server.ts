@@ -7,9 +7,9 @@ import { buildListingEndDateAndTime, generateSlug } from "~/util/utils";
 import { prisma } from "../util/prisma.server";
 import { getUserById } from "./user.server";
 
-export async function getAllListings({
-  amount = 50,
-}: { amount?: number } = {}) {
+export async function getAllListings(
+  { amount }: { amount?: number } = { amount: 50 }
+) {
   return await prisma.listing.findMany({
     include: { images: true },
     take: amount,

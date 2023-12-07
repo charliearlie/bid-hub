@@ -1,5 +1,7 @@
-import { NavLink, NavLinkProps } from "@remix-run/react";
-import React, { HTMLAttributes } from "react";
+import type { NavLinkProps } from "@remix-run/react";
+import { NavLink } from "@remix-run/react";
+import type { HTMLAttributes } from "react";
+import React from "react";
 
 import { cn } from "~/util/utils";
 
@@ -24,3 +26,5 @@ export const TabNavLink = React.forwardRef<HTMLAnchorElement, TabNavLinkProps>(
     );
   }
 );
+
+TabNavLink.displayName = "TabNavLink";

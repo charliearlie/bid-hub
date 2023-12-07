@@ -1,4 +1,5 @@
-import { json, type DataFunctionArgs, MetaFunction } from "@remix-run/node";
+import { json} from "@remix-run/node";
+import type { MetaFunction , type DataFunctionArgs } from "@remix-run/node";
 import { Link, useFetcher, useLoaderData } from "@remix-run/react";
 import { HeartIcon } from "lucide-react";
 import invariant from "tiny-invariant";

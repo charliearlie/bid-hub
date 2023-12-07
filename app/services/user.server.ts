@@ -1,8 +1,8 @@
-import { ForgotPassword } from "@prisma/client";
+import type { ForgotPassword } from "@prisma/client";
 import { json } from "@remix-run/node";
 import bcrypt from "bcryptjs";
 import { v4 as uuidv4 } from "uuid";
-import { z } from "zod";
+import type { z } from "zod";
 
 import sendEmail from "~/services/email.server";
 import { createUserSession, getUserId } from "~/services/session.server";
@@ -13,7 +13,7 @@ import magicLinkEmailTemplate from "~/util/helpers/email/magic-link-email";
 import resetPasswordEmailTemplate from "~/util/helpers/email/reset-password-email";
 
 import { prisma } from "../util/prisma.server";
-import {
+import type {
   AddressFieldsetSchema,
   PersonalDetailsFieldsetSchema,
 } from "./zod-schemas";

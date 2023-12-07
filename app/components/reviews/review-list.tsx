@@ -1,4 +1,4 @@
-import { ReviewType } from "~/types";
+import type { ReviewType } from "~/types";
 
 import { RatingStars } from "../common/star-rating/star-rating";
 import { Separator } from "../common/ui/separator";

@@ -1,6 +1,7 @@
-import { $Enums, FulfilmentOption } from "@prisma/client";
+import type { FulfilmentOption } from "@prisma/client";
+import { $Enums } from "@prisma/client";
 
-import { AtLeast } from "~/services/types.server";
+import type { AtLeast } from "~/services/types.server";
 
 // This might be doing nothing so do some tests to ensure it is
 type FulfilmentOptionPartial = AtLeast<

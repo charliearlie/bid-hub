@@ -43,7 +43,7 @@ export default function ItemsIndexRoute() {
     <div className="flex flex-col gap-2 p-4">
       <h2>Number of listings: {listings.length}</h2>
       {listings.map((listing) => (
-        <div className="flex gap-2">
+        <div key={listing.id} className="flex gap-2">
           <div>
             <img
               className="h-20 w-20 rounded-lg"

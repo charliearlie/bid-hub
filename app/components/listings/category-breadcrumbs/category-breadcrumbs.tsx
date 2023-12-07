@@ -1,4 +1,4 @@
-import { Category, Listing } from "@prisma/client";
+import type { Category, Listing } from "@prisma/client";
 import { Link } from "@remix-run/react";
 import { SlashIcon } from "lucide-react";
 
@@ -16,7 +16,7 @@ export const CategoryBreadcrumbs = ({
   const { parentCategory } = category;
   return (
     <nav aria-label="Breadcrumb" className="mx-auto max-w-7xl pb-8">
-      <ol role="list" className="flex items-center space-x-4">
+      <ol className="flex items-center space-x-4">
         {parentCategory && (
           <CategoryBreadcrumb
             id={parentCategory.id}

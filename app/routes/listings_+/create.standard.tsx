@@ -1,8 +1,8 @@
 import { conform, list, useFieldList, useForm } from "@conform-to/react";
 import { getFieldsetConstraint, parse } from "@conform-to/zod";
 import { SelectValue } from "@radix-ui/react-select";
+import type { DataFunctionArgs } from "@remix-run/node";
 import {
-  DataFunctionArgs,
   json,
   unstable_createMemoryUploadHandler as createMemoryUploadHandler,
   unstable_parseMultipartFormData as parseMultipartFormData,
@@ -228,6 +228,7 @@ export default function CreateListingRoute() {
               label="Image"
               accept="image/*"
               type="file"
+              key={image.id}
               {...conform.input(image)}
             />
           ))}
