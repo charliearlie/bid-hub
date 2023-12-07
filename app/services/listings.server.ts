@@ -136,7 +136,7 @@ export const getListingBySlug = async (slug: string) => {
           ISBN: true,
           developer: true,
           platform: true,
-          releaseDate: true, // Prisma needs an exclude
+          releaseDate: false, // Explicit about this as we need to map the type
         },
       },
       warranty: true,
