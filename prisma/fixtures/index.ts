@@ -74,7 +74,26 @@ export const fulfilmentOptions = [
   ],
 ];
 
-export const productDetails = [
+type ProductDetails =
+  | {
+      author?: string;
+      publisher?: string;
+      language?: string;
+      publicationYear?: number;
+      pageCount?: number;
+      brand?: string;
+      sizes?: string[];
+      colours?: string[];
+      materials?: string[];
+      fit?: string;
+      developer?: string;
+      releaseDate?: Date;
+      platform?: string[];
+      genre?: string[];
+    }
+  | undefined;
+
+export const productDetails: ProductDetails[] = [
   {
     author: faker.person.fullName(),
     publisher: faker.company.name(),
@@ -121,15 +140,30 @@ export const productDetails = [
     language: "English",
     releaseDate: faker.date.past(),
     platform: faker.helpers.arrayElements(
-      ["PlayStation 5", "PlayStation 4", "Xbox Series", "Xbox One", "Nintendo Switch", "PC"],
+      [
+        "PlayStation 5",
+        "PlayStation 4",
+        "Xbox Series",
+        "Xbox One",
+        "Nintendo Switch",
+        "PC",
+      ],
       {
         min: 1,
         max: 3,
       }
     ),
     genre: faker.helpers.arrayElements(
-      ["Action/Adventure", "First Person Shooter", "RPG", "Racing", "Sports", "Puzzle"], {min: 1, max: 1}
+      [
+        "Action/Adventure",
+        "First Person Shooter",
+        "RPG",
+        "Racing",
+        "Sports",
+        "Puzzle",
+      ],
+      { min: 1, max: 1 }
     ),
   },
-  undefined
-]
+  undefined,
+];

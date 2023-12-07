@@ -98,6 +98,8 @@ export default function ListingSlugRoute() {
     seller,
   } = listing;
 
+  console.log({ productDetails });
+
   const likesListing =
     fetcher.formData?.get("intent") === "favourite"
       ? !userLikesListing

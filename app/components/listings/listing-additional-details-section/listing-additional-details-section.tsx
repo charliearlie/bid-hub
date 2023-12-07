@@ -1,3 +1,5 @@
+import type { FulfilmentOption, ProductDetails } from "@prisma/client";
+
 import {
   Accordion,
   AccordionContent,
@@ -7,7 +9,6 @@ import {
 
 import { FulfilmentOptions } from "../fulfilment-options/fulfilment-options";
 import { ProductDetails as ProductDetailsComponent } from "../product-details/product-details";
-import type { FulfilmentOption, ProductDetails } from "@prisma/client";
 
 type Props = {
   fulfilmentOptions: Pick<
@@ -21,6 +22,10 @@ export const ListingAdditionalDetailsSection = ({
   productDetails,
   fulfilmentOptions,
 }: Props) => {
+  console.log(
+    "(productDetails && Object.keys(productDetails).length !== 0)",
+    productDetails && Object.keys(productDetails).length !== 0
+  );
   return (
     <section aria-labelledby="details-heading" className="mt-12">
       <h2 id="details-heading" className="sr-only">
@@ -28,17 +33,15 @@ export const ListingAdditionalDetailsSection = ({
       </h2>
 
       <div className="divide-y divide-gray-200 border-t">
-        {(productDetails && Object.keys(productDetails).length === 0) && (
-        <Accordion defaultValue="productDetails" type="single" collapsible>
-          <AccordionItem value="productDetails">
-            <AccordionTrigger>Product Details</AccordionTrigger>
-            <AccordionContent>
-              <ProductDetailsComponent
-                options={productDetails}
-              />
-            </AccordionContent>
-          </AccordionItem>
-        </Accordion>
+        {productDetails && Object.keys(productDetails).length !== 0 && (
+          <Accordion defaultValue="productDetails" type="single" collapsible>
+            <AccordionItem value="productDetails">
+              <AccordionTrigger>Product Details</AccordionTrigger>
+              <AccordionContent>
+                <ProductDetailsComponent options={productDetails} />
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
         )}
         <Accordion type="single" collapsible>
           <AccordionItem value="fulfilmentOptions">

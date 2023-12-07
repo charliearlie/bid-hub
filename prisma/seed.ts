@@ -1,10 +1,7 @@
 import { faker } from "@faker-js/faker";
 import { PrismaClient } from "@prisma/client";
 
-import {
-  createCategoriesWithImages,
-  createListing,
-} from "./helpers";
+import { createCategoriesWithImages, createListing } from "./helpers";
 
 const prisma = new PrismaClient();
 async function seed() {
@@ -197,8 +194,10 @@ async function seed() {
     });
   });
 
-  for (let i = 0; i < 100; i++) {
-    createListing(prisma, userIds, categoryIds);
+  for (let i = 0; i < 50; i++) {
+    setInterval(() => {
+      createListing(prisma, userIds, categoryIds);
+    }, 300);
   }
 
   createCategoriesWithImages(prisma);

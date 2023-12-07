@@ -92,7 +92,6 @@ model Listing {
   id                 String             @id @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   sellerId           String             @db.Uuid
   seller             User               @relation(fields: [sellerId], references: [id])
-  itemId             String             @db.Uuid
   description        String
   condition          Condition?         @default(NEW)
   thumbnail          String             @default("https://picsum.photos/200")
@@ -102,7 +101,6 @@ model Listing {
   reviews            Review[]
   rating             Int?
   watches            Watch[]
-  item               Item               @relation(fields: [itemId], references: [id])
   fulfilmentOptions  FulfilmentOption[]
   orders             Order[]
   productDetails     ProductDetails?
@@ -143,7 +141,7 @@ model ProductDetails {
   certifications      String[]
   usageInstructions   String?
   warrantyInformation String?
-  isSmart             Boolean?       @default(false)
+  isSmart             Boolean?
   energyEfficiency    String?
   compatibleDevices   String[]
   author              String?
@@ -210,18 +208,6 @@ model Address {
   postcode          String
   user              User               @relation(fields: [userId], references: [id])
   fulfilmentDetails FulfilmentDetails?
-}
-
-model Item {
-  name        String
-  description String?
-  size        String?
-  material    String?
-  colour      String?
-  image       String?
-  id          String    @id @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  brandId     String?   @db.Uuid
-  listings    Listing[]
 }
 
 model ListingImage {

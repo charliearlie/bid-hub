@@ -1,7 +1,8 @@
 import { faker } from "@faker-js/faker";
 import type { PrismaClient } from "@prisma/client";
-import { fulfilmentOptions, productDetails } from "./fixtures";
 import { v4 as uuidv4 } from "uuid";
+
+import { fulfilmentOptions, productDetails } from "./fixtures";
 
 const cloudinaryImages: {
   altText: string;
@@ -177,12 +178,6 @@ export const createListing = async (
 ) => {
   const sellerId =
     userIds[faker.number.int({ min: 1, max: userIds.length - 1 })];
-  const item = await prisma.item.create({
-    data: {
-      name: faker.commerce.productName(),
-      description: faker.commerce.productDescription(),
-    },
-  });
 
   const image =
     cloudinaryImages[
@@ -190,16 +185,14 @@ export const createListing = async (
     ];
 
   const listingName = faker.commerce.productName();
+  const productDeets = productDetails[faker.number.int({ min: 0, max: 3 })];
+
+  console.log("productDeets", productDeets);
   await prisma.listing.create({
     data: {
       title: listingName,
       description: faker.commerce.productDescription(),
       buyItNowPrice: Math.ceil(Number(faker.commerce.price())),
-      item: {
-        connect: {
-          id: item.id,
-        },
-      },
       category: {
         connect: {
           id: categoryIds[
@@ -264,7 +257,7 @@ export const createListing = async (
           ],
       },
       productDetails: {
-        create: productDetails[faker.number.int({ min: 0, max: productDetails.length - 1 })]
+        create: productDeets,
       },
     },
   });
