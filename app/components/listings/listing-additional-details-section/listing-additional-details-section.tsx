@@ -22,10 +22,6 @@ export const ListingAdditionalDetailsSection = ({
   productDetails,
   fulfilmentOptions,
 }: Props) => {
-  console.log(
-    "(productDetails && Object.keys(productDetails).length !== 0)",
-    productDetails && Object.keys(productDetails).length !== 0
-  );
   return (
     <section aria-labelledby="details-heading" className="mt-12">
       <h2 id="details-heading" className="sr-only">
