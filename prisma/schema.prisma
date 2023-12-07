@@ -66,7 +66,7 @@ model Review {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   id        String   @id @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  comment    String
+  comment   String
   rating    Int
   listingId String   @db.Uuid
   listing   Listing  @relation(fields: [listingId], references: [id])
@@ -77,38 +77,36 @@ model Review {
 }
 
 model Listing {
-  createdAt         DateTime           @default(now()) @db.Timestamptz(6)
-  updatedAt         DateTime           @default(now()) @updatedAt @db.Timestamptz(6)
-  quantity          Int                @default(1)
-  highestBidValue   Int?
-  startTime         DateTime?          @db.Timestamptz(6)
-  endTime           DateTime?          @db.Timestamptz(6)
-  buyItNowPrice     Int?
-  minBidIncrement   Int?               @default(50)
-  images            ListingImage[]
-  slug              String             @unique
-  title             String
-  startingBid       Int?
-  id                String             @id @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  sellerId          String             @db.Uuid
-  seller            User               @relation(fields: [sellerId], references: [id])
-  itemId            String             @db.Uuid
-  description       String
-  condition         Condition?         @default(NEW)
-  thumbnail         String             @default("https://picsum.photos/200")
-  Bid               Bid[]
-  category          Category           @relation(fields: [categoryId], references: [id])
-  categoryId        String             @db.Uuid
-  reviews           Review[]
-  rating            Int?
-  watches           Watch[]
-  item              Item               @relation(fields: [itemId], references: [id])
-  fulfilmentOptions FulfilmentOption[]
-  orders            Order[]
-  clothingOptions   ClothingOptions[]
-  bookOptions       BookOptions[]
-  ElectricalOptions ElectricalOptions[]
-  numberSold        Int                @default(0)
+  createdAt          DateTime           @default(now()) @db.Timestamptz(6)
+  updatedAt          DateTime           @default(now()) @updatedAt @db.Timestamptz(6)
+  quantity           Int                @default(1)
+  highestBidValue    Int?
+  startTime          DateTime?          @db.Timestamptz(6)
+  endTime            DateTime?          @db.Timestamptz(6)
+  buyItNowPrice      Int?
+  minBidIncrement    Int?               @default(50)
+  images             ListingImage[]
+  slug               String             @unique
+  title              String
+  startingBid        Int?
+  id                 String             @id @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  sellerId           String             @db.Uuid
+  seller             User               @relation(fields: [sellerId], references: [id])
+  description        String
+  condition          Condition?         @default(NEW)
+  thumbnail          String             @default("https://picsum.photos/200")
+  Bid                Bid[]
+  category           Category           @relation(fields: [categoryId], references: [id])
+  categoryId         String             @db.Uuid
+  reviews            Review[]
+  rating             Int?
+  watches            Watch[]
+  fulfilmentOptions  FulfilmentOption[]
+  orders             Order[]
+  productDetails     ProductDetails?
+  warranty           Warranty?
+  insuranceAvailable Boolean            @default(false)
+  numberSold         Int                @default(0)
 }
 
 model FulfilmentOption {
@@ -121,51 +119,52 @@ model FulfilmentOption {
   listing   Listing     @relation(fields: [listingId], references: [id])
 }
 
-model ClothingOptions {
-  id        String         @id @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  sizes     String[]
-  materials String[]
-  colours   String[]
-  fit       String?
-  listingId String         @db.Uuid
-  listing   Listing        @relation(fields: [listingId], references: [id])
-  brand     String?
-  style     String?
-  gender    GenderOptions?
-}
-
-model ElectricalOptions {
-  id                 String    @id @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  brand              String?
-  modelNumber        String?
-  powerSource        String?
-  voltage            String?
-  wattage            Int?
-  connectivity       String?
-  features           String[]
-  dimensions         String?
-  weight             Int?
-  certifications     String[]
-  usageInstructions  String?
+model ProductDetails {
+  id                  String         @id @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  sizes               String[]
+  materials           String[]
+  colours             String[]
+  fit                 String?
+  listingId           String         @unique @db.Uuid
+  listing             Listing        @relation(fields: [listingId], references: [id])
+  brand               String?
+  style               String?
+  gender              GenderOptions?
+  modelNumber         String?
+  powerSource         String?
+  voltage             String?
+  wattage             Int?
+  connectivity        String?
+  features            String[]
+  dimensions          String?
+  weight              Int?
+  certifications      String[]
+  usageInstructions   String?
   warrantyInformation String?
-  isSmart            Boolean?  @default(false) // Indicates whether the item is a smart device
-  energyEfficiency   String?   // Energy efficiency rating
-  compatibleDevices  String[]  // List of compatible devices
-  listingId String         @db.Uuid
-  listing   Listing        @relation(fields: [listingId], references: [id])
+  isSmart             Boolean?
+  energyEfficiency    String?
+  compatibleDevices   String[]
+  author              String?
+  genre               String[]
+  language            String?
+  pageCount           Int?
+  publicationYear     Int?
+  publisher           String?
+  ISBN                String?
+  developer           String?
+  platform            String[]
+  releaseDate         DateTime?
 }
 
-model BookOptions {
-  id            String  @id @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  author        String?
-  genre         String[]
-  language      String?
-  pageCount     Int?
-  publicationYear Int?
-  publisher     String?
-  ISBN          String?
-  listingId String         @db.Uuid
-  listing   Listing        @relation(fields: [listingId], references: [id])
+model Warranty {
+  id                     String  @id @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  duration               Int
+  extendable             Boolean @default(false)
+  manufacturerWarranty   Boolean @default(false)
+  bidHubExtendedWarranty Boolean @default(false)
+  maxExtension           Int     @default(0)
+  listingId              String  @unique @db.Uuid
+  listing                Listing @relation(fields: [listingId], references: [id])
 }
 
 model Order {
@@ -211,18 +210,6 @@ model Address {
   fulfilmentDetails FulfilmentDetails?
 }
 
-model Item {
-  name        String
-  description String?
-  size        String?
-  material    String?
-  colour      String?
-  image       String?
-  id          String    @id @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  brandId     String?   @db.Uuid
-  listings    Listing[]
-}
-
 model ListingImage {
   id        String  @id @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   listingId String  @db.Uuid
@@ -245,8 +232,9 @@ model Category {
 }
 
 model Brand {
-  name String
   id   String @id @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name String
+  slug String @unique
 }
 
 model Watch {

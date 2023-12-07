@@ -47,12 +47,13 @@ export const action = async ({ params, request }: DataFunctionArgs) => {
     return json({ status: "error", submission } as const);
   }
 
-  await prisma.userFeedback.create({
+  await prisma.review.create({
     data: {
       buyerId: loggedInUserId,
-      review: review,
+      comment: review,
       sellerId: user.id,
       rating: 5,
+      listingId: "1", //todo: Fix before merging PR. Listing shouldn't be mandatory
     },
   });
 

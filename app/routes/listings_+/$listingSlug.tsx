@@ -92,6 +92,7 @@ export default function ListingSlugRoute() {
     buyItNowPrice,
     description,
     fulfilmentOptions,
+    productDetails,
     title,
     images,
     seller,
@@ -164,6 +165,7 @@ export default function ListingSlugRoute() {
                 </div>
               </fetcher.Form>
               <ListingAdditionalDetailsSection
+                productDetails={productDetails}
                 fulfilmentOptions={fulfilmentOptions}
               />
             </div>

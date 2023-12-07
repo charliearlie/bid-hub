@@ -242,7 +242,7 @@ export async function getUserByUsernameOrEmail(usernameOrEmail: string) {
       feedbackReceived: {
         select: {
           rating: true,
-          review: true,
+          comment: true,
           createdAt: true,
           buyer: {
             select: {

@@ -1,14 +1,19 @@
-import type { Item, Listing } from "@prisma/client";
+import type { Listing } from "@prisma/client";
 
-import { CoreImageType } from "~/types";
+import type { CoreImageType } from "~/types";
 
 import { buildListingEndDateAndTime, generateSlug } from "~/util/utils";
 
 import { prisma } from "../util/prisma.server";
 import { getUserById } from "./user.server";
 
-export async function getAllListings() {
-  return await prisma.listing.findMany({ include: { images: true } });
+export async function getAllListings({
+  amount = 50,
+}: { amount?: number } = {}) {
+  return await prisma.listing.findMany({
+    include: { images: true },
+    take: amount,
+  });
 }
 
 type ListingSubSet = Pick<
@@ -36,7 +41,6 @@ export const addListing = async (
     endTime: _endtime,
     thumbnail,
   }: ListingSubSet,
-  item: Item,
   userId: string
 ) => {
   const user = await getUserById(userId);
@@ -54,11 +58,6 @@ export const addListing = async (
       seller: {
         connect: {
           id: user?.id,
-        },
-      },
-      item: {
-        connect: {
-          id: item.id,
         },
       },
       category: {
@@ -83,7 +82,6 @@ export const getListingBySlug = async (slug: string) => {
   const listing = await prisma.listing.findUniqueOrThrow({
     where: { slug },
     include: {
-      item: true,
       category: true,
       seller: {
         select: {
@@ -107,6 +105,41 @@ export const getListingBySlug = async (slug: string) => {
           price: true,
         },
       },
+      productDetails: {
+        select: {
+          sizes: true,
+          colours: true,
+          materials: true,
+          fit: true,
+          brand: true,
+          style: true,
+          gender: true,
+          modelNumber: true,
+          powerSource: true,
+          voltage: true,
+          wattage: true,
+          connectivity: true,
+          features: true,
+          dimensions: true,
+          weight: true,
+          certifications: true,
+          usageInstructions: true,
+          warrantyInformation: true,
+          isSmart: true,
+          compatibleDevices: true,
+          author: true,
+          genre: true,
+          language: true,
+          pageCount: true,
+          publicationYear: true,
+          publisher: true,
+          ISBN: true,
+          developer: true,
+          platform: true,
+          releaseDate: false, // Explicit about this as we need to map the type
+        },
+      },
+      warranty: true,
     },
   });
 

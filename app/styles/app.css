@@ -1059,6 +1059,14 @@ h2 {
   width: 3rem;
 }
 
+.w-1\/3 {
+  width: 33.333333%;
+}
+
+.w-2\/3 {
+  width: 66.666667%;
+}
+
 .min-w-\[8rem\] {
   min-width: 8rem;
 }
@@ -1249,6 +1257,10 @@ h2 {
   justify-content: space-evenly;
 }
 
+.gap-2 {
+  gap: 0.5rem;
+}
+
 .gap-6 {
   gap: 1.5rem;
 }
@@ -1259,10 +1271,6 @@ h2 {
 
 .gap-4 {
   gap: 1rem;
-}
-
-.gap-2 {
-  gap: 0.5rem;
 }
 
 .gap-1 {
@@ -1557,6 +1565,10 @@ h2 {
      object-fit: cover;
 }
 
+.p-4 {
+  padding: 1rem;
+}
+
 .p-20 {
   padding: 5rem;
 }
@@ -1567,10 +1579,6 @@ h2 {
 
 .p-8 {
   padding: 2rem;
-}
-
-.p-4 {
-  padding: 1rem;
 }
 
 .p-0 {

@@ -1,4 +1,4 @@
-import { FulfilmentOption } from "@prisma/client";
+import type { FulfilmentOption, ProductDetails } from "@prisma/client";
 
 import {
   Accordion,
@@ -8,15 +8,18 @@ import {
 } from "~/components/common/ui/accordion";
 
 import { FulfilmentOptions } from "../fulfilment-options/fulfilment-options";
+import { ProductDetails as ProductDetailsComponent } from "../product-details/product-details";
 
 type Props = {
   fulfilmentOptions: Pick<
     FulfilmentOption,
     "minDays" | "maxDays" | "method" | "price"
   >[];
+  productDetails: Partial<ProductDetails> | null;
 };
 
 export const ListingAdditionalDetailsSection = ({
+  productDetails,
   fulfilmentOptions,
 }: Props) => {
   return (
@@ -26,6 +29,16 @@ export const ListingAdditionalDetailsSection = ({
       </h2>
 
       <div className="divide-y divide-gray-200 border-t">
+        {productDetails && Object.keys(productDetails).length !== 0 && (
+          <Accordion defaultValue="productDetails" type="single" collapsible>
+            <AccordionItem value="productDetails">
+              <AccordionTrigger>Product Details</AccordionTrigger>
+              <AccordionContent>
+                <ProductDetailsComponent options={productDetails} />
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
+        )}
         <Accordion type="single" collapsible>
           <AccordionItem value="fulfilmentOptions">
             <AccordionTrigger>Delivery options</AccordionTrigger>
@@ -34,19 +47,15 @@ export const ListingAdditionalDetailsSection = ({
             </AccordionContent>
           </AccordionItem>
         </Accordion>
-        {[1, 2, 3, 4].map((num) => (
-          <Accordion key={num} type="single" collapsible>
-            <AccordionItem value={String(num)}>
-              <AccordionTrigger>Features</AccordionTrigger>
-              <AccordionContent>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-                enim ad minim veniam, quis nostrud exercitation ullamco laboris
-                nisi ut aliquip ex ea commodo consequat.
-              </AccordionContent>
-            </AccordionItem>
-          </Accordion>
-        ))}
+        <Accordion type="single" collapsible>
+          <AccordionItem value="warrantyAndInsurance">
+            <AccordionTrigger>Warranty & Insurance</AccordionTrigger>
+            <AccordionContent>
+              This item doesn't have a warranty and if you want insurance then
+              you need to pay us the big bucks
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
       </div>
     </section>
   );
