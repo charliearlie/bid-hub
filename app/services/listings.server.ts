@@ -110,7 +110,7 @@ export const getListingBySlug = async (slug: string) => {
           price: true,
         },
       },
-      clothingOptions: {
+      productDetails: {
         select: {
           sizes: true,
           colours: true,
@@ -118,7 +118,6 @@ export const getListingBySlug = async (slug: string) => {
           fit: true,
         },
       },
-      electricalOptions: true,
       warranty: true,
     },
   });

@@ -1,9 +1,7 @@
 import { faker } from "@faker-js/faker";
-import { PrismaClient } from "@prisma/client";
-
-import { prisma } from "~/util/prisma.server";
-
-import { fulfilmentOptions } from "./fixtures";
+import type { PrismaClient } from "@prisma/client";
+import { fulfilmentOptions, productDetails } from "./fixtures";
+import { v4 as uuidv4 } from "uuid";
 
 const cloudinaryImages: {
   altText: string;
@@ -172,7 +170,7 @@ export const createCategoriesWithImages = async (prisma: PrismaClient) => {
   });
 };
 
-export const createListingNoOptions = async (
+export const createListing = async (
   prisma: PrismaClient,
   userIds: string[],
   categoryIds: string[]
@@ -214,7 +212,7 @@ export const createListingNoOptions = async (
           id: sellerId,
         },
       },
-      slug: faker.helpers.slugify(listingName),
+      slug: `${faker.helpers.slugify(listingName)}-${uuidv4()}`,
       thumbnail: image.thumbnail,
       quantity: faker.number.int({ min: 10, max: 1000 }),
       images: {
@@ -227,8 +225,8 @@ export const createListingNoOptions = async (
           {
             altText: "SpongeBob SquarePants",
             imageUrl:
-              "https://res.cloudinary.com/bidhub/image/upload/v1701896677/bidhub/jgdsonl7q0nkqgw0eksu.webp",
-            publicId: "bidhub/jgdsonl7q0nkqgw0eksu",
+              "https://res.cloudinary.com/bidhub/image/upload/v1701896680/bidhub/dxcfmoarddecngekkg7w.webp",
+            publicId: "bidhub/dxcfmoarddecngekkg7w",
           },
         ],
       },
@@ -252,235 +250,21 @@ export const createListingNoOptions = async (
         })),
       },
       numberSold: faker.number.int({ min: 0, max: 100 }),
-      fulfilmentOptions: {
-        create:
-          fulfilmentOptions[
-            faker.number.int({ min: 0, max: fulfilmentOptions.length - 1 })
-          ],
-      },
-    },
-  });
-};
-
-export const createListingClothingOptions = async (
-  prisma: PrismaClient,
-  userIds: string[],
-  categoryIds: string[]
-) => {
-  const sellerId =
-    userIds[faker.number.int({ min: 1, max: userIds.length - 1 })];
-  const item = await prisma.item.create({
-    data: {
-      name: faker.commerce.productName(),
-      description: faker.commerce.productDescription(),
-    },
-  });
-
-  const image =
-    cloudinaryImages[
-      faker.number.int({ min: 0, max: cloudinaryImages.length - 1 })
-    ];
-
-  const listingName = faker.commerce.productName();
-  await prisma.listing.create({
-    data: {
-      title: listingName,
-      description: faker.commerce.productDescription(),
-      buyItNowPrice: Math.ceil(Number(faker.commerce.price())),
-      item: {
-        connect: {
-          id: item.id,
-        },
-      },
-      category: {
-        connect: {
-          id: categoryIds[
-            faker.number.int({ min: 1, max: categoryIds.length - 1 })
-          ],
-        },
-      },
-      seller: {
-        connect: {
-          id: sellerId,
-        },
-      },
-      slug: faker.helpers.slugify(listingName),
-      thumbnail: image.thumbnail,
-      quantity: faker.number.int({ min: 10, max: 1000 }),
-      images: {
-        create: [
-          {
-            altText: image.altText,
-            imageUrl: image.imageUrl,
-            publicId: image.publicId,
-          },
-          {
-            altText: "SpongeBob SquarePants",
-            imageUrl:
-              "https://res.cloudinary.com/bidhub/image/upload/v1701896677/bidhub/jgdsonl7q0nkqgw0eksu.webp",
-            publicId: "bidhub/jgdsonl7q0nkqgw0eksu",
-          },
-        ],
-      },
-      rating: faker.number.int({ min: 1, max: 5 }),
-      reviews: {
-        create: [1, 2, 3].map(() => ({
-          rating: faker.number.int({ min: 1, max: 5 }),
-          comment: faker.lorem.paragraph(),
-          buyer: {
-            connect: {
-              id: userIds[
-                faker.number.int({ min: 1, max: userIds.length - 1 })
-              ],
-            },
-          },
-          seller: {
-            connect: {
-              id: sellerId,
-            },
-          },
-        })),
-      },
-      numberSold: faker.number.int({ min: 0, max: 100 }),
-      fulfilmentOptions: {
-        create:
-          fulfilmentOptions[
-            faker.number.int({ min: 0, max: fulfilmentOptions.length - 1 })
-          ],
-      },
-      clothingOptions: {
+      warranty: {
         create: {
-          brand: faker.company.name(),
-          sizes: faker.helpers.arrayElements(["XS", "SM", "MD", "LG", "XL"], {
-            min: 1,
-            max: 4,
-          }),
-          colours: faker.helpers.arrayElements(
-            [
-              "Green",
-              "Blue",
-              "Red",
-              "Beige",
-              "Black",
-              "White",
-              "Yellow",
-              "Orange",
-              "Purple",
-              "Pink",
-            ],
-            {
-              min: 1,
-              max: 2,
-            }
-          ),
-          materials: faker.helpers.arrayElements(
-            ["Linen", "Polyester", "Leather", "Rubber", "Cotton"],
-            {
-              min: 1,
-              max: 3,
-            }
-          ),
-          fit: faker.commerce.productAdjective(),
+          duration: faker.number.int({ min: 1, max: 24 }),
+          bidHubExtendedWarranty: faker.datatype.boolean(),
+          extendable: true,
         },
       },
-    },
-  });
-};
-
-export const createListingBookOptions = async (
-  prisma: PrismaClient,
-  userIds: string[],
-  categoryIds: string[]
-) => {
-  const sellerId =
-    userIds[faker.number.int({ min: 1, max: userIds.length - 1 })];
-  const item = await prisma.item.create({
-    data: {
-      name: faker.commerce.productName(),
-      description: faker.commerce.productDescription(),
-    },
-  });
-
-  const image =
-    cloudinaryImages[
-      faker.number.int({ min: 0, max: cloudinaryImages.length - 1 })
-    ];
-
-  const listingName = faker.commerce.productName();
-  await prisma.listing.create({
-    data: {
-      title: listingName,
-      description: faker.commerce.productDescription(),
-      buyItNowPrice: Math.ceil(Number(faker.commerce.price())),
-      item: {
-        connect: {
-          id: item.id,
-        },
-      },
-      category: {
-        connect: {
-          id: categoryIds[
-            faker.number.int({ min: 1, max: categoryIds.length - 1 })
-          ],
-        },
-      },
-      seller: {
-        connect: {
-          id: sellerId,
-        },
-      },
-      slug: faker.helpers.slugify(listingName),
-      thumbnail: image.thumbnail,
-      quantity: faker.number.int({ min: 10, max: 1000 }),
-      images: {
-        create: [
-          {
-            altText: image.altText,
-            imageUrl: image.imageUrl,
-            publicId: image.publicId,
-          },
-          {
-            altText: "SpongeBob SquarePants",
-            imageUrl:
-              "https://res.cloudinary.com/bidhub/image/upload/v1701896677/bidhub/jgdsonl7q0nkqgw0eksu.webp",
-            publicId: "bidhub/jgdsonl7q0nkqgw0eksu",
-          },
-        ],
-      },
-      rating: faker.number.int({ min: 1, max: 5 }),
-      reviews: {
-        create: [1, 2, 3].map(() => ({
-          rating: faker.number.int({ min: 1, max: 5 }),
-          comment: faker.lorem.paragraph(),
-          buyer: {
-            connect: {
-              id: userIds[
-                faker.number.int({ min: 1, max: userIds.length - 1 })
-              ],
-            },
-          },
-          seller: {
-            connect: {
-              id: sellerId,
-            },
-          },
-        })),
-      },
-      numberSold: faker.number.int({ min: 0, max: 100 }),
       fulfilmentOptions: {
         create:
           fulfilmentOptions[
             faker.number.int({ min: 0, max: fulfilmentOptions.length - 1 })
           ],
       },
-      bookOptions: {
-        create: {
-          author: faker.person.fullName(),
-          publisher: faker.company.name(),
-          language: "English",
-          publicationYear: faker.date.past().getFullYear(),
-          pageCount: faker.number.int({ min: 100, max: 1000 }),
-        },
+      productDetails: {
+        create: productDetails[faker.number.int({ min: 0, max: productDetails.length - 1 })]
       },
     },
   });

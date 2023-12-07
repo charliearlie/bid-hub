@@ -3,9 +3,7 @@ import { PrismaClient } from "@prisma/client";
 
 import {
   createCategoriesWithImages,
-  createListingBookOptions,
-  createListingClothingOptions,
-  createListingNoOptions,
+  createListing,
 } from "./helpers";
 
 const prisma = new PrismaClient();
@@ -199,16 +197,8 @@ async function seed() {
     });
   });
 
-  for (let i = 0; i < 15; i++) {
-    createListingNoOptions(prisma, userIds, categoryIds);
-  }
-
-  for (let i = 0; i < 10; i++) {
-    createListingClothingOptions(prisma, userIds, categoryIds);
-  }
-
-  for (let i = 0; i < 5; i++) {
-    createListingBookOptions(prisma, userIds, categoryIds);
+  for (let i = 0; i < 100; i++) {
+    createListing(prisma, userIds, categoryIds);
   }
 
   createCategoriesWithImages(prisma);

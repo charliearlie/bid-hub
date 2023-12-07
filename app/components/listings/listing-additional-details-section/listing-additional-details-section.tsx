@@ -1,10 +1,4 @@
 import {
-  ClothingOptions,
-  ElectricalOptions,
-  FulfilmentOption,
-} from "@prisma/client";
-
-import {
   Accordion,
   AccordionContent,
   AccordionItem,
@@ -12,20 +6,19 @@ import {
 } from "~/components/common/ui/accordion";
 
 import { FulfilmentOptions } from "../fulfilment-options/fulfilment-options";
-import { ProductDetails } from "../product-details/product-details";
+import { ProductDetails as ProductDetailsComponent } from "../product-details/product-details";
+import type { FulfilmentOption, ProductDetails } from "@prisma/client";
 
 type Props = {
   fulfilmentOptions: Pick<
     FulfilmentOption,
     "minDays" | "maxDays" | "method" | "price"
   >[];
-  clothingOptions: Partial<ClothingOptions> | null;
-  electricalOptions: ElectricalOptions | null;
+  productDetails: Partial<ProductDetails> | null;
 };
 
 export const ListingAdditionalDetailsSection = ({
-  clothingOptions,
-  electricalOptions,
+  productDetails,
   fulfilmentOptions,
 }: Props) => {
   return (
@@ -35,16 +28,18 @@ export const ListingAdditionalDetailsSection = ({
       </h2>
 
       <div className="divide-y divide-gray-200 border-t">
-        <Accordion type="single" collapsible>
-          <AccordionItem value="fulfilmentOptions">
+        {(productDetails && Object.keys(productDetails).length === 0) && (
+        <Accordion defaultValue="productDetails" type="single" collapsible>
+          <AccordionItem value="productDetails">
             <AccordionTrigger>Product Details</AccordionTrigger>
             <AccordionContent>
-              <ProductDetails
-                options={{ ...clothingOptions, ...electricalOptions }}
+              <ProductDetailsComponent
+                options={productDetails}
               />
             </AccordionContent>
           </AccordionItem>
         </Accordion>
+        )}
         <Accordion type="single" collapsible>
           <AccordionItem value="fulfilmentOptions">
             <AccordionTrigger>Delivery options</AccordionTrigger>
@@ -54,7 +49,7 @@ export const ListingAdditionalDetailsSection = ({
           </AccordionItem>
         </Accordion>
         <Accordion type="single" collapsible>
-          <AccordionItem value="fulfilmentOptions">
+          <AccordionItem value="warrantyAndInsurance">
             <AccordionTrigger>Warranty & Insurance</AccordionTrigger>
             <AccordionContent>
               This item doesn't have a warranty and if you want insurance then
