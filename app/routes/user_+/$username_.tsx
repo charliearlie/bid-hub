@@ -1,4 +1,5 @@
-import { DataFunctionArgs, json } from "@remix-run/node";
+import type { DataFunctionArgs } from "@remix-run/node";
+import { json } from "@remix-run/node";
 import { Link, Outlet, useLoaderData } from "@remix-run/react";
 
 import { RatingStars } from "~/components/common/star-rating/star-rating";
@@ -64,6 +65,7 @@ export default function UserProfileRoute() {
             <div className="flex gap-8">
               <img
                 className="h-48 w-48 rounded-lg border-2 border-border"
+                alt="user avatar"
                 src={avatarUrl || "https://picsum.photos/200"}
               />
               <div className="flex flex-col gap-2">

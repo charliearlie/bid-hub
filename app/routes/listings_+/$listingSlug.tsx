@@ -1,4 +1,5 @@
-import { json, type DataFunctionArgs, MetaFunction } from "@remix-run/node";
+import { json } from "@remix-run/node";
+import type { MetaFunction, DataFunctionArgs } from "@remix-run/node";
 import { Link, useFetcher, useLoaderData } from "@remix-run/react";
 import { HeartIcon } from "lucide-react";
 import invariant from "tiny-invariant";
@@ -88,7 +89,15 @@ export default function ListingSlugRoute() {
   const { category, listing, userLikesListing } =
     useLoaderData<typeof loader>();
 
-  const { buyItNowPrice, description, title, images, seller } = listing;
+  const {
+    buyItNowPrice,
+    description,
+    fulfilmentOptions,
+    productDetails,
+    title,
+    images,
+    seller,
+  } = listing;
 
   const likesListing =
     fetcher.formData?.get("intent") === "favourite"
@@ -156,7 +165,10 @@ export default function ListingSlugRoute() {
                   <input type="hidden" name="listingId" value={listing.id} />
                 </div>
               </fetcher.Form>
-              <ListingAdditionalDetailsSection />
+              <ListingAdditionalDetailsSection
+                productDetails={productDetails}
+                fulfilmentOptions={fulfilmentOptions}
+              />
             </div>
           </div>
         </div>

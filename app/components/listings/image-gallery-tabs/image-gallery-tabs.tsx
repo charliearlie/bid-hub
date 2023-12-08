@@ -1,4 +1,4 @@
-import { CoreImageType } from "~/types";
+import type { CoreImageType } from "~/types";
 
 import {
   Tabs,
@@ -21,7 +21,7 @@ export const ImageGalleryTabs = ({ images, listingTitle }: Props) => {
           <img
             className="h-[300px] w-full rounded-lg object-cover sm:h-[500px]"
             src={image.imageUrl}
-            alt={`${listingTitle}-image-${index}`}
+            alt={`${listingTitle}-${index}`}
             loading="eager"
           />
         </TabsContent>
@@ -41,7 +41,7 @@ export const ImageGalleryTabs = ({ images, listingTitle }: Props) => {
             <img
               className="h-20 w-20 rounded-lg object-cover"
               src={image.imageUrl}
-              alt={`${listingTitle}-image-${index}`}
+              alt={`${listingTitle}-${index}`}
               loading="lazy"
             />
           </TabsTrigger>

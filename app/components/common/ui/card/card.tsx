@@ -19,3 +19,5 @@ export const Card = React.forwardRef<
     </div>
   );
 });
+
+Card.displayName = "Card";

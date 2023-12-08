@@ -1,6 +1,7 @@
 import { conform, useForm } from "@conform-to/react";
 import { getFieldsetConstraint, parse } from "@conform-to/zod";
-import { DataFunctionArgs, json } from "@remix-run/node";
+import type { DataFunctionArgs} from "@remix-run/node";
+import { json } from "@remix-run/node";
 import { useActionData, useFetcher } from "@remix-run/react";
 import { SendIcon } from "lucide-react";
 import { z } from "zod";
@@ -15,7 +16,7 @@ import { getUserByUsernameOrEmail } from "~/services/user.server";
 import { prisma } from "~/util/prisma.server";
 import { invariantResponse, useRouteLoaderDataTyped } from "~/util/utils";
 
-import { loader as userLoader } from "../$username_";
+import type { loader as userLoader } from "../$username_";
 
 const UserFeedbackSchema = z.object({
   review: z.string().optional(),
@@ -47,12 +48,13 @@ export const action = async ({ params, request }: DataFunctionArgs) => {
     return json({ status: "error", submission } as const);
   }
 
-  await prisma.userFeedback.create({
+  await prisma.review.create({
     data: {
       buyerId: loggedInUserId,
-      review: review,
+      comment: review,
       sellerId: user.id,
       rating: 5,
+      listingId: "1", //todo: Fix before merging PR. Listing shouldn't be mandatory
     },
   });
 

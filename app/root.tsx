@@ -14,6 +14,7 @@ import {
   useLoaderData,
   useLocation,
 } from "@remix-run/react";
+import { AlertOctagon } from "lucide-react";
 import styles from "~/styles/app.css";
 import fontStylesheet from "~/styles/font.css";
 
@@ -85,6 +86,10 @@ export default function App() {
 
   return (
     <Document>
+      <div className="flex gap-2 p-4">
+        <AlertOctagon /> Listing data is auto generated so will not match the
+        images, categories and description shown
+      </div>
       <UserProvider username={user?.username} userId={user?.id}>
         <SharedHeader user={user} isHomepage={isHomePage} categories={categories} />
         <Outlet />

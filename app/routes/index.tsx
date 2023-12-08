@@ -11,7 +11,7 @@ export const meta = () => {
 };
 
 export const loader = async () => {
-  const listings = await getAllListings();
+  const listings = await getAllListings({ amount: 10 });
   const categories = await getHomepageCategories();
 
   if (!listings) {

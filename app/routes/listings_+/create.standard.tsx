@@ -1,12 +1,12 @@
 import { conform, list, useFieldList, useForm } from "@conform-to/react";
 import { getFieldsetConstraint, parse } from "@conform-to/zod";
-import { Item } from "@prisma/client";
 import { SelectValue } from "@radix-ui/react-select";
+import type { DataFunctionArgs } from "@remix-run/node";
 import {
-  DataFunctionArgs,
   json,
   unstable_createMemoryUploadHandler as createMemoryUploadHandler,
   unstable_parseMultipartFormData as parseMultipartFormData,
+  redirect,
 } from "@remix-run/node";
 import { Form, useActionData, useLoaderData } from "@remix-run/react";
 import { PoundSterlingIcon } from "lucide-react";
@@ -29,7 +29,6 @@ import { FormField } from "~/components/form/form-field";
 import { FormFieldTextArea } from "~/components/form/form-field-text-area";
 import { SubmitButton } from "~/components/form/submit-button";
 
-import { createItem, getItemById } from "~/services/item.server";
 import {
   addListing,
   getCategoryDropdownOptions,
@@ -108,19 +107,6 @@ export const action = async ({ request }: DataFunctionArgs) => {
       )
     : [];
 
-  let newItem: Item | null;
-
-  if (submission.value.itemId) {
-    newItem = await getItemById(submission.value.itemId);
-  } else {
-    newItem = await createItem(submission.value.itemName);
-  }
-
-  if (!newItem || !thumbnail) {
-    submission.error[""] = ["We failed to create your item"];
-    return json({ status: "error", submission } as const);
-  }
-
   const { itemId, ...listingData } = submission.value;
 
   const userId = await getUserId(request);
@@ -139,7 +125,6 @@ export const action = async ({ request }: DataFunctionArgs) => {
       images,
       thumbnail: thumbnail.imageUrl,
     },
-    newItem,
     userId
   );
 
@@ -148,7 +133,7 @@ export const action = async ({ request }: DataFunctionArgs) => {
     return json({ status: "error", submission } as const);
   }
 
-  return json({ status: "success", listing: newListing, submission } as const);
+  return redirect(`/listings/${newListing.slug}`);
 };
 
 export default function CreateListingRoute() {
@@ -243,6 +228,7 @@ export default function CreateListingRoute() {
               label="Image"
               accept="image/*"
               type="file"
+              key={image.id}
               {...conform.input(image)}
             />
           ))}
