@@ -3,11 +3,15 @@ import { Link } from "@remix-run/react";
 import type { ListingPreviewType } from "~/types";
 
 type ListingPreviewProps = {
+  includeDescription?: boolean;
   listing: ListingPreviewType;
 };
 
-export default function ListingPreview({ listing }: ListingPreviewProps) {
-  const { buyItNowPrice, slug, thumbnail, title } = listing;
+export default function ListingPreview({
+  includeDescription = false,
+  listing,
+}: ListingPreviewProps) {
+  const { buyItNowPrice, description, slug, thumbnail, title } = listing;
 
   return (
     <Link prefetch="intent" to={`/listings/${slug}`}>
@@ -23,6 +27,11 @@ export default function ListingPreview({ listing }: ListingPreviewProps) {
               <span className="block font-semibold">{title}</span>
             </h3>
           </div>
+          {includeDescription && (
+            <div>
+              <p className="line-clamp-2 text-sm">{description}</p>
+            </div>
+          )}
           <div className="flex justify-between">
             <p className="text-xl">£{buyItNowPrice}</p>
           </div>

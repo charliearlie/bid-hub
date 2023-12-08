@@ -1,9 +1,10 @@
-import { json } from "@remix-run/node";
+import { defer, json } from "@remix-run/node";
 import type { MetaFunction, DataFunctionArgs } from "@remix-run/node";
-import { Link, useFetcher, useLoaderData } from "@remix-run/react";
-import { HeartIcon } from "lucide-react";
+import { Await, Link, useFetcher, useLoaderData } from "@remix-run/react";
+import { Suspense } from "react";
 import invariant from "tiny-invariant";
 
+import { RatingStars } from "~/components/common/star-rating/star-rating";
 import { Button } from "~/components/common/ui/button";
 import { Card } from "~/components/common/ui/card";
 import { ErrorBoundaryComponent } from "~/components/error-boundary";
@@ -11,17 +12,21 @@ import { CategoryBreadcrumbs } from "~/components/listings/category-breadcrumbs"
 import { ImageGalleryTabs } from "~/components/listings/image-gallery-tabs";
 import { ListingAdditionalDetailsSection } from "~/components/listings/listing-additional-details-section/listing-additional-details-section";
 import { SellerDetails } from "~/components/listings/seller-details";
+import { SimilarListings } from "~/components/listings/similar-listings/similar-listings";
+import { SimilarListingsSkeleton } from "~/components/listings/similar-listings/similar-listings-skeleton";
+import { WishlistButton } from "~/components/listings/wishlist/wishlist-button";
 
 import { getCategoryAndParents } from "~/services/category.server";
 import {
   doesUserLikeListing,
   getListingBySlug,
+  getListingsByCategory,
   toggleLikeOnListing,
 } from "~/services/listings.server";
 import { getUserId } from "~/services/session.server";
 
 import { optimiseImageForBrowser } from "~/util/cloudinary.server";
-import { cn, invariantResponse } from "~/util/utils";
+import { invariantResponse } from "~/util/utils";
 
 export const meta: MetaFunction<typeof loader, {}> = ({ data }) => {
   return [
@@ -77,16 +82,19 @@ export async function loader({ params, request }: DataFunctionArgs) {
     ? await doesUserLikeListing(currentUserId, listing.id)
     : false;
 
-  return json({
+  const similarListingsPromise = getListingsByCategory(listing.categoryId, 6);
+
+  return defer({
     category,
     listing: { ...listing, images: optimisedListingImages },
     userLikesListing,
+    similarListings: similarListingsPromise,
   });
 }
 
 export default function ListingSlugRoute() {
   const fetcher = useFetcher();
-  const { category, listing, userLikesListing } =
+  const { category, listing, similarListings, userLikesListing } =
     useLoaderData<typeof loader>();
 
   const {
@@ -94,6 +102,7 @@ export default function ListingSlugRoute() {
     description,
     fulfilmentOptions,
     productDetails,
+    rating,
     title,
     images,
     seller,
@@ -122,55 +131,53 @@ export default function ListingSlugRoute() {
           />
           <div className="lg:grid lg:grid-cols-2 lg:items-start lg:gap-x-8">
             <ImageGalleryTabs images={images} listingTitle={title} />
-            <div className="mt-10 px-2 sm:mt-16 sm:px-0 lg:mt-0">
-              <h1 className="text-3xl font-extrabold tracking-tight">
-                {title}
-              </h1>
-              <div className="mt-3">
-                <h2 className="sr-only">Product information</h2>
-                <p className="text-3xl font-bold">£{buyItNowPrice}</p>
+            <div className="mt-10 flex flex-col gap-4 px-2 sm:mt-16 sm:px-0 lg:mt-0">
+              <div className="flex flex-col gap-1">
+                <h1 className="text-3xl font-extrabold tracking-tight">
+                  {title}
+                </h1>
+                <RatingStars rating={rating} />
               </div>
-              <div className="mt-6">
+              <div>
                 <h3 className="sr-only">Description</h3>
                 <div className="space-y-6 text-base">{description}</div>
               </div>
-              <div className="mt-3">
-                <SellerDetails {...seller} listingSlug={listing.slug} />
+              <div>
+                <h2 className="sr-only">Product information</h2>
+                <p className="text-3xl font-bold">£{buyItNowPrice}</p>
               </div>
-              <fetcher.Form method="post" className="mt-6">
-                <div className="mt-10 flex items-center">
+              <fetcher.Form method="post">
+                <div className="flex items-center gap-2 sm:grid sm:grid-cols-2">
                   <Button
-                    className="basis-4/5 sm:basis-2/4"
+                    className="flex-grow"
                     name="intent"
+                    size="lg"
                     value="bag"
                     type="submit"
                   >
                     Add to bag
                   </Button>
-                  <button
-                    name="intent"
-                    value="favourite"
-                    className="group ml-4 flex items-center justify-center rounded-md py-3 px-3 text-accent"
-                  >
-                    <HeartIcon
-                      className={cn(
-                        "h-6 w-6 flex-shrink-0 text-foreground group-hover:fill-destructive group-hover:text-destructive dark:text-accent",
-                        likesListing &&
-                          "fill-destructive text-destructive group-hover:fill-accent group-hover:text-foreground dark:text-destructive"
-                      )}
-                      aria-hidden="true"
-                    />
-                    <span className="sr-only">Add to favorites</span>
-                  </button>
+                  <WishlistButton
+                    className="w-16 sm:w-auto"
+                    inWishlist={likesListing}
+                  />
                   <input type="hidden" name="listingId" value={listing.id} />
                 </div>
               </fetcher.Form>
+              <div className="mt-3">
+                <SellerDetails {...seller} listingSlug={listing.slug} />
+              </div>
               <ListingAdditionalDetailsSection
                 productDetails={productDetails}
                 fulfilmentOptions={fulfilmentOptions}
               />
             </div>
           </div>
+          <Suspense fallback={<SimilarListingsSkeleton />}>
+            <Await resolve={similarListings}>
+              {(listings) => <SimilarListings listings={listings} />}
+            </Await>
+          </Suspense>
         </div>
       </Card>
     </main>

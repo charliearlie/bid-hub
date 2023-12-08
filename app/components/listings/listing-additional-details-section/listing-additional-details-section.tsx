@@ -23,7 +23,7 @@ export const ListingAdditionalDetailsSection = ({
   fulfilmentOptions,
 }: Props) => {
   return (
-    <section aria-labelledby="details-heading" className="mt-12">
+    <section aria-labelledby="details-heading">
       <h2 id="details-heading" className="sr-only">
         Additional details
       </h2>
