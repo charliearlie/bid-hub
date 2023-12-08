@@ -12,6 +12,7 @@ import {
   Scripts,
   ScrollRestoration,
   useLoaderData,
+  useLocation,
 } from "@remix-run/react";
 import styles from "~/styles/app.css";
 import fontStylesheet from "~/styles/font.css";
@@ -25,6 +26,7 @@ import { getUser } from "~/services/user.server";
 import { getEnv } from "~/util/env.server";
 
 import { UserProvider } from "./contexts/user-context";
+import { getHomepageCategories } from "./services/category.server";
 
 export const meta: MetaFunction = () => {
   return [
@@ -53,7 +55,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const user = await getUser(request);
-  return json({ user, ENV: getEnv() });
+  const categories = await getHomepageCategories();
+  return json({ user, categories, ENV: getEnv() });
 };
 
 function Document({ children }: { children: React.ReactNode }) {
@@ -76,11 +79,14 @@ function Document({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
-  const { ENV, user } = useLoaderData<typeof loader>();
+  const { ENV, user, categories } = useLoaderData<typeof loader>();
+  const location = useLocation();
+  const isHomePage = location.pathname === '/';
+
   return (
     <Document>
       <UserProvider username={user?.username} userId={user?.id}>
-        <SharedHeader user={user} />
+        <SharedHeader user={user} isHomepage={isHomePage} categories={categories} />
         <Outlet />
       </UserProvider>
       <script
