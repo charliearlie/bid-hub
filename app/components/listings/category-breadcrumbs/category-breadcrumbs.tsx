@@ -16,7 +16,7 @@ export const CategoryBreadcrumbs = ({
   const { parentCategory } = category;
   return (
     <nav aria-label="Breadcrumb" className="mx-auto max-w-7xl pb-8">
-      <ol className="flex items-center space-x-4">
+      <ol className="flex items-center justify-center space-x-4 sm:justify-start">
         {parentCategory && (
           <CategoryBreadcrumb
             id={parentCategory.id}

@@ -2,7 +2,13 @@ import { Star } from "lucide-react";
 
 import { cn } from "~/util/utils";
 
-export const RatingStars = ({ rating }: { rating: number | null }) => {
+export const RatingStars = ({
+  numberOfRatings,
+  rating,
+}: {
+  numberOfRatings?: number;
+  rating: number | null;
+}) => {
   if (!rating) {
     return (
       <div className="flex items-center">
@@ -28,6 +34,7 @@ export const RatingStars = ({ rating }: { rating: number | null }) => {
           aria-hidden="true"
         />
       ))}
+      {numberOfRatings && <span className="ml-2">({numberOfRatings})</span>}
     </div>
   );
 };

@@ -8,7 +8,7 @@ import { prisma } from "../util/prisma.server";
 import { getUserById } from "./user.server";
 
 export async function getAllListings(
-  { amount }: { amount?: number } = { amount: 50 }
+  { amount }: { amount?: number } = { amount: 500 }
 ) {
   return await prisma.listing.findMany({
     include: { images: true },
@@ -143,7 +143,13 @@ export const getListingBySlug = async (slug: string) => {
     },
   });
 
-  return listing;
+  const numberOfReviews = await prisma.review.count({
+    where: {
+      listingId: listing.id,
+    },
+  });
+
+  return { listing, numberOfReviews };
 };
 
 export const doesUserLikeListing = async (
@@ -160,11 +166,15 @@ export const doesUserLikeListing = async (
   return Boolean(result);
 };
 
-export const getListingsByCategory = async (categoryId: string) => {
+export const getListingsByCategory = async (
+  categoryId: string,
+  take?: number
+) => {
   const listings = await prisma.listing.findMany({
     where: {
       categoryId,
     },
+    take,
   });
 
   return listings;
