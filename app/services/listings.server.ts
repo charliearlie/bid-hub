@@ -143,7 +143,13 @@ export const getListingBySlug = async (slug: string) => {
     },
   });
 
-  return listing;
+  const numberOfReviews = await prisma.review.count({
+    where: {
+      listingId: listing.id,
+    },
+  });
+
+  return { listing, numberOfReviews };
 };
 
 export const doesUserLikeListing = async (

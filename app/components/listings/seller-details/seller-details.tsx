@@ -9,12 +9,7 @@ type Props = {
   username: string;
 };
 
-export const SellerDetails = ({
-  avatarUrl,
-  feedbackScore,
-  listingSlug,
-  username,
-}: Props) => {
+export const SellerDetails = ({ avatarUrl, listingSlug, username }: Props) => {
   const avatar =
     avatarUrl || "https://avatars.githubusercontent.com/u/10001?v=4";
   const { username: loggedInUsername } = useUser();
@@ -41,7 +36,8 @@ export const SellerDetails = ({
               {/* <RatingStars rating={feedbackScore} /> */}
             </div>
             <span className="flex gap-2 text-sm opacity-80 group-hover:opacity-100 sm:text-base">
-              {ctaText} <ChevronRight />
+              <span className="hidden sm:block">{ctaText}</span>{" "}
+              <ChevronRight />
             </span>
           </div>
         </div>

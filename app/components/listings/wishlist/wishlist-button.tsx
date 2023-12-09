@@ -19,7 +19,7 @@ export const WishlistButton = ({ className, inWishlist }: Props) => {
     >
       <HeartIcon
         className={cn(
-          "h-6 w-6 flex-shrink-0 text-primary-foreground group-hover:fill-destructive group-hover:text-destructive",
+          "h-6 w-6 flex-shrink-0 text-foreground group-hover:fill-destructive group-hover:text-destructive",
           inWishlist &&
             "fill-destructive text-destructive group-hover:fill-accent group-hover:text-foreground dark:text-destructive"
         )}

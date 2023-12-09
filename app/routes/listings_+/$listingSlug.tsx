@@ -66,7 +66,9 @@ export async function action({ request }: DataFunctionArgs) {
 export async function loader({ params, request }: DataFunctionArgs) {
   invariant(params.listingSlug, "Expected params.listingSlug");
   const currentUserId = await getUserId(request);
-  const listing = await getListingBySlug(params.listingSlug);
+  const { listing, numberOfReviews } = await getListingBySlug(
+    params.listingSlug
+  );
 
   invariantResponse(listing, "Listing not found", {
     status: 404,
@@ -87,6 +89,7 @@ export async function loader({ params, request }: DataFunctionArgs) {
   return defer({
     category,
     listing: { ...listing, images: optimisedListingImages },
+    numberOfReviews,
     userLikesListing,
     similarListings: similarListingsPromise,
   });
@@ -94,8 +97,13 @@ export async function loader({ params, request }: DataFunctionArgs) {
 
 export default function ListingSlugRoute() {
   const fetcher = useFetcher();
-  const { category, listing, similarListings, userLikesListing } =
-    useLoaderData<typeof loader>();
+  const {
+    category,
+    listing,
+    numberOfReviews,
+    similarListings,
+    userLikesListing,
+  } = useLoaderData<typeof loader>();
 
   const {
     buyItNowPrice,
@@ -136,7 +144,10 @@ export default function ListingSlugRoute() {
                 <h1 className="text-3xl font-extrabold tracking-tight">
                   {title}
                 </h1>
-                <RatingStars rating={rating} />
+                <RatingStars
+                  numberOfRatings={numberOfReviews}
+                  rating={rating}
+                />
               </div>
               <div>
                 <h3 className="sr-only">Description</h3>
@@ -173,6 +184,8 @@ export default function ListingSlugRoute() {
               />
             </div>
           </div>
+        </div>
+        <div className="px-4 sm:py-8">
           <Suspense fallback={<SimilarListingsSkeleton />}>
             <Await resolve={similarListings}>
               {(listings) => <SimilarListings listings={listings} />}
