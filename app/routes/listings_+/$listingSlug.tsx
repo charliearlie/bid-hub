@@ -15,6 +15,7 @@ import { SellerDetails } from "~/components/listings/seller-details";
 import { SimilarListings } from "~/components/listings/similar-listings/similar-listings";
 import { SimilarListingsSkeleton } from "~/components/listings/similar-listings/similar-listings-skeleton";
 import { WishlistButton } from "~/components/listings/wishlist/wishlist-button";
+import { ReviewList } from "~/components/reviews/review-list";
 
 import { getCategoryAndParents } from "~/services/category.server";
 import {
@@ -84,7 +85,7 @@ export async function loader({ params, request }: DataFunctionArgs) {
     ? await doesUserLikeListing(currentUserId, listing.id)
     : false;
 
-  const similarListingsPromise = getListingsByCategory(listing.categoryId, 6);
+  const similarListingsPromise = getListingsByCategory(listing.categoryId, 3);
 
   return defer({
     category,
@@ -114,6 +115,7 @@ export default function ListingSlugRoute() {
     title,
     images,
     seller,
+    reviews,
   } = listing;
 
   const likesListing =
@@ -137,9 +139,11 @@ export default function ListingSlugRoute() {
               title: listing.title,
             }}
           />
-          <div className="lg:grid lg:grid-cols-2 lg:items-start lg:gap-x-8">
-            <ImageGalleryTabs images={images} listingTitle={title} />
-            <div className="mt-10 flex flex-col gap-4 px-2 sm:mt-16 sm:px-0 lg:mt-0">
+          <div className="flex flex-col gap-8 lg:flex-row">
+            <div className="lg:basis-3/5">
+              <ImageGalleryTabs images={images} listingTitle={title} />
+            </div>
+            <div className="mt-10 flex flex-col gap-4 px-2 sm:mt-16 sm:px-0 lg:mt-0 lg:basis-2/5">
               <div className="flex flex-col gap-1">
                 <h1 className="text-3xl font-extrabold tracking-tight">
                   {title}
@@ -184,6 +188,9 @@ export default function ListingSlugRoute() {
               />
             </div>
           </div>
+        </div>
+        <div className="px-2 py-8 sm:px-6 lg:max-w-7xl lg:px-8">
+          <ReviewList reviews={reviews} showHeading />
         </div>
         <div className="px-4 sm:py-8">
           <Suspense fallback={<SimilarListingsSkeleton />}>

@@ -3,10 +3,11 @@ import { useState } from "react";
 import BurgerSVG from "~/styles/svg/burger";
 import CloseSVG from "~/styles/svg/close";
 import SearchSVG from "~/styles/svg/search";
-import type { UserType as User } from "~/types";
 
 import { Input } from "~/components/common/ui/input";
 import { UserDropDown } from "~/components/header/user-dropdown";
+
+import type { UserType as User } from "~/types";
 
 type Props = {
   user: User | null;
@@ -20,11 +21,11 @@ export function SharedHeader({ user }: Props) {
     { title: "Sell", path: "/listings/create" },
   ];
   return (
-    <nav className="sticky top-0 z-50 bg-accent-foreground dark:bg-background sm:h-[84px]">
+    <nav className="sticky top-0 z-50 bg-background sm:h-[84px]">
       <div className="mx-auto flex max-w-screen-xl items-center space-x-8 py-3 px-4 md:px-8">
         <div className="flex-none lg:flex-initial">
           <Link to="/">
-            <span className="text-2xl font-black text-purple-200 md:text-4xl">
+            <span className="text-2xl font-black text-primary md:text-4xl">
               Bidhub
             </span>
           </Link>
@@ -39,7 +40,7 @@ export function SharedHeader({ user }: Props) {
               {navigation.map((item, idx) => (
                 <li
                   key={idx}
-                  className="text-xl font-bold text-gray-300 hover:text-gray-400"
+                  className="text-xl font-bold text-foreground hover:opacity-50"
                 >
                   <Link to={item.path}>{item.title}</Link>
                 </li>

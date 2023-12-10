@@ -23,7 +23,7 @@ export default function ListingPreview({
     <Link prefetch="intent" to={`/listings/${slug}`}>
       <Comp className="group">
         <img
-          className="h-64 w-full rounded-lg object-cover group-hover:opacity-75"
+          className="aspect-square w-full rounded-lg object-cover group-hover:opacity-75"
           src={thumbnail || "https://picsum.photos/200"}
           alt={title}
         />

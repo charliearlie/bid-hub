@@ -831,6 +831,10 @@ h2 {
   margin-left: 0.5rem;
 }
 
+.ml-4 {
+  margin-left: 1rem;
+}
+
 .block {
   display: block;
 }
@@ -861,6 +865,10 @@ h2 {
 
 .hidden {
   display: none;
+}
+
+.aspect-square {
+  aspect-ratio: 1 / 1;
 }
 
 .h-4 {
@@ -957,6 +965,10 @@ h2 {
 
 .h-8 {
   height: 2rem;
+}
+
+.h-auto {
+  height: auto;
 }
 
 .max-h-8 {
@@ -1155,6 +1167,10 @@ h2 {
   flex-basis: 33.333333%;
 }
 
+.basis-4\/5 {
+  flex-basis: 80%;
+}
+
 .border-collapse {
   border-collapse: collapse;
 }
@@ -1317,6 +1333,10 @@ h2 {
 
 .gap-0 {
   gap: 0px;
+}
+
+.gap-16 {
+  gap: 4rem;
 }
 
 .space-x-4 > :not([hidden]) ~ :not([hidden]) {
@@ -2265,6 +2285,10 @@ h2 {
   color: rgb(55 65 81 / var(--tw-text-opacity));
 }
 
+.hover\:text-accent:hover {
+  color: hsl(var(--accent));
+}
+
 .hover\:underline:hover {
   text-decoration-line: underline;
 }
@@ -2275,6 +2299,10 @@ h2 {
 
 .hover\:opacity-100:hover {
   opacity: 1;
+}
+
+.hover\:opacity-50:hover {
+  opacity: 0.5;
 }
 
 .hover\:file\:opacity-70::file-selector-button:hover {
@@ -2659,6 +2687,10 @@ h2 {
   .dark\:text-destructive {
     color: hsl(var(--destructive));
   }
+
+  .dark\:text-accent {
+    color: hsl(var(--accent));
+  }
 }
 
 @media (min-width: 640px) {
@@ -2719,8 +2751,16 @@ h2 {
     width: 4rem;
   }
 
+  .sm\:basis-2\/4 {
+    flex-basis: 50%;
+  }
+
   .sm\:grid-cols-2 {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .sm\:grid-cols-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
   .sm\:flex-row {
@@ -2737,6 +2777,10 @@ h2 {
 
   .sm\:justify-end {
     justify-content: flex-end;
+  }
+
+  .sm\:justify-center {
+    justify-content: center;
   }
 
   .sm\:space-x-4 > :not([hidden]) ~ :not([hidden]) {
@@ -2848,8 +2892,28 @@ h2 {
     max-width: 420px;
   }
 
+  .md\:basis-3\/5 {
+    flex-basis: 60%;
+  }
+
+  .md\:basis-2\/5 {
+    flex-basis: 40%;
+  }
+
+  .md\:basis-1\/2 {
+    flex-basis: 50%;
+  }
+
   .md\:grid-cols-4 {
     grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .md\:grid-cols-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .md\:flex-row {
+    flex-direction: row;
   }
 
   .md\:justify-end {
@@ -2881,6 +2945,10 @@ h2 {
     position: static;
   }
 
+  .lg\:col-span-1 {
+    grid-column: span 1 / span 1;
+  }
+
   .lg\:mt-0 {
     margin-top: 0px;
   }
@@ -2905,6 +2973,14 @@ h2 {
     height: 32rem;
   }
 
+  .lg\:w-7\/12 {
+    width: 58.333333%;
+  }
+
+  .lg\:w-5\/12 {
+    width: 41.666667%;
+  }
+
   .lg\:max-w-7xl {
     max-width: 80rem;
   }
@@ -2917,12 +2993,24 @@ h2 {
     flex-basis: 75%;
   }
 
+  .lg\:basis-3\/5 {
+    flex-basis: 60%;
+  }
+
+  .lg\:basis-2\/5 {
+    flex-basis: 40%;
+  }
+
   .lg\:grid-cols-2 {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .lg\:grid-cols-3 {
     grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .lg\:grid-cols-4 {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 
   .lg\:flex-row {

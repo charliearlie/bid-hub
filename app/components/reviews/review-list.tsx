@@ -1,16 +1,22 @@
+import { ArrowRight } from "lucide-react";
+
 import type { ReviewType } from "~/types";
 
 import { RatingStars } from "../common/star-rating/star-rating";
+import { Button } from "../common/ui/button";
 import { Separator } from "../common/ui/separator";
 
 type Props = {
   reviews: Array<ReviewType>;
+  showHeading?: boolean;
 };
 
-export const ReviewList = ({ reviews }: Props) => {
+export const ReviewList = ({ reviews, showHeading }: Props) => {
   return (
-    <>
-      <h3 className="sr-only">Customer Reviews</h3>
+    <div>
+      <h2 className={showHeading ? "text-2xl font-bold" : "sr-only"}>
+        Customer Reviews
+      </h2>
 
       {reviews.map((review, reviewIdx) => (
         <div
@@ -48,6 +54,11 @@ export const ReviewList = ({ reviews }: Props) => {
           </div>
         </div>
       ))}
-    </>
+      <div className="flex w-full justify-end">
+        <Button variant="outline">
+          View all reviews <ArrowRight />
+        </Button>
+      </div>
+    </div>
   );
 };

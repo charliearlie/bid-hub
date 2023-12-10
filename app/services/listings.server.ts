@@ -140,6 +140,19 @@ export const getListingBySlug = async (slug: string) => {
         },
       },
       warranty: true,
+      reviews: {
+        select: {
+          comment: true,
+          rating: true,
+          createdAt: true,
+          buyer: {
+            select: {
+              avatarUrl: true,
+              username: true,
+            },
+          },
+        },
+      },
     },
   });
 
