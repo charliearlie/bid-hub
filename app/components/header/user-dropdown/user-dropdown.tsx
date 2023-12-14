@@ -10,7 +10,7 @@ import {
   DropdownMenuTrigger,
 } from "~/components/common/ui/dropdown-menu";
 
-import type { UserType as User } from "~/util/types";
+import type { UserType as User } from "~/types";
 
 type Props = {
   className: string;
@@ -41,6 +41,7 @@ export function UserDropDown({ className, user }: Props) {
             <button className="h-10 w-10 rounded-full outline-none ring-2 ring-white ring-offset-2 lg:focus:ring-violet-500">
               <img
                 src="https://ih1.redbubble.net/image.1003426384.0291/st,small,507x507-pad,600x600,f8f8f8.jpg"
+                alt="User avatar"
                 className="h-full w-full rounded-full"
               />
             </button>

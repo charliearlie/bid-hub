@@ -1,18 +1,19 @@
-import { ForgotPassword } from "@prisma/client";
+import type { ForgotPassword } from "@prisma/client";
 import { json } from "@remix-run/node";
 import bcrypt from "bcryptjs";
 import { v4 as uuidv4 } from "uuid";
-import { z } from "zod";
+import type { z } from "zod";
 
 import sendEmail from "~/services/email.server";
 import { createUserSession, getUserId } from "~/services/session.server";
 
+import type { LoginForm, RegisterForm } from "~/types";
+
 import magicLinkEmailTemplate from "~/util/helpers/email/magic-link-email";
 import resetPasswordEmailTemplate from "~/util/helpers/email/reset-password-email";
-import type { LoginForm, RegisterForm } from "~/util/types";
 
 import { prisma } from "../util/prisma.server";
-import {
+import type {
   AddressFieldsetSchema,
   PersonalDetailsFieldsetSchema,
 } from "./zod-schemas";
@@ -236,6 +237,21 @@ export async function getUserByUsernameOrEmail(usernameOrEmail: string) {
   return await prisma.user.findFirst({
     where: {
       OR: [{ username: usernameOrEmail }, { email: usernameOrEmail }],
+    },
+    include: {
+      feedbackReceived: {
+        select: {
+          rating: true,
+          comment: true,
+          createdAt: true,
+          buyer: {
+            select: {
+              avatarUrl: true,
+              username: true,
+            },
+          },
+        },
+      },
     },
   });
 }

@@ -1,30 +1,22 @@
 import { conform, list, useFieldList, useForm } from "@conform-to/react";
 import { getFieldsetConstraint, parse } from "@conform-to/zod";
-import { Item } from "@prisma/client";
 import { SelectValue } from "@radix-ui/react-select";
+import type { DataFunctionArgs } from "@remix-run/node";
 import {
-  DataFunctionArgs,
   json,
   unstable_createMemoryUploadHandler as createMemoryUploadHandler,
   unstable_parseMultipartFormData as parseMultipartFormData,
+  redirect,
 } from "@remix-run/node";
 import { Form, useActionData, useLoaderData } from "@remix-run/react";
 import { PoundSterlingIcon } from "lucide-react";
 import { useState } from "react";
 import { z } from "zod";
 
-import { createItem, getItemById } from "~/services/item.server";
-import {
-  addListing,
-  getCategoryDropdownOptions,
-} from "~/services/listings.server";
-import { getUserId } from "~/services/session.server";
-import { FileSchema } from "~/services/zod-schemas";
-
 import { DatePicker } from "~/components/common/date-picker";
 import { SwitchWithLabel } from "~/components/common/switch-with-label";
 import { Button } from "~/components/common/ui/button";
-import Card from "~/components/common/ui/card/card";
+import { Card } from "~/components/common/ui/card/card";
 import CardContent from "~/components/common/ui/card/card-content";
 import { Label } from "~/components/common/ui/label";
 import {
@@ -36,6 +28,13 @@ import {
 import { FormField } from "~/components/form/form-field";
 import { FormFieldTextArea } from "~/components/form/form-field-text-area";
 import { SubmitButton } from "~/components/form/submit-button";
+
+import {
+  addListing,
+  getCategoryDropdownOptions,
+} from "~/services/listings.server";
+import { getUserId } from "~/services/session.server";
+import { FileSchema } from "~/services/zod-schemas";
 
 import { UPLOAD_PRESET_ENUM, uploadImages } from "~/util/cloudinary.server";
 
@@ -108,19 +107,6 @@ export const action = async ({ request }: DataFunctionArgs) => {
       )
     : [];
 
-  let newItem: Item | null;
-
-  if (submission.value.itemId) {
-    newItem = await getItemById(submission.value.itemId);
-  } else {
-    newItem = await createItem(submission.value.itemName);
-  }
-
-  if (!newItem || !thumbnail) {
-    submission.error[""] = ["We failed to create your item"];
-    return json({ status: "error", submission } as const);
-  }
-
   const { itemId, ...listingData } = submission.value;
 
   const userId = await getUserId(request);
@@ -136,12 +122,9 @@ export const action = async ({ request }: DataFunctionArgs) => {
       buyItNowPrice: listingData.buyItNowPrice || null,
       startingBid: listingData.startingBid || null,
       minBidIncrement: listingData.minBidIncrement || null,
-      images: images.filter((image) => Boolean(image)) as string[],
-      endTime: listingData.endTime,
-      thumbnail,
+      images,
+      thumbnail: thumbnail.imageUrl,
     },
-    newItem,
-    [listingData.categoryId],
     userId
   );
 
@@ -150,7 +133,7 @@ export const action = async ({ request }: DataFunctionArgs) => {
     return json({ status: "error", submission } as const);
   }
 
-  return json({ status: "success", listing: newListing, submission } as const);
+  return redirect(`/listings/${newListing.slug}`);
 };
 
 export default function CreateListingRoute() {
@@ -211,9 +194,13 @@ export default function CreateListingRoute() {
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Select category" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="h-48">
                 {categoryDropdownOptions.map((option) => (
-                  <SelectItem key={option.value} value={option.value}>
+                  <SelectItem
+                    className="cursor-pointer"
+                    key={option.value}
+                    value={option.value}
+                  >
                     {option.label}
                   </SelectItem>
                 ))}
@@ -241,6 +228,7 @@ export default function CreateListingRoute() {
               label="Image"
               accept="image/*"
               type="file"
+              key={image.id}
               {...conform.input(image)}
             />
           ))}

@@ -1,6 +1,6 @@
 # Bidhub
 
-An eBay alternative built on a modern tech stack
+An eCommerce website built on a modern tech stack
 
 ## Development
 
