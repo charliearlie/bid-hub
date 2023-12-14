@@ -17,7 +17,7 @@ module.exports = {
     },
     extend: {
       fontFamily: {
-        sans: ["Raleway", "sans-serif"],
+        sans: ["Nunito Sans", "sans-serif"],
       },
       colors: {
         border: "hsl(var(--border))",

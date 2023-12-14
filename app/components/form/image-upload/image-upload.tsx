@@ -36,3 +36,5 @@ export const ImageUpload = React.forwardRef<HTMLInputElement, Props>(
     );
   }
 );
+
+ImageUpload.displayName = "ImageUpload";

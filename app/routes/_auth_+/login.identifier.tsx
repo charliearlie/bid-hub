@@ -7,11 +7,6 @@ import { HoneypotInputs } from "remix-utils/honeypot/react";
 import { z } from "zod";
 
 import {
-  generateMagicLink,
-  getUserByUsernameOrEmail,
-} from "~/services/user.server";
-
-import {
   Alert,
   AlertDescription,
   AlertTitle,
@@ -19,6 +14,11 @@ import {
 import { Button } from "~/components/common/ui/button";
 import { FormField } from "~/components/form/form-field";
 import { SubmitButton } from "~/components/form/submit-button";
+
+import {
+  generateMagicLink,
+  getUserByUsernameOrEmail,
+} from "~/services/user.server";
 
 import { checkForHoneypot } from "~/util/honeypot.server";
 
@@ -84,7 +84,7 @@ export default function LoginIdentifierRoute() {
   });
 
   return (
-    <div>
+    <div className="flex h-full flex-col gap-8">
       {actionData?.status === "error" && (
         <Alert variant="destructive" className="my-2">
           <AlertTitle>User not found</AlertTitle>
@@ -101,6 +101,18 @@ export default function LoginIdentifierRoute() {
           </AlertDescription>
         </Alert>
       )}
+      <div className="flex flex-col items-center gap-4 text-center">
+        <h1 className="flex text-xl sm:text-2xl">
+          Enter your email or username to log in to Bidhub
+        </h1>
+        <p>
+          Or{" "}
+          <Link className="text-primary" to="/register">
+            sign up
+          </Link>{" "}
+          to buy some good shit
+        </p>
+      </div>
       <Form className="" method="post" {...form.props}>
         <FormField
           label="Email or username"
@@ -119,7 +131,12 @@ export default function LoginIdentifierRoute() {
           <SubmitButton name={conform.INTENT} value="submit" variant="default">
             Next {<ArrowRight size={16} />}
           </SubmitButton>
-          <SubmitButton name={conform.INTENT} value="magic" variant="secondary">
+          <SubmitButton
+            className="bg-green-800 text-primary-foreground"
+            name={conform.INTENT}
+            value="magic"
+            variant="secondary"
+          >
             Send magic link {<Send size={16} />}
           </SubmitButton>
           <Button asChild variant="outline">

@@ -1,12 +1,19 @@
-import type { Item, Listing } from "@prisma/client";
+import type { Listing } from "@prisma/client";
+
+import type { CoreImageType } from "~/types";
 
 import { buildListingEndDateAndTime, generateSlug } from "~/util/utils";
 
 import { prisma } from "../util/prisma.server";
 import { getUserById } from "./user.server";
 
-export async function getAllListings() {
-  return await prisma.listing.findMany();
+export async function getAllListings(
+  { amount }: { amount?: number } = { amount: 500 }
+) {
+  return await prisma.listing.findMany({
+    include: { images: true },
+    take: amount,
+  });
 }
 
 type ListingSubSet = Pick<
@@ -18,12 +25,13 @@ type ListingSubSet = Pick<
   | "startingBid"
   | "minBidIncrement"
   | "thumbnail"
-  | "images"
-> & { endTime?: string };
+  | "categoryId"
+> & { endTime?: string; images: CoreImageType[] };
 
-export async function addListing(
+export const addListing = async (
   {
     buyItNowPrice,
+    categoryId,
     description,
     images,
     minBidIncrement,
@@ -33,10 +41,8 @@ export async function addListing(
     endTime: _endtime,
     thumbnail,
   }: ListingSubSet,
-  item: Item,
-  categoryIds: string[],
   userId: string
-) {
+) => {
   const user = await getUserById(userId);
   const endTime = buildListingEndDateAndTime(_endtime);
 
@@ -45,7 +51,6 @@ export async function addListing(
       buyItNowPrice,
       description,
       endTime,
-      images,
       minBidIncrement,
       quantity,
       startingBid,
@@ -55,18 +60,14 @@ export async function addListing(
           id: user?.id,
         },
       },
-      item: {
+      category: {
         connect: {
-          id: item.id,
+          id: categoryId,
         },
       },
-      categories: {
-        create: categoryIds.map((categoryId) => ({
-          category: {
-            connect: {
-              id: categoryId,
-            },
-          },
+      images: {
+        create: images.map((image) => ({
+          ...image,
         })),
       },
       slug: generateSlug(title),
@@ -75,26 +76,118 @@ export async function addListing(
   });
 
   return newListing;
-}
-
-export const getListingBySlug = async (slug: string) => {
-  const item = await prisma.listing.findUnique({
-    where: { slug },
-    include: { item: true },
-  });
-
-  return item;
 };
 
-export const getListingsByCategory = async (categoryId: string) => {
-  const listings = await prisma.listing.findMany({
-    where: {
-      categories: {
-        some: {
-          categoryId,
+export const getListingBySlug = async (slug: string) => {
+  const listing = await prisma.listing.findUniqueOrThrow({
+    where: { slug },
+    include: {
+      category: true,
+      seller: {
+        select: {
+          avatarUrl: true,
+          feedbackScore: true,
+          username: true,
+        },
+      },
+      images: {
+        select: {
+          altText: true,
+          imageUrl: true,
+          publicId: true,
+        },
+      },
+      fulfilmentOptions: {
+        select: {
+          minDays: true,
+          maxDays: true,
+          method: true,
+          price: true,
+        },
+      },
+      productDetails: {
+        select: {
+          sizes: true,
+          colours: true,
+          materials: true,
+          fit: true,
+          brand: true,
+          style: true,
+          gender: true,
+          modelNumber: true,
+          powerSource: true,
+          voltage: true,
+          wattage: true,
+          connectivity: true,
+          features: true,
+          dimensions: true,
+          weight: true,
+          certifications: true,
+          usageInstructions: true,
+          warrantyInformation: true,
+          isSmart: true,
+          compatibleDevices: true,
+          author: true,
+          genre: true,
+          language: true,
+          pageCount: true,
+          publicationYear: true,
+          publisher: true,
+          ISBN: true,
+          developer: true,
+          platform: true,
+          releaseDate: false, // Explicit about this as we need to map the type
+        },
+      },
+      warranty: true,
+      reviews: {
+        select: {
+          comment: true,
+          rating: true,
+          createdAt: true,
+          buyer: {
+            select: {
+              avatarUrl: true,
+              username: true,
+            },
+          },
         },
       },
     },
+  });
+
+  const numberOfReviews = await prisma.review.count({
+    where: {
+      listingId: listing.id,
+    },
+  });
+
+  return { listing, numberOfReviews };
+};
+
+export const doesUserLikeListing = async (
+  userId: string,
+  listingId: string
+) => {
+  const result = await prisma.watch.findFirst({
+    where: {
+      listingId,
+      userId,
+    },
+  });
+
+  return Boolean(result);
+};
+
+export const getListingsByCategory = async (
+  categoryId: string,
+  take?: number
+) => {
+  const listings = await prisma.listing.findMany({
+    where: {
+      categoryId,
+    },
+    take,
   });
 
   return listings;
@@ -112,4 +205,35 @@ export const getCategoryDropdownOptions = async () => {
     value: category.id,
     label: category.name,
   }));
+};
+
+export const toggleLikeOnListing = async (
+  listingId: string,
+  userId: string
+) => {
+  const watch = await prisma.watch.findFirst({
+    where: {
+      listingId,
+      userId,
+    },
+  });
+
+  const userLikesListing = !!watch;
+
+  if (userLikesListing) {
+    await prisma.watch.delete({
+      where: {
+        id: watch.id,
+      },
+    });
+  } else {
+    await prisma.watch.create({
+      data: {
+        listingId,
+        userId,
+      },
+    });
+  }
+
+  return !userLikesListing;
 };

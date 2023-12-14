@@ -1,9 +1,10 @@
-import { FieldConfig } from "@conform-to/react";
+import type { FieldConfig } from "@conform-to/react";
 import { PlusIcon } from "lucide-react";
-import React, { ChangeEvent, useState } from "react";
-import { z } from "zod";
+import type { ChangeEvent } from "react";
+import React, { useState } from "react";
+import type { z } from "zod";
 
-import { FileSchema } from "~/services/zod-schemas";
+import type { FileSchema } from "~/services/zod-schemas";
 
 import { cn } from "~/util/utils";
 
@@ -12,7 +13,7 @@ export const ImageUploadAvatar = React.forwardRef<
   React.ImgHTMLAttributes<HTMLImageElement> & {
     fieldProps: FieldConfig<z.infer<typeof FileSchema>>;
   }
->(({ className, fieldProps, src, ...props }, ref) => {
+>(({ alt, className, fieldProps, src, ...props }, ref) => {
   const [previewImage, setPreviewImage] = useState<string | null>(src || null);
   return (
     <>
@@ -23,6 +24,7 @@ export const ImageUploadAvatar = React.forwardRef<
               "cursor-pointer object-cover hover:opacity-80",
               className
             )}
+            alt={alt}
             {...props}
             src={previewImage}
             ref={ref}
