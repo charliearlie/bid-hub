@@ -14,10 +14,8 @@ import {
   useLoaderData,
 } from "@remix-run/react";
 import { AlertOctagon } from "lucide-react";
-import styles from "~/styles/app.css";
-import fontStylesheet from "~/styles/font.css";
 
-import "./styles/app.css";
+// import fontStylesheet from "~/styles/font.css";
 import { ErrorBoundaryComponent } from "~/components/error-boundary";
 import { SharedHeader } from "~/components/header/shared-header";
 
@@ -27,6 +25,7 @@ import { getUser } from "~/services/user.server";
 import { getEnv } from "~/util/env.server";
 
 import { UserProvider } from "./contexts/user-context";
+import "./styles/app.css";
 
 export const meta: MetaFunction = () => {
   return [
@@ -40,7 +39,7 @@ export const meta: MetaFunction = () => {
 
 export function links() {
   return [
-    { rel: "stylesheet", href: fontStylesheet },
+    // { rel: "stylesheet", href: fontStylesheet },
     {
       rel: "icon",
       href: "https://fav.farm/👨🏻‍⚖️",
