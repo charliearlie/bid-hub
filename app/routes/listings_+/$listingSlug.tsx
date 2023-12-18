@@ -1,6 +1,6 @@
 import { defer, json } from "@remix-run/node";
 import type { MetaFunction, DataFunctionArgs } from "@remix-run/node";
-import { Await, Link, useFetcher, useLoaderData } from "@remix-run/react";
+import { Await, Link, useLoaderData } from "@remix-run/react";
 import { Suspense } from "react";
 import invariant from "tiny-invariant";
 
@@ -97,7 +97,6 @@ export async function loader({ params, request }: DataFunctionArgs) {
 }
 
 export default function ListingSlugRoute() {
-  const fetcher = useFetcher();
   const {
     category,
     listing,
@@ -117,11 +116,6 @@ export default function ListingSlugRoute() {
     seller,
     reviews,
   } = listing;
-
-  const likesListing =
-    fetcher.formData?.get("intent") === "favourite"
-      ? !userLikesListing
-      : userLikesListing;
 
   return (
     <main className="container mx-auto max-w-screen-xl p-4">
@@ -161,24 +155,23 @@ export default function ListingSlugRoute() {
                 <h2 className="sr-only">Product information</h2>
                 <p className="text-3xl font-bold">£{buyItNowPrice}</p>
               </div>
-              <fetcher.Form method="post">
-                <div className="flex items-center gap-2 sm:grid sm:grid-cols-2">
-                  <Button
-                    className="flex-grow"
-                    name="intent"
-                    size="lg"
-                    value="bag"
-                    type="submit"
-                  >
-                    Add to bag
-                  </Button>
-                  <WishlistButton
-                    className="w-16 sm:w-auto"
-                    inWishlist={likesListing}
-                  />
-                  <input type="hidden" name="listingId" value={listing.id} />
-                </div>
-              </fetcher.Form>
+              <div className="flex items-center gap-2 sm:grid sm:grid-cols-2">
+                <Button
+                  className="flex-grow"
+                  name="intent"
+                  size="lg"
+                  value="bag"
+                  type="submit"
+                >
+                  Add to bag
+                </Button>
+                <WishlistButton
+                  className="w-16 sm:w-auto"
+                  inWishlist={userLikesListing}
+                  listingId={listing.id}
+                />
+                <input type="hidden" name="listingId" value={listing.id} />
+              </div>
               <div className="mt-3">
                 <SellerDetails {...seller} listingSlug={listing.slug} />
               </div>
