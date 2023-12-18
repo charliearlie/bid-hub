@@ -7,7 +7,7 @@ type Props = {
 
 export function CategoryList({ categories }: Props) {
     return (
-        <div className="bg-accent-foreground dark:bg-background">
+        <div className="bg-accent-foreground dark:bg-background sticky top-[82px] z-40">
             <ul className="mx-auto flex justify-center items-center max-w-screen-xl space-x-8 py-3 px-4 md:px-8">
                 {categories.map((category, idx) => (
                     <li

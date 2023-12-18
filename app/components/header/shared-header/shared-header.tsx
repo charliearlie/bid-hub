@@ -10,57 +10,90 @@ import { Menu } from "./menu";
 import { cn } from "~/util/utils";
 import { CategoryList } from "./category-list";
 
+import useScrollPosition from "../../../hooks/useScrollPosition";
+import useWindowWidth from "../../../hooks/useScreenWidth";
+
 type Props = {
   user: User | null;
   isHomepage: boolean;
   categories: Pick<Category, "name" | "slug">[];
 };
 
+type LogoProps = {
+  isFullSize?: Boolean;
+};
+
+function Logo({ isFullSize }: LogoProps) {
+  return (
+    <div className="flex-none lg:flex-initial">
+      <Link to="/">
+        <span className={`font-black text-purple-200 ${isFullSize ? 'text-9xl' : 'md:text-4xl text-2xl'}`}>
+          Bidhub
+        </span>
+      </Link>
+    </div>
+  )
+}
+
 export function SharedHeader({ user, isHomepage, categories }: Props) {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
 
-  const classy = cn(
-    'sticky top-0 z-50 bg-accent-foreground dark:bg-background sm:h-[84px]',
-    isHomepage &&  'h-4/5 sm:h-[100%]'
+  const scrollPosition = useScrollPosition();
+  const windowWidth = useWindowWidth();
+
+  const checkHeight = (item: 'logo' | 'search') => {
+    const items = {
+      logo: {
+        sm: 270,
+        lg: 235
+      },
+      search : {
+        sm: 537,
+        lg: 500
+      }
+    }
+
+    const itemSize = items[item]
+    const minHeigth = windowWidth ? itemSize[windowWidth] : itemSize.lg
+
+    return minHeigth < scrollPosition;
+  }
+
+  const shouldShowHeroItems = {
+    logo: (isHomepage && checkHeight('logo')) || !isHomepage || isMenuOpen,
+    search:( isHomepage && checkHeight('search')) || !isHomepage,
+  };
+
+  const navigationClass = 'mx-auto flex max-w-screen-xl items-center gap-8 py-3 px-4 md:px-8'
+
+  const navigationContainerClass = cn(
+    "flex gap-8 justify-between items-center ",
+    shouldShowHeroItems.logo && 'lg:w-full',
+    shouldShowHeroItems.search && 'w-full'
   );
-  const layoutClass = cn(
-    'mx-auto flex max-w-screen-xl items-center space-x-8 py-3 px-4 md:px-8',
-    isHomepage &&  'flex-col space-y-8'
-  );
-
-  const test = cn(isHomepage ? "order-first w-full flex space-between" : "w-full flex space-x-8 items-center")
-
-  const logo = cn(
-    "text-2xl font-black text-purple-200 md:text-4xl",
-    isHomepage && 'text-4xl md:text-8xl'
-  )
-
-  const t = cn(isHomepage && "w-full")
 
   return (
     <>
-      <nav className={classy}>
-        <div className={layoutClass}>
-          <div className="flex-none lg:flex-initial">
-            <Link to="/">
-              <span className={logo}>
-                Bidhub
-              </span>
-            </Link>
-          </div>
-          { isHomepage && <p className="text-xl font-bold text-gray-300">An eCommerce website built on a modern tech stack</p> }
-          {/* <div className="flex flex-1 space-x-6 items-center justify-between"> */}
-          <div className={test}>
-
-          <Menu user={user} isMenuOpen={isMenuOpen} className={t} />
-            {!isHomepage && <Search  />}
-          <Account user={user} isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />
-          </div>
-          {isHomepage && <Search />}
-
+      <nav className="sticky top-0 z-50 bg-accent-foreground dark:bg-background ">
+        <div className={cn(navigationClass, shouldShowHeroItems.logo ? 'justify-between' : 'justify-end')}>
+            { shouldShowHeroItems.logo  && <Logo /> }
+          <div className={navigationContainerClass}>
+            <Menu user={user} isMenuOpen={isMenuOpen} className={(!shouldShowHeroItems.search || isMenuOpen ) ? "w-full" : ''} />
+              {shouldShowHeroItems.search && <Search  />}
+              <Account user={user} isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />
+            </div>
         </div>
       </nav>
-      <CategoryList categories={categories} />
+      { isHomepage && 
+        <div className="bg-accent-foreground dark:bg-background">
+          <div className={cn(navigationClass, isHomepage && 'flex-col space-y-10 pt-32 pb-24' )}>
+            <Logo isFullSize />
+            <p className="text-xl font-bold text-gray-300">An eCommerce website built on a modern tech stack</p>
+            <Search />
+          </div>
+        </div>
+      }
+      <CategoryList categories={categories}/>
     </>
   );
 }

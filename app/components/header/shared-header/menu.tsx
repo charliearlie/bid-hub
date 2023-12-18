@@ -23,7 +23,7 @@ export function Menu({ user, isMenuOpen, className }: Props ) {
         className
       )}
       >
-      <ul className="mt-12 space-y-5 lg:mt-0 lg:flex lg:space-x-6 lg:space-y-0">
+      <ul className="mt-12 space-y-5 lg:mt-0 lg:flex lg:space-x-6 lg:space-y-0 px-4 md:px-8">
         {navigation.map((item, idx) => (
           <li
             key={idx}
@@ -35,7 +35,7 @@ export function Menu({ user, isMenuOpen, className }: Props ) {
       </ul>
 
       <UserDropDown
-        className="mt-5 block border-t bg-gray-800 pt-5 lg:hidden"
+        className="mt-5 block border-t bg-gray-800 py-5 lg:hidden px-4 md:px-8"
         user={user}
       />
     </div>
