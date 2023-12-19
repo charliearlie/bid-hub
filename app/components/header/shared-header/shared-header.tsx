@@ -13,8 +13,6 @@ import { CategoryList } from "./category-list";
 import useScrollPosition from "../../../hooks/useScrollPosition";
 import useWindowWidth from "../../../hooks/useScreenWidth";
 
-import type { UserType as User } from "~/types";
-
 type Props = {
   user: User | null;
   isHomepage: boolean;
