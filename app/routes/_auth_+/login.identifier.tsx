@@ -132,7 +132,7 @@ export default function LoginIdentifierRoute() {
             Next {<ArrowRight size={16} />}
           </SubmitButton>
           <SubmitButton
-            className="bg-green-800"
+            className="bg-green-800 text-primary-foreground"
             name={conform.INTENT}
             value="magic"
             variant="secondary"

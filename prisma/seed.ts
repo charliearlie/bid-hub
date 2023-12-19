@@ -1,6 +1,12 @@
 import { faker } from "@faker-js/faker";
 import { PrismaClient } from "@prisma/client";
+import { v4 as uuidv4 } from "uuid";
 
+import {
+  cloudinaryImages,
+  fulfilmentOptions,
+  productDetails,
+} from "./fixtures";
 import { createCategoriesWithImages, createListing } from "./helpers";
 
 const prisma = new PrismaClient();
@@ -194,11 +200,97 @@ async function seed() {
     });
   });
 
-  for (let i = 0; i < 50; i++) {
-    setInterval(() => {
-      createListing(prisma, userIds, categoryIds);
-    }, 300);
-  }
+  const listingInserts = Array.from({ length: 150 }, () => {
+    const sellerId =
+      userIds[faker.number.int({ min: 1, max: userIds.length - 1 })];
+
+    const image =
+      cloudinaryImages[
+        faker.number.int({ min: 0, max: cloudinaryImages.length - 1 })
+      ];
+
+    const listingName = faker.commerce.productName();
+    const productDeets = productDetails[faker.number.int({ min: 0, max: 3 })];
+
+    return prisma.listing.create({
+      data: {
+        title: listingName,
+        description: faker.commerce.productDescription(),
+        buyItNowPrice: Math.ceil(
+          Number(faker.commerce.price({ min: 5, max: 150 }))
+        ),
+        category: {
+          connect: {
+            id: categoryIds[
+              faker.number.int({ min: 1, max: categoryIds.length - 1 })
+            ],
+          },
+        },
+        seller: {
+          connect: {
+            id: sellerId,
+          },
+        },
+        slug: `${faker.helpers.slugify(listingName)}-${uuidv4()}`,
+        thumbnail: image.thumbnail,
+        quantity: faker.number.int({ min: 10, max: 1000 }),
+        images: {
+          create: [
+            {
+              altText: image.altText,
+              imageUrl: image.imageUrl,
+              publicId: image.publicId,
+            },
+            {
+              altText: "SpongeBob SquarePants",
+              imageUrl:
+                "https://res.cloudinary.com/bidhub/image/upload/v1701896680/bidhub/dxcfmoarddecngekkg7w.webp",
+              publicId: "bidhub/dxcfmoarddecngekkg7w",
+            },
+          ],
+        },
+        rating: faker.number.int({ min: 1, max: 5 }),
+        reviews: {
+          create: [1, 2, 3].map(() => ({
+            rating: faker.number.int({ min: 1, max: 5 }),
+            comment: faker.lorem.paragraph(),
+            buyer: {
+              connect: {
+                id: userIds[
+                  faker.number.int({ min: 1, max: userIds.length - 1 })
+                ],
+              },
+            },
+            seller: {
+              connect: {
+                id: sellerId,
+              },
+            },
+          })),
+        },
+        numberSold: faker.number.int({ min: 0, max: 100 }),
+        warranty: {
+          create: {
+            duration: faker.number.int({ min: 1, max: 24 }),
+            bidHubExtendedWarranty: faker.datatype.boolean(),
+            extendable: true,
+          },
+        },
+        fulfilmentOptions: {
+          create:
+            fulfilmentOptions[
+              faker.number.int({ min: 0, max: fulfilmentOptions.length - 1 })
+            ],
+        },
+        productDetails: {
+          create: productDeets,
+        },
+      },
+    });
+  });
+
+  // https://github.com/prisma/prisma/issues/8131
+  await prisma.$transaction(listingInserts);
 
   createCategoriesWithImages(prisma);
 

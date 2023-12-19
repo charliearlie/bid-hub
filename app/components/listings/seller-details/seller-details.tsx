@@ -2,9 +2,6 @@ import { Link } from "@remix-run/react";
 import { ChevronRight } from "lucide-react";
 import { useUser } from "~/contexts/user-context";
 
-import { RatingStars } from "~/components/common/star-rating/star-rating";
-import { Separator } from "~/components/common/ui/separator";
-
 type Props = {
   avatarUrl: string | null;
   feedbackScore: number | null;
@@ -12,12 +9,7 @@ type Props = {
   username: string;
 };
 
-export const SellerDetails = ({
-  avatarUrl,
-  feedbackScore,
-  listingSlug,
-  username,
-}: Props) => {
+export const SellerDetails = ({ avatarUrl, listingSlug, username }: Props) => {
   const avatar =
     avatarUrl || "https://avatars.githubusercontent.com/u/10001?v=4";
   const { username: loggedInUsername } = useUser();
@@ -29,8 +21,7 @@ export const SellerDetails = ({
     : `/user/${username}/reviews`;
   return (
     <div>
-      <Separator />
-      <Link to={ctaUrl} className="group block flex-shrink-0 py-2">
+      <Link to={ctaUrl} className="group block flex-shrink-0 pt-2">
         <div className="flex items-center">
           <div>
             <img
@@ -42,15 +33,15 @@ export const SellerDetails = ({
           <div className="ml-3 flex w-full items-center justify-between">
             <div>
               <p className="text-sm font-black sm:text-base">{username}</p>
-              <RatingStars rating={feedbackScore} />
+              {/* <RatingStars rating={feedbackScore} /> */}
             </div>
             <span className="flex gap-2 text-sm opacity-80 group-hover:opacity-100 sm:text-base">
-              {ctaText} <ChevronRight />
+              <span className="hidden sm:block">{ctaText}</span>{" "}
+              <ChevronRight />
             </span>
           </div>
         </div>
       </Link>
-      <Separator />
     </div>
   );
 };

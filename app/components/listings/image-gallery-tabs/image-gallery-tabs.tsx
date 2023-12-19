@@ -1,11 +1,11 @@
-import type { CoreImageType } from "~/types";
-
 import {
   Tabs,
   TabsContent,
   TabsList,
   TabsTrigger,
 } from "~/components/common/ui/tabs";
+
+import type { CoreImageType } from "~/types";
 
 import { cn } from "~/util/utils";
 
@@ -19,7 +19,7 @@ export const ImageGalleryTabs = ({ images, listingTitle }: Props) => {
       {images.map((image, index) => (
         <TabsContent key={image.publicId} value={image.publicId}>
           <img
-            className="h-[300px] w-full rounded-lg object-cover sm:h-[500px]"
+            className="w-full rounded-lg object-cover"
             src={image.imageUrl}
             alt={`${listingTitle}-${index}`}
             loading="eager"

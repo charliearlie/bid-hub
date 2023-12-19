@@ -21,7 +21,7 @@ export const loader = async () => {
   const listingPreviewData = listings.map((listing) => {
     const {
       buyItNowPrice,
-      highestBidValue,
+      description,
       id,
       images,
       slug,
@@ -31,7 +31,7 @@ export const loader = async () => {
     } = listing;
     return {
       buyItNowPrice,
-      highestBidValue,
+      description,
       id,
       images,
       slug,

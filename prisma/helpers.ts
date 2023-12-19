@@ -187,7 +187,7 @@ export const createListing = async (
   const listingName = faker.commerce.productName();
   const productDeets = productDetails[faker.number.int({ min: 0, max: 3 })];
 
-  await prisma.listing.create({
+  return prisma.listing.create({
     data: {
       title: listingName,
       description: faker.commerce.productDescription(),
