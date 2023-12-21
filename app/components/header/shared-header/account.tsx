@@ -1,5 +1,7 @@
-import BurgerSVG from "~/styles/svg/burger";
-import CloseSVG from "~/styles/svg/close";
+import { 
+    Menu as MenuIcon, 
+    X as CloseIcon 
+} from "lucide-react";
 import type { UserType as User } from "~/types";
 
 import { UserDropDown } from "~/components/header/user-dropdown";
@@ -18,7 +20,7 @@ export function Account({ user, isMenuOpen, setIsMenuOpen, className }: Props) {
                 className="block text-gray-400 outline-none lg:hidden"
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
             >
-                {isMenuOpen ? <CloseSVG /> : <BurgerSVG />}
+                {isMenuOpen ? <CloseIcon /> : <MenuIcon />}
             </button>
         </div>
     );

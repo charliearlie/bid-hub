@@ -10,7 +10,7 @@ import { Menu } from "./menu";
 import { cn } from "~/util/utils";
 import { CategoryList } from "./category-list";
 
-import useScrollPosition from "../../../hooks/useScrollPosition";
+import useScrollPosition from "~/hooks/useScrollPosition";
 import useWindowWidth from "../../../hooks/useScreenWidth";
 
 type Props = {
