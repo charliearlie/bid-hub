@@ -1,6 +1,6 @@
 import { conform, useForm } from "@conform-to/react";
 import { getFieldsetConstraint, parse } from "@conform-to/zod";
-import type { DataFunctionArgs} from "@remix-run/node";
+import type { DataFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useActionData, useFetcher } from "@remix-run/react";
 import { SendIcon } from "lucide-react";
@@ -48,13 +48,14 @@ export const action = async ({ params, request }: DataFunctionArgs) => {
     return json({ status: "error", submission } as const);
   }
 
+  // todo: Remove adding reviews here. They will be made through the listing page
   await prisma.review.create({
     data: {
       buyerId: loggedInUserId,
       comment: review,
       sellerId: user.id,
       rating: 5,
-      listingId: "1", //todo: Fix before merging PR. Listing shouldn't be mandatory
+      listingId: "1",
     },
   });
 

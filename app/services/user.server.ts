@@ -244,6 +244,12 @@ export async function getUserByUsernameOrEmail(usernameOrEmail: string) {
           rating: true,
           comment: true,
           createdAt: true,
+          listing: {
+            select: {
+              title: true,
+              slug: true,
+            },
+          },
           buyer: {
             select: {
               avatarUrl: true,

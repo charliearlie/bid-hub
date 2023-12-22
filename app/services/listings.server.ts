@@ -151,6 +151,12 @@ export const getListingBySlug = async (slug: string) => {
               username: true,
             },
           },
+          listing: {
+            select: {
+              title: true,
+              slug: true,
+            },
+          },
         },
       },
     },
@@ -236,4 +242,16 @@ export const toggleLikeOnListing = async (
   }
 
   return !userLikesListing;
+};
+
+export const getUsersListings = async (username: string) => {
+  const listings = await prisma.listing.findMany({
+    where: {
+      seller: {
+        username,
+      },
+    },
+  });
+
+  return listings;
 };
