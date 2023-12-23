@@ -10,6 +10,10 @@ const jestConfig: JestConfigWithTsJest = {
     "^~/(.*)$": "<rootDir>/app/$1",
   },
   watchPathIgnorePatterns: ["/node_modules/", "/\\.git/", "\\.snap$"],
+  extensionsToTreatAsEsm: [".ts", ".tsx"],
+  transform: {
+    "^.+\\.(js|jsx|ts|tsx)$": "babel-jest",
+  },
 };
 
 export default jestConfig;
