@@ -250,6 +250,12 @@ export async function getUserByUsernameOrEmail(usernameOrEmail: string) {
               username: true,
             },
           },
+          listing: {
+            select: {
+              title: true,
+              slug: true,
+            },
+          },
         },
       },
     },

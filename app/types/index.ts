@@ -51,6 +51,7 @@ export type ReviewType = Pick<
   "createdAt" | "rating" | "comment"
 > & {
   buyer: Pick<User, "avatarUrl" | "username">;
+  listing: Pick<Listing, "title" | "slug">;
 };
 
 export type CoreImageType = Pick<
