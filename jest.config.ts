@@ -11,8 +11,10 @@ const jestConfig: JestConfigWithTsJest = {
   },
   watchPathIgnorePatterns: ["/node_modules/", "/\\.git/", "\\.snap$"],
   extensionsToTreatAsEsm: [".ts", ".tsx"],
+  preset: "ts-jest",
   transform: {
-    "^.+\\.(js|jsx|ts|tsx)$": "babel-jest",
+    "^.+\\.(ts|tsx)?$": "ts-jest",
+    "^.+\\.(js|jsx)$": "babel-jest",
   },
 };
 
