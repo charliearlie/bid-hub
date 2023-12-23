@@ -1,5 +1,5 @@
 import { Link } from "@remix-run/react";
-import dayjs from "dayjs";
+import { format } from "date-fns";
 import { ArrowRight } from "lucide-react";
 
 import type { ReviewType } from "~/types";
@@ -43,7 +43,7 @@ export const ReviewList = ({ reviews, showHeading }: Props) => {
               </Link>
               <p>
                 <time className="opacity-60" dateTime={review.createdAt}>
-                  {dayjs(review.createdAt).format("DD MMMM YYYY")}
+                  {format(new Date(review.createdAt), "DD MMMM yyyy")}
                 </time>
               </p>
 

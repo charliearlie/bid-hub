@@ -47,7 +47,6 @@
     "cmdk": "^0.2.0",
     "crypto-js": "^4.2.0",
     "date-fns": "^2.30.0",
-    "dayjs": "^1.11.10",
     "intl-parse-accept-language": "^1.0.0",
     "is-ip": "^5.0.1",
     "isbot": "^3.6.5",

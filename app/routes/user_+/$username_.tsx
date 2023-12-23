@@ -1,7 +1,7 @@
 import type { DataFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Link, Outlet, useLoaderData } from "@remix-run/react";
-import dayjs from "dayjs";
+import { format } from "date-fns";
 
 import { RatingStars } from "~/components/common/star-rating/star-rating";
 import { Button } from "~/components/common/ui/button";
@@ -73,7 +73,7 @@ export default function UserProfileRoute() {
                 <h1>{username}</h1>
                 <RatingStars rating={feedbackScore} />
                 <p>Role: {role}</p>
-                <p>Member since: {dayjs(createdAt).format("MMMM YYYY")}</p>
+                <p>Member since: {format(new Date(createdAt), "MMMM YYYY")}</p>
                 {isLoggedInUser && (
                   <Button asChild variant="secondary">
                     <Link to="/user/manage">Edit your profile</Link>
