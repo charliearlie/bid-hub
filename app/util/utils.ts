@@ -1,11 +1,12 @@
 import type { SerializeFrom } from "@remix-run/node";
 import type { Navigation } from "@remix-run/react";
-import { useRouteLoaderData } from "@remix-run/react";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { v4 as uuidv4 } from "uuid";
 
 import type { RouteId } from "~/types/route-id";
+
+const { useRouteLoaderData } = require("@remix-run/react");
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
