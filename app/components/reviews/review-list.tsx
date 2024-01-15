@@ -43,7 +43,7 @@ export const ReviewList = ({ reviews, showHeading }: Props) => {
               </Link>
               <p>
                 <time className="opacity-60" dateTime={review.createdAt}>
-                  {format(new Date(review.createdAt), "DD MMMM yyyy")}
+                  {format(new Date(review.createdAt), "dd MMMM yyyy")}
                 </time>
               </p>
 
