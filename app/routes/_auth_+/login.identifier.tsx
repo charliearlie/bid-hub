@@ -113,7 +113,7 @@ export default function LoginIdentifierRoute() {
           to buy some good shit
         </p>
       </div>
-      <Form className="" method="post" {...form.props}>
+      <Form method="post" {...form.props}>
         <FormField
           label="Email or username"
           errors={fields.emailOrUsername.errors}

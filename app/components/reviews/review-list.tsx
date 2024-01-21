@@ -9,11 +9,12 @@ import { Button } from "../common/ui/button";
 import { Separator } from "../common/ui/separator";
 
 type Props = {
+  allReviewsLink?: string;
   reviews: Array<ReviewType>;
   showHeading?: boolean;
 };
 
-export const ReviewList = ({ reviews, showHeading }: Props) => {
+export const ReviewList = ({ allReviewsLink, reviews, showHeading }: Props) => {
   return (
     <div>
       <h2 className={showHeading ? "text-2xl font-bold" : "sr-only"}>
@@ -58,11 +59,13 @@ export const ReviewList = ({ reviews, showHeading }: Props) => {
           </div>
         </div>
       ))}
-      <div className="flex w-full justify-end">
-        <Button variant="outline">
-          View all reviews <ArrowRight />
-        </Button>
-      </div>
+      {allReviewsLink && (
+        <div className="flex w-full justify-end">
+          <Button variant="outline">
+            View all reviews <ArrowRight />
+          </Button>
+        </div>
+      )}
     </div>
   );
 };
