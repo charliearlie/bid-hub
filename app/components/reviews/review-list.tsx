@@ -1,3 +1,5 @@
+import { Link } from "@remix-run/react";
+import { format } from "date-fns";
 import { ArrowRight } from "lucide-react";
 
 import type { ReviewType } from "~/types";
@@ -7,11 +9,12 @@ import { Button } from "../common/ui/button";
 import { Separator } from "../common/ui/separator";
 
 type Props = {
+  allReviewsLink?: string;
   reviews: Array<ReviewType>;
   showHeading?: boolean;
 };
 
-export const ReviewList = ({ reviews, showHeading }: Props) => {
+export const ReviewList = ({ allReviewsLink, reviews, showHeading }: Props) => {
   return (
     <div>
       <h2 className={showHeading ? "text-2xl font-bold" : "sr-only"}>
@@ -33,20 +36,22 @@ export const ReviewList = ({ reviews, showHeading }: Props) => {
           <div className="w-full">
             {reviewIdx !== 0 ? <Separator /> : null}
             <div className="py-8">
-              <h3 className="font-medium text-foreground">
+              <h3 className="text-lg font-semibold text-foreground">
                 {review.buyer.username}
               </h3>
+              <Link to={`/listings/${review.listing.slug}`}>
+                {review.listing.title}
+              </Link>
               <p>
                 <time className="opacity-60" dateTime={review.createdAt}>
-                  {new Date(review.createdAt).toLocaleDateString()}
+                  {format(new Date(review.createdAt), "dd MMMM yyyy")}
                 </time>
               </p>
 
               <div className="mt-2 flex items-center">
                 <RatingStars rating={review.rating} />
+                <p className="sr-only">{review.rating} out of 5 stars</p>
               </div>
-              <p className="sr-only">{review.rating} out of 5 stars</p>
-
               <div className="prose prose-sm mt-4 max-w-none text-foreground">
                 <p>{review.comment}</p>
               </div>
@@ -54,11 +59,13 @@ export const ReviewList = ({ reviews, showHeading }: Props) => {
           </div>
         </div>
       ))}
-      <div className="flex w-full justify-end">
-        <Button variant="outline">
-          View all reviews <ArrowRight />
-        </Button>
-      </div>
+      {allReviewsLink && (
+        <div className="flex w-full justify-end">
+          <Button variant="outline">
+            View all reviews <ArrowRight />
+          </Button>
+        </div>
+      )}
     </div>
   );
 };

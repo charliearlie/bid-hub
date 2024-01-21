@@ -1,6 +1,8 @@
 import { Link, useFetcher } from "@remix-run/react";
 import { HeartIcon } from "lucide-react";
+import { useState } from "react";
 import { useUser } from "~/contexts/user-context";
+import { useMediaQuery } from "~/hooks/use-media-query";
 
 import { Button } from "~/components/common/ui/button";
 import {
@@ -12,6 +14,14 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "~/components/common/ui/dialog";
+import {
+  Drawer,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTrigger,
+} from "~/components/common/ui/drawer";
 
 import { cn } from "~/util/utils";
 
@@ -23,6 +33,8 @@ type Props = {
 export const WishlistButton = ({ className, inWishlist, listingId }: Props) => {
   const user = useUser();
   const fetcher = useFetcher();
+  const [open, setOpen] = useState(false);
+  const isDesktop = useMediaQuery("(min-width: 768px)");
 
   // This works removing the delay when adding to wishlist but removing still has a delay
   const likesListing =
@@ -62,9 +74,38 @@ export const WishlistButton = ({ className, inWishlist, listingId }: Props) => {
     );
   }
 
+  if (isDesktop) {
+    return (
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogTrigger asChild>
+          <Button
+            variant="outline"
+            size="lg"
+            className={cn("group flex items-center gap-2", className)}
+          >
+            <Cta />
+          </Button>
+        </DialogTrigger>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Log in required</DialogTitle>
+          </DialogHeader>
+          <DialogDescription>
+            Log in to bidhub to add item to your wishlist
+          </DialogDescription>
+          <DialogFooter>
+            <Button asChild>
+              <Link to="/login">Log in</Link>
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    );
+  }
+
   return (
-    <Dialog>
-      <DialogTrigger asChild>
+    <Drawer>
+      <DrawerTrigger asChild>
         <Button
           variant="outline"
           size="lg"
@@ -72,20 +113,22 @@ export const WishlistButton = ({ className, inWishlist, listingId }: Props) => {
         >
           <Cta />
         </Button>
-      </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
-          <DialogTitle>Log in required</DialogTitle>
-        </DialogHeader>
-        <DialogDescription>
-          Log in to bidhub to add item to your wishlist
-        </DialogDescription>
-        <DialogFooter>
-          <Button asChild>
-            <Link to="/login">Log in</Link>
-          </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+      </DrawerTrigger>
+      <DrawerContent>
+        <div className="mx-auto w-full max-w-sm">
+          <DrawerHeader>
+            <DialogTitle>Log in required</DialogTitle>
+            <DrawerDescription>
+              Log in to bidhub to add item to your wishlist
+            </DrawerDescription>
+          </DrawerHeader>
+          <DrawerFooter>
+            <Button asChild>
+              <Link to="/login">Log in</Link>
+            </Button>
+          </DrawerFooter>
+        </div>
+      </DrawerContent>
+    </Drawer>
   );
 };
