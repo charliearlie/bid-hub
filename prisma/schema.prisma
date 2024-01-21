@@ -18,6 +18,8 @@ model User {
   feedbackScore    Int?
   feedbackReceived Review[]             @relation("seller")
   feedbackGiven    Review[]             @relation("buyer")
+  reportsReceived  Report[]             @relation("reportedUser")
+  reportsGiven     Report[]             @relation("reporter")
   role             Role                 @default(USER)
   id               String               @id @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   addresses        Address[]
@@ -74,6 +76,18 @@ model Review {
   seller    User     @relation("seller", fields: [sellerId], references: [id])
   buyerId   String   @db.Uuid
   buyer     User     @relation("buyer", fields: [buyerId], references: [id])
+}
+
+model Report {
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+  id             String     @id @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  description    String
+  type           ReportType
+  reportedUserId String     @db.Uuid
+  reportedUser   User       @relation("reportedUser", fields: [reportedUserId], references: [id])
+  reporter       User       @relation("reporter", fields: [reporterId], references: [id])
+  reporterId     String     @db.Uuid
 }
 
 model Listing {
@@ -302,4 +316,11 @@ enum PostageType {
   COURIER
   NEXT_DAY
   SIGNED_FOR
+}
+
+enum ReportType {
+  INAPPROPRIATE_CONTENT
+  DUPLICATE_LISTING
+  STOLEN_LISTING
+  OTHER
 }

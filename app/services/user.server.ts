@@ -1,4 +1,4 @@
-import type { ForgotPassword } from "@prisma/client";
+import type { ForgotPassword, ReportType } from "@prisma/client";
 import { json } from "@remix-run/node";
 import bcrypt from "bcryptjs";
 import { v4 as uuidv4 } from "uuid";
@@ -171,7 +171,7 @@ export const createUser = async (user: RegisterForm) => {
   return { id: newUser.id, email: newUser.email };
 };
 
-export async function updateUserAvatar(avatarUrl: string, userId: string) {
+export const updateUserAvatar = async (avatarUrl: string, userId: string) => {
   return await prisma.user.update({
     where: {
       id: userId,
@@ -180,12 +180,12 @@ export async function updateUserAvatar(avatarUrl: string, userId: string) {
       avatarUrl,
     },
   });
-}
+};
 
-export async function updateUserAddresses(
+export const updateUserAddresses = async (
   addresses: z.infer<typeof AddressFieldsetSchema>[],
   userId: string
-) {
+) => {
   // Would rather use upsert here but it's behaving weird
   const updatedAddresses = await Promise.all(
     addresses.map(async (address) => {
@@ -217,12 +217,12 @@ export async function updateUserAddresses(
   );
 
   return updatedAddresses;
-}
+};
 
-export async function updateUserPersonalDetails(
+export const updateUserPersonalDetails = async (
   personalDetails: z.infer<typeof PersonalDetailsFieldsetSchema>,
   userId: string
-) {
+) => {
   const updatedPersonalDetails = await prisma.userPersonalDetails.update({
     where: {
       userId,
@@ -231,9 +231,9 @@ export async function updateUserPersonalDetails(
   });
 
   return updatedPersonalDetails;
-}
+};
 
-export async function getUserByUsernameOrEmail(usernameOrEmail: string) {
+export const getUserByUsernameOrEmail = async (usernameOrEmail: string) => {
   return await prisma.user.findFirst({
     where: {
       OR: [{ username: usernameOrEmail }, { email: usernameOrEmail }],
@@ -260,15 +260,44 @@ export async function getUserByUsernameOrEmail(usernameOrEmail: string) {
       },
     },
   });
-}
+};
 
-export async function getUserById(userId: string) {
+export const getUserById = async (userId: string) => {
   return await prisma.user.findUnique({
     where: {
       id: userId,
     },
   });
-}
+};
+
+export const reportUser = async (
+  userId: string,
+  reporterId: string,
+  description: string,
+  type: ReportType
+) => {
+  try {
+    await prisma.report.create({
+      data: {
+        reportedUser: {
+          connect: {
+            id: userId,
+          },
+        },
+        reporter: {
+          connect: {
+            id: reporterId,
+          },
+        },
+        description,
+        type,
+      },
+    });
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
+};
 
 // This has a request param. Does it belong in this file? I'm doubting it
 export async function getUser(request: Request) {

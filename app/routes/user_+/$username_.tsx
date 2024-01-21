@@ -63,34 +63,43 @@ export default function UserProfileRoute() {
       <Card>
         <CardContent>
           <div className="flex items-center justify-between">
-            <div className="flex flex-col gap-8 sm:flex-row">
+            <div className="flex w-full flex-col gap-8 sm:flex-row">
               <img
                 className="rounded-lg border-2 border-border sm:h-48 sm:w-48"
                 alt="user avatar"
                 src={avatarUrl || "https://picsum.photos/200"}
               />
-              <div className="flex flex-col gap-2">
+              <div className="flex w-full flex-col gap-2">
                 <h1>{username}</h1>
                 <RatingStars rating={feedbackScore} />
                 <p>Role: {role}</p>
-                <p>Member since: {format(new Date(createdAt), "MMMM YYYY")}</p>
+                <p>Member since: {format(new Date(createdAt), "MMMM yyyy")}</p>
                 {isLoggedInUser && (
                   <Button asChild variant="secondary">
-                    <Link to="/user/manage">Edit your profile</Link>
+                    <Link to={`/user/manage`}>Edit your profile</Link>
                   </Button>
+                )}
+                {!isLoggedInUser && (
+                  <div className="flex items-center gap-2 sm:justify-between">
+                    <Button asChild variant="default">
+                      <Link to="/user/messages">Send a message</Link>
+                    </Button>
+                    <Button asChild variant="destructive">
+                      <Link to={`/user/${username}/report`}>Report</Link>
+                    </Button>
+                  </div>
                 )}
               </div>
             </div>
           </div>
           <div className="mt-8">
             <div>
-              <div className="grid grid-cols-3">
-                <TabNavLink to="./details">Details</TabNavLink>
+              <div className="grid grid-cols-2 overflow-hidden rounded-t-lg">
                 <TabNavLink to="./reviews">Reviews</TabNavLink>
                 <TabNavLink to="./listings">Listings</TabNavLink>
               </div>
               <Separator />
-              <div className="px-4">
+              <div>
                 <Outlet />
               </div>
             </div>
