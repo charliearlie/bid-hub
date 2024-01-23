@@ -48,11 +48,6 @@ export default function Index() {
 
   return (
     <main className="bg-background">
-      <img
-        className="h-48 w-full object-cover md:h-96 lg:h-[32rem]"
-        src="https://res.cloudinary.com/bidhub/image/upload/v1678720975/bidhub/Valkyrie-AMR-Pro_08_169.jpg"
-        alt="Aston Martin Valkyrie"
-      />
       <div>
         <h2 className="flex h-16 w-full items-center justify-center rounded bg-accent text-center text-3xl font-black">
           Buy & sell things
