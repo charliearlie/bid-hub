@@ -29,7 +29,7 @@ export default function ListingPreview({
         />
         <div className="flex flex-col gap-2 p-2">
           <div className="h-10">
-            <h3 className="block max-h-8 overflow-hidden text-ellipsis font-medium leading-none">
+            <h3 className="block max-h-8 overflow-hidden text-ellipsis text-base font-medium leading-none">
               <span className="block font-semibold">{title}</span>
             </h3>
           </div>
