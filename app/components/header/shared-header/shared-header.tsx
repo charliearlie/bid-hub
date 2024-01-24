@@ -1,17 +1,19 @@
 import type { Category } from "@prisma/client";
 import { Link } from "@remix-run/react";
 import { useState } from "react";
-import useScrollPosition from "~/hooks/useScrollPosition";
+
+import { SearchInput } from "~/components/search/search-input";
+
+import useWindowWidth from "~/hooks/use-screen-width";
+import useScrollPosition from "~/hooks/use-scroll-position";
 
 import type { UserType as User } from "~/types";
 
 import { cn } from "~/util/utils";
 
-import useWindowWidth from "../../../hooks/useScreenWidth";
 import { Account } from "./account";
 import { CategoryList } from "./category-list";
 import { Menu } from "./menu";
-import { Search } from "./search";
 
 type Props = {
   user: User | null;
@@ -96,7 +98,7 @@ export function SharedHeader({ user, isHomepage, categories }: Props) {
                 !shouldShowHeroItems.search || isMenuOpen ? "w-full" : ""
               }
             />
-            {shouldShowHeroItems.search && <Search />}
+            {shouldShowHeroItems.search && <SearchInput />}
             <Account
               user={user}
               isMenuOpen={isMenuOpen}
@@ -117,7 +119,7 @@ export function SharedHeader({ user, isHomepage, categories }: Props) {
             <p className="text-center font-bold text-gray-300">
               An eCommerce website built on a modern tech stack
             </p>
-            <Search />
+            <SearchInput />
           </div>
         </div>
       )}
