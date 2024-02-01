@@ -255,3 +255,24 @@ export const getUsersListings = async (username: string) => {
 
   return listings;
 };
+
+export const getSearchListings = async (query: string) => {
+  const matchedByTitle = await prisma.listing.findMany({
+    where: {
+      title: {
+        search: query,
+      },
+    },
+  });
+
+  const matchedByDescription = await prisma.listing.findMany({
+    where: {
+      description: {
+        search: query,
+      },
+    },
+  });
+
+  // Give weighting to title matches
+  return [...matchedByTitle, ...matchedByDescription];
+};
