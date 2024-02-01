@@ -1,8 +1,10 @@
+import { parse } from "@conform-to/zod";
 import {
   type ActionFunctionArgs,
   type LoaderFunctionArgs,
   type MetaFunction,
   json,
+  redirect,
 } from "@remix-run/node";
 import {
   Links,
@@ -15,6 +17,7 @@ import {
   useLocation,
 } from "@remix-run/react";
 import { AlertOctagon } from "lucide-react";
+import { z } from "zod";
 import styles from "~/styles/app.css";
 import fontStylesheet from "~/styles/font.css";
 
@@ -28,6 +31,13 @@ import { getEnv } from "~/util/env.server";
 
 import { UserProvider } from "./contexts/user-context";
 import { getHomepageCategories } from "./services/category.server";
+
+const SearchSchema = z.object({
+  intent: z.literal("search"),
+  search: z.string({
+    required_error: "Search is required",
+  }),
+});
 
 export const meta: MetaFunction = () => {
   return [
@@ -51,7 +61,17 @@ export function links() {
 }
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-  return await logout(request);
+  const formData = await request.formData();
+  const submission = parse(formData, { schema: SearchSchema });
+
+  if (submission.value?.intent === "search" && submission.value.search) {
+    const { search } = submission.value;
+    return redirect(`/search?query=${search}`);
+  } else if (submission.intent === "logout") {
+    return await logout(request);
+  }
+
+  return null;
 };
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
@@ -82,7 +102,7 @@ function Document({ children }: { children: React.ReactNode }) {
 export default function App() {
   const { ENV, user, categories } = useLoaderData<typeof loader>();
   const location = useLocation();
-  const isHomePage = location.pathname === '/';
+  const isHomePage = location.pathname === "/";
 
   return (
     <Document>
@@ -91,7 +111,11 @@ export default function App() {
         images, categories and description shown
       </div>
       <UserProvider username={user?.username} userId={user?.id}>
-        <SharedHeader user={user} isHomepage={isHomePage} categories={categories} />
+        <SharedHeader
+          user={user}
+          isHomepage={isHomePage}
+          categories={categories}
+        />
         <Outlet />
       </UserProvider>
       <script
