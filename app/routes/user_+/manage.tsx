@@ -1,11 +1,5 @@
-import {
-  conform,
-  list,
-  useFieldList,
-  useFieldset,
-  useForm,
-} from "@conform-to/react";
-import { getFieldsetConstraint, parse } from "@conform-to/zod";
+import { getFormProps, getInputProps, useForm } from "@conform-to/react";
+import { getZodConstraint, parseWithZod } from "@conform-to/zod";
 import {
   type ActionFunctionArgs,
   type LoaderFunctionArgs,
@@ -37,9 +31,6 @@ import {
 import { UPLOAD_PRESET_ENUM, uploadImages } from "~/util/cloudinary.server";
 import { invariantResponse } from "~/util/utils";
 
-import { AddressFieldset } from "./form/address-fieldset";
-import { UserDetailsFieldset } from "./form/user-details-fieldset";
-
 const ManageUserFormSchema = z.object({
   personalDetails: PersonalDetailsFieldsetSchema,
   addresses: z.array(AddressFieldsetSchema),
@@ -54,10 +45,15 @@ const ManageUserFormSchema = z.object({
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData();
-  const submission = parse(formData, { schema: ManageUserFormSchema });
+  const submission = parseWithZod(formData, { schema: ManageUserFormSchema });
 
-  if (submission.intent !== "submit" || !submission.value) {
-    return json({ status: "idle", submission } as const);
+  if (submission.status !== "success") {
+    return json(
+      { result: submission.reply(), status: submission.status } as const,
+      {
+        status: submission.status === "error" ? 400 : 200,
+      }
+    );
   }
 
   const [avatarImage] = submission.value?.avatarImage
@@ -69,7 +65,12 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
   const user = await getUser(request);
   if (!user) {
-    throw new Response("User not logged in", { status: 404 });
+    return json({
+      result: submission.reply({
+        formErrors: ["You must be logged in to manage your profile"],
+      }),
+      status: "error",
+    } as const);
   }
 
   if (typeof avatarImage?.imageUrl === "string") {
@@ -81,16 +82,30 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     user.id
   );
 
+  if (!updatedUserAddresses) {
+    return json({
+      result: submission.reply({
+        formErrors: ["Your address wasn't updated. Please try again."],
+      }),
+      status: "error",
+    } as const);
+  }
+
   const updatedUser = await updateUserPersonalDetails(
     submission.value.personalDetails,
     user.id
   );
 
-  // todo: add good error/success messages
-  return json({
-    status: updatedUserAddresses && updatedUser ? "success" : "error",
-    submission,
-  } as const);
+  if (!updatedUser) {
+    return json({
+      result: submission.reply({
+        formErrors: ["Something went wrong. Please try again."],
+      }),
+      status: "error",
+    } as const);
+  }
+
+  return json({ result: submission.reply(), status: "success" });
 };
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
@@ -107,10 +122,10 @@ export default function ManageUserRoute() {
 
   const [form, fields] = useForm({
     id: "manage-user-form",
-    constraint: getFieldsetConstraint(ManageUserFormSchema),
-    lastSubmission: actionData?.submission,
+    constraint: getZodConstraint(ManageUserFormSchema),
+    lastResult: actionData?.result,
     onValidate({ formData }) {
-      return parse(formData, { schema: ManageUserFormSchema });
+      return parseWithZod(formData, { schema: ManageUserFormSchema });
     },
     shouldValidate: "onBlur",
     defaultValue: {
@@ -123,47 +138,120 @@ export default function ManageUserRoute() {
     },
   });
 
-  const userData = useFieldset(form.ref, fields.personalDetails);
-  const addresses = useFieldList(form.ref, fields.addresses);
+  const userData = fields.personalDetails.getFieldset();
+  const addresses = fields.addresses.getFieldList();
 
   if (user) {
     return (
       <main className="container mx-auto max-w-3xl p-4">
         <Card>
           <CardContent className="md:p-8">
-            <Form method="post" encType="multipart/form-data" {...form.props}>
+            <Form
+              method="post"
+              encType="multipart/form-data"
+              {...getFormProps(form)}
+            >
               <div className="flex flex-col items-center justify-between gap-4 lg:flex-row lg:items-start lg:gap-8">
                 <ImageUploadAvatar
                   className="h-[172px] w-[172px] basis-1/4 rounded-lg"
                   src={user.avatarUrl || undefined}
-                  fieldProps={{ ...conform.input(fields.avatarImage) }}
+                  fieldProps={{
+                    ...getInputProps(fields.avatarImage, { type: "file" }),
+                  }}
                 />
                 <div className="flex w-full flex-col gap-0.5 lg:basis-3/4">
                   <FormField
                     label="Email"
-                    {...conform.input(fields.email, { type: "email" })}
+                    {...getInputProps(fields.email, { type: "email" })}
                     helperText="Contact support to change your email address"
                   />
                   <FormField
                     label="Password"
-                    {...conform.input(fields.password, { type: "password" })}
+                    {...getInputProps(fields.password, { type: "password" })}
                     errors={fields.password.errors}
                   />
                 </div>
               </div>
-              <UserDetailsFieldset user={userData} />
+              <div className="flex flex-col">
+                <h3 className="py-4 font-semibold">Personal details</h3>
+                <div className="flex justify-evenly gap-1.5">
+                  <FormField
+                    label="First Name"
+                    {...getInputProps(userData.firstName, { type: "text" })}
+                  />
+                  <FormField
+                    label="Last Name"
+                    {...getInputProps(userData.lastName, { type: "text" })}
+                  />
+                </div>
+                <FormField
+                  label="Phone number"
+                  {...getInputProps(userData.phoneNumber, { type: "tel" })}
+                />
+              </div>
               <Separator />
               <h3 className="py-4 text-lg font-semibold">Addresses</h3>
-              {addresses.map((address, index) => (
-                <div key={address.id}>
-                  {index > 0 && <Separator />}
-                  <AddressFieldset address={address} />
-                </div>
-              ))}
+              {addresses.map((address, index) => {
+                const {
+                  addressLine1,
+                  addressLine2,
+                  addressLine3,
+                  cityOrTown,
+                  id,
+                  name,
+                  postcode,
+                } = address.getFieldset();
+                return (
+                  <div key={address.id}>
+                    {index > 0 && <Separator />}
+                    <fieldset className="flex flex-col py-4">
+                      <FormField
+                        label="Address name"
+                        {...getInputProps(name, { type: "text" })}
+                        errors={name.errors}
+                      />
+                      <FormField
+                        label="Address Line 1"
+                        {...getInputProps(addressLine1, { type: "text" })}
+                        errors={addressLine1.errors}
+                      />
+                      <FormField
+                        label="Address Line 2"
+                        {...getInputProps(addressLine2, { type: "text" })}
+                      />
+                      <FormField
+                        label="Address Line 3"
+                        {...getInputProps(addressLine3, { type: "text" })}
+                      />
+                      <div className="flex gap-1.5">
+                        <div className="basis-2/3">
+                          <FormField
+                            label="City or Town"
+                            {...getInputProps(cityOrTown, { type: "text" })}
+                            errors={cityOrTown.errors}
+                          />
+                        </div>
+                        <div className="basis-1/3">
+                          <FormField
+                            label="Postcode"
+                            {...getInputProps(postcode, { type: "text" })}
+                            errors={postcode.errors}
+                          />
+                        </div>
+                      </div>
+                      {id && (
+                        <input {...getInputProps(id, { type: "hidden" })} />
+                      )}
+                    </fieldset>
+                  </div>
+                );
+              })}
               <div className="flex justify-center py-2">
                 <Button
                   variant="outline"
-                  {...list.insert(fields.addresses.name, {})}
+                  {...form.insert.getButtonProps({
+                    name: fields.addresses.name,
+                  })}
                 >
                   Add address
                 </Button>

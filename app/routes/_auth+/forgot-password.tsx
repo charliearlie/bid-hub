@@ -1,12 +1,10 @@
-import { conform, useForm } from "@conform-to/react";
-import { getFieldsetConstraint, parse } from "@conform-to/zod";
+import { getFormProps, getInputProps, useForm } from "@conform-to/react";
+import { getZodConstraint, parseWithZod } from "@conform-to/zod";
 import { json, type DataFunctionArgs } from "@remix-run/node";
 import { Form, useActionData } from "@remix-run/react";
 import { Send } from "lucide-react";
 import { HoneypotInputs } from "remix-utils/honeypot/react";
 import { z } from "zod";
-
-import { forgotPassword } from "~/services/user.server";
 
 import {
   Alert,
@@ -15,6 +13,8 @@ import {
 } from "~/components/common/ui/alert";
 import { FormField } from "~/components/form/form-field";
 import { SubmitButton } from "~/components/form/submit-button";
+
+import { forgotPassword } from "~/services/user.server";
 
 import { checkForHoneypot } from "~/util/honeypot.server";
 
@@ -34,27 +34,32 @@ export const action = async ({ request }: DataFunctionArgs) => {
   const formData = await request.formData();
   checkForHoneypot(formData);
 
-  const submission = parse(formData, { schema: ForgotPasswordSchema });
+  const submission = parseWithZod(formData, { schema: ForgotPasswordSchema });
 
-  if (submission.intent !== "submit") {
-    return json({ status: "idle", submission } as const);
-  }
-
-  if (!submission.value) {
-    return json({ status: "error", submission } as const, {
-      status: 400,
+  if (submission.status !== "success") {
+    return json({ result: submission.reply(), status: "idle" } as const, {
+      status: submission.status === "error" ? 400 : 200,
     });
   }
 
   const { email } = submission.value;
 
-  const forgotPasswordResponse = await forgotPassword(submission.value.email);
+  const forgotPasswordResponse = await forgotPassword(email);
+  if (!forgotPasswordResponse.success) {
+    return json({
+      result: submission.reply({
+        formErrors: ["Something went wrong"],
+        fieldErrors: {
+          address: ["Email is invalid"],
+        },
+      }),
+      status: "error",
+    } as const);
+  }
 
   return json({
-    status: !forgotPasswordResponse.success ? "error" : "success",
-    submission,
-    email,
-    error: forgotPasswordResponse.error,
+    result: submission.reply({ resetForm: true }),
+    status: submission.status,
   } as const);
 };
 
@@ -63,13 +68,15 @@ export default function ForgotPasswordRoute() {
 
   const [form, fields] = useForm({
     id: "forgot-password-form",
-    lastSubmission: actionData?.submission,
-    constraint: getFieldsetConstraint(ForgotPasswordSchema),
+    lastResult: actionData?.result,
+    constraint: getZodConstraint(ForgotPasswordSchema),
     shouldValidate: "onBlur",
     onValidate({ formData }) {
-      return parse(formData, { schema: ForgotPasswordSchema });
+      return parseWithZod(formData, { schema: ForgotPasswordSchema });
     },
   });
+
+  console.log("actionData", actionData?.result);
 
   return (
     <div>
@@ -93,11 +100,11 @@ export default function ForgotPasswordRoute() {
           </AlertDescription>
         </Alert>
       )}
-      <Form className="mb-4 pt-6" method="post" {...form.props}>
+      <Form className="mb-4 pt-6" method="post" {...getFormProps(form)}>
         <FormField
           label="Email"
           errors={fields.email.errors}
-          {...conform.input(fields.email, { type: "email" })}
+          {...getInputProps(fields.email, { type: "email" })}
         />
         <HoneypotInputs />
         <div className="mt-2 flex justify-center">

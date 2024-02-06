@@ -1,5 +1,5 @@
-import { conform, useForm } from "@conform-to/react";
-import { getFieldsetConstraint, parse } from "@conform-to/zod";
+import { getFormProps, getInputProps, useForm } from "@conform-to/react";
+import { getZodConstraint, parseWithZod } from "@conform-to/zod";
 import type { DataFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useActionData, useFetcher } from "@remix-run/react";
@@ -30,22 +30,28 @@ export const action = async ({ params, request }: DataFunctionArgs) => {
   const loggedInUserId = await getUserId(request);
 
   const formData = await request.formData();
-  const submission = parse(formData, { schema: UserFeedbackSchema });
+  const submission = parseWithZod(formData, { schema: UserFeedbackSchema });
 
   if (!loggedInUserId) {
-    submission.error[""] = ["You need to ne logged in to leave feedback"];
-    return json({ status: "error", submission } as const);
+    return json(submission.reply({ formErrors: ["You need to be logged in"] }));
   }
 
-  if (submission.intent !== "submit" || !submission.value) {
-    return json({ status: "idle", submission } as const);
+  if (submission.status !== "success") {
+    return json(
+      { result: submission.reply(), status: submission.status } as const,
+      {
+        status: submission.status === "error" ? 400 : 200,
+      }
+    );
   }
 
   const { review } = submission.value;
 
   if (!review) {
-    submission.error[""] = ["We failed to create your listing"];
-    return json({ status: "error", submission } as const);
+    return json({
+      result: submission.reply({ formErrors: ["Review is required"] }),
+      status: "error",
+    } as const);
   }
 
   await prisma.review.create({
@@ -54,22 +60,25 @@ export const action = async ({ params, request }: DataFunctionArgs) => {
       comment: review,
       sellerId: user.id,
       rating: 5,
-      listingId: "1",
+      listingId: "025c64c8-3be8-49d9-afed-c48f4e2e97c4",
     },
   });
 
-  return json({ status: "success", submission } as const);
+  return json({
+    result: submission.reply({ resetForm: true }),
+    status: "success" as const,
+  });
 };
 
 export default function UserReviews() {
-  const actionData = useActionData<typeof action>();
+  const lastResult = useActionData<typeof action>();
   const fetcher = useFetcher();
   const [form, fields] = useForm({
     id: "user-feedback",
-    constraint: getFieldsetConstraint(UserFeedbackSchema),
-    lastSubmission: actionData?.submission,
+    constraint: getZodConstraint(UserFeedbackSchema),
+    lastResult,
     onValidate({ formData }) {
-      return parse(formData, { schema: UserFeedbackSchema });
+      return parseWithZod(formData, { schema: UserFeedbackSchema });
     },
     shouldValidate: "onBlur",
   });
@@ -87,13 +96,13 @@ export default function UserReviews() {
         <div className="mx-auto flex max-w-xl justify-center p-8">
           <fetcher.Form
             className="flex w-full flex-col"
-            {...form.props}
+            {...getFormProps(form)}
             method="post"
           >
             <FormFieldTextArea
               className="h-32"
               label="Leave feedback"
-              {...conform.input(fields.review)}
+              {...getInputProps(fields.review, { type: "text" })}
               placeholder="This won't live on this page. It's just here to ensure that adding feedback exists. Instead we're going to link a review to a listing and a URL to that listing in the review"
             />
             <SubmitButton className="self-end">
