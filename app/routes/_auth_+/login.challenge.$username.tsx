@@ -1,5 +1,5 @@
-import { conform, useForm } from "@conform-to/react";
-import { getFieldsetConstraint, parse } from "@conform-to/zod";
+import { getFormProps, getInputProps, useForm } from "@conform-to/react";
+import { getZodConstraint, parseWithZod } from "@conform-to/zod";
 import { redirect, json, type DataFunctionArgs } from "@remix-run/node";
 import {
   Form,
@@ -47,10 +47,15 @@ export const loader = async ({ params }: DataFunctionArgs) => {
 export async function action({ request, params }: DataFunctionArgs) {
   const formData = await request.formData();
 
-  const submission = parse(formData, { schema: LoginChallengeSchema });
+  const submission = parseWithZod(formData, { schema: LoginChallengeSchema });
 
-  if (submission.intent !== "submit" || !submission.value) {
-    return json({ status: "idle", submission } as const);
+  if (submission.status !== "success") {
+    return json(
+      { result: submission.reply(), status: submission.status } as const,
+      {
+        status: submission.status === "error" ? 400 : 200,
+      }
+    );
   }
 
   let errorMessage = "Incorrect password";
@@ -62,8 +67,10 @@ export async function action({ request, params }: DataFunctionArgs) {
   });
 
   if (!user) {
-    submission.error[""] = [errorMessage];
-    return json({ status: "error", errorMessage, submission } as const);
+    return json({
+      result: submission.reply({ formErrors: [errorMessage] }),
+      status: "error",
+    } as const);
   }
 
   return createUserSession(user.id, submission.value.redirectTo);
@@ -77,12 +84,12 @@ export default function LoginIdentifierRoute() {
 
   const [form, fields] = useForm({
     id: "login-challenge-form",
-    lastSubmission: actionData?.submission,
-    constraint: getFieldsetConstraint(LoginChallengeSchema),
+    lastResult: actionData?.result,
+    constraint: getZodConstraint(LoginChallengeSchema),
     shouldValidate: "onBlur",
     defaultValue: { redirectTo: "" },
     onValidate({ formData }) {
-      return parse(formData, { schema: LoginChallengeSchema });
+      return parseWithZod(formData, { schema: LoginChallengeSchema });
     },
   });
 
@@ -93,14 +100,14 @@ export default function LoginIdentifierRoute() {
       </h1>
       {actionData?.status === "error" && (
         <Alert variant="destructive" className="my-2">
-          <AlertTitle>{form.error}</AlertTitle>
+          <AlertTitle>{form.errors}</AlertTitle>
         </Alert>
       )}
-      <Form className="flex flex-col" method="post" {...form.props}>
+      <Form className="flex flex-col" method="post" {...getFormProps(form)}>
         <FormField
           label="Password"
           errors={fields.password.errors}
-          {...conform.input(fields.password, { type: "password" })}
+          {...getInputProps(fields.password, { type: "password" })}
         />
         <input
           name="redirectTo"

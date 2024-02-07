@@ -1,5 +1,5 @@
-import { conform, list, useFieldList, useForm } from "@conform-to/react";
-import { getFieldsetConstraint, parse } from "@conform-to/zod";
+import { getFormProps, getInputProps, useForm } from "@conform-to/react";
+import { getZodConstraint, parseWithZod } from "@conform-to/zod";
 import { SelectValue } from "@radix-ui/react-select";
 import type { DataFunctionArgs } from "@remix-run/node";
 import {
@@ -88,10 +88,17 @@ export const action = async ({ request }: DataFunctionArgs) => {
     createMemoryUploadHandler({ maxPartSize: MAX_FILE_SIZE })
   );
 
-  const submission = await parse(formData, { schema: CreateListingSchema });
+  const submission = await parseWithZod(formData, {
+    schema: CreateListingSchema,
+  });
 
-  if (submission.intent !== "submit" || !submission.value) {
-    return json({ status: "idle", submission } as const);
+  if (submission.status !== "success") {
+    return json(
+      { result: submission.reply(), status: submission.status } as const,
+      {
+        status: submission.status === "error" ? 400 : 200,
+      }
+    );
   }
 
   const hasAtLeastOneImage = !!submission.value.images.length;
@@ -112,8 +119,10 @@ export const action = async ({ request }: DataFunctionArgs) => {
   const userId = await getUserId(request);
 
   if (!userId) {
-    submission.error[""] = ["You must be logged in to create a listing"];
-    return json({ status: "error", submission } as const);
+    return json({
+      result: submission.reply({ formErrors: ["You must be logged in"] }),
+      status: "error",
+    } as const);
   }
 
   const newListing = await addListing(
@@ -129,8 +138,10 @@ export const action = async ({ request }: DataFunctionArgs) => {
   );
 
   if (!newListing) {
-    submission.error[""] = ["We failed to create your listing"];
-    return json({ status: "error", submission } as const);
+    return json({
+      result: submission.reply({ formErrors: ["Something went wrong"] }),
+      status: "error",
+    } as const);
   }
 
   return redirect(`/listings/${newListing.slug}`);
@@ -143,21 +154,25 @@ export default function CreateListingRoute() {
 
   const [form, fields] = useForm({
     id: "create-listing-form",
-    lastSubmission: actionData?.submission,
+    lastResult: actionData?.result,
     shouldValidate: "onBlur",
-    constraint: getFieldsetConstraint(CreateListingSchema),
+    constraint: getZodConstraint(CreateListingSchema),
     onValidate({ formData }) {
-      return parse(formData, { schema: CreateListingSchema });
+      return parseWithZod(formData, { schema: CreateListingSchema });
     },
     defaultValue: { quantity: 1, itemId: "", images: [] }, // We will get the item id if it exists
   });
 
-  const images = useFieldList(form.ref, fields.images);
+  const images = fields.images.getFieldList();
 
   return (
     <Card>
       <CardContent className="md:p-8">
-        <Form method="post" {...form.props} encType="multipart/form-data">
+        <Form
+          method="post"
+          {...getFormProps(form)}
+          encType="multipart/form-data"
+        >
           <button type="submit" className="hidden">
             Submit
           </button>
@@ -165,12 +180,12 @@ export default function CreateListingRoute() {
             label="Title"
             helperText="This is what will be displayed in search results"
             errors={fields.title.errors} // These should work in the line above so need to fix - todo
-            {...conform.input(fields.title)}
+            {...getInputProps(fields.title, { type: "text" })}
           />
           <FormFieldTextArea
             label="Description"
             errors={fields.description.errors}
-            {...conform.input(fields.description)}
+            {...getInputProps(fields.description, { type: "text" })}
           />
           {/**
            * itemName will do some magic mapping to existing items
@@ -180,7 +195,7 @@ export default function CreateListingRoute() {
             label="Item name"
             errors={fields.itemName.errors}
             helperText="Find your item or create a new one"
-            {...conform.input(fields.itemName)}
+            {...getInputProps(fields.itemName, { type: "text" })}
           />
           {/**
            * Category is single select for now but will be multi select
@@ -211,13 +226,13 @@ export default function CreateListingRoute() {
             <FormField
               label="Quantity"
               errors={fields.quantity.errors}
-              {...conform.input(fields.quantity)}
+              {...getInputProps(fields.quantity, { type: "number" })}
             />
             <FormField
               label="Sale price"
               errors={fields.buyItNowPrice.errors}
               Icon={PoundSterlingIcon} // Will use a config for the user's currency
-              {...conform.input(fields.buyItNowPrice)}
+              {...getInputProps(fields.buyItNowPrice, { type: "number" })}
             />
           </div>
           <span className="text-[8px]">
@@ -227,16 +242,14 @@ export default function CreateListingRoute() {
             <FormField
               label="Image"
               accept="image/*"
-              type="file"
-              key={image.id}
-              {...conform.input(image)}
+              {...getInputProps(image, { type: "file" })}
             />
           ))}
           <div className="flex justify-end">
             <Button
               className="self-end"
               variant="outline"
-              {...list.insert(fields.images.name, {})}
+              {...form.insert.getButtonProps({ name: fields.images.name })}
             >
               {images.length === 0 ? "Add image" : "Add another image"}
             </Button>
@@ -253,13 +266,13 @@ export default function CreateListingRoute() {
                   label="Starting price"
                   errors={fields.startingBid.errors}
                   Icon={PoundSterlingIcon}
-                  {...conform.input(fields.startingBid)}
+                  {...getInputProps(fields.startingBid, { type: "number" })}
                 />
                 <FormField
                   label="Reserve price"
                   errors={fields.reservePrice.errors}
                   Icon={PoundSterlingIcon}
-                  {...conform.input(fields.reservePrice)}
+                  {...getInputProps(fields.reservePrice, { type: "number" })}
                 />
               </div>
               <div className="mt-5 flex items-center space-x-2">
@@ -267,7 +280,7 @@ export default function CreateListingRoute() {
                   label="Smallest bid"
                   errors={fields.minBidIncrement.errors}
                   Icon={PoundSterlingIcon}
-                  {...conform.input(fields.minBidIncrement)}
+                  {...getInputProps(fields.minBidIncrement, { type: "number" })}
                 />
                 <div className="flex w-full flex-col gap-1.5">
                   <Label className="font-bold" htmlFor="date">

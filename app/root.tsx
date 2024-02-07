@@ -1,4 +1,4 @@
-import { parse } from "@conform-to/zod";
+import { parseWithZod } from "@conform-to/zod";
 import {
   type ActionFunctionArgs,
   type LoaderFunctionArgs,
@@ -33,7 +33,7 @@ import { UserProvider } from "./contexts/user-context";
 import { getHomepageCategories } from "./services/category.server";
 
 const SearchSchema = z.object({
-  intent: z.literal("search"),
+  intent: z.string(),
   search: z.string({
     required_error: "Search is required",
   }),
@@ -62,12 +62,19 @@ export function links() {
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData();
-  const submission = parse(formData, { schema: SearchSchema });
+  const submission = parseWithZod(formData, { schema: SearchSchema });
 
-  if (submission.value?.intent === "search" && submission.value.search) {
-    const { search } = submission.value;
+  if (submission.status !== "success") {
+    return json(submission.reply(), {
+      status: submission.status === "error" ? 400 : 200,
+    });
+  }
+
+  const { intent, search } = submission.value;
+
+  if (intent === "search" && submission.value.search) {
     return redirect(`/search?query=${search}`);
-  } else if (submission.intent === "logout") {
+  } else if (intent === "logout") {
     return await logout(request);
   }
 

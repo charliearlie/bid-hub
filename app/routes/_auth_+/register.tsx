@@ -1,5 +1,5 @@
-import { useForm } from "@conform-to/react";
-import { getFieldsetConstraint, parse } from "@conform-to/zod";
+import { getFormProps, useForm } from "@conform-to/react";
+import { getZodConstraint, parseWithZod } from "@conform-to/zod";
 import { type DataFunctionArgs, json } from "@remix-run/node";
 import { Form, useActionData } from "@remix-run/react";
 import { HoneypotInputs } from "remix-utils/honeypot/react";
@@ -32,7 +32,7 @@ const RegisterFormSchema = z.object({
 export async function action({ request }: DataFunctionArgs) {
   const formData = await request.formData();
   checkForHoneypot(formData);
-  const submission = await parse(formData, {
+  const submission = await parseWithZod(formData, {
     schema: RegisterFormSchema.superRefine(async (data, ctx) => {
       const availabilityCheck = await checkAvailability(
         data.email,
@@ -60,21 +60,24 @@ export async function action({ request }: DataFunctionArgs) {
     async: true,
   });
 
-  if (submission.intent !== "submit" || !submission.value) {
-    return json({ status: "idle", submission } as const);
+  if (submission.status !== "success") {
+    return json(
+      { result: submission.reply(), status: "submission.status" },
+      {
+        status: submission.status === "error" ? 400 : 200,
+      }
+    );
   }
 
   const newUser = await createUser(submission.value);
 
   if (!newUser) {
-    return json(
-      {
-        status: "error",
-        submission,
-        error: "Something went wrong",
-      } as const,
-      { status: 500 }
-    );
+    return json({
+      result: submission.reply({
+        formErrors: ["Something went wrong"],
+      }),
+      status: "error",
+    } as const);
   }
   return createUserSession(newUser.id);
 }
@@ -84,21 +87,21 @@ export default function RegisterRoute() {
 
   const [form, fields] = useForm({
     id: "register-form",
-    lastSubmission: actionData?.submission,
-    constraint: getFieldsetConstraint(RegisterFormSchema),
+    lastResult: actionData?.result,
+    constraint: getZodConstraint(RegisterFormSchema),
     shouldValidate: "onBlur",
     onValidate: ({ formData }) => {
-      return parse(formData, { schema: RegisterFormSchema });
+      return parseWithZod(formData, { schema: RegisterFormSchema });
     },
   });
 
   return (
     <div className="flex h-full flex-col gap-8">
       <h1 className="text-center text-2xl font-bold">Sign up to Bidhub</h1>
-      <Form className="flex flex-col" method="post" {...form.props}>
+      <Form className="flex flex-col" method="post" {...getFormProps(form)}>
         {actionData?.status === "error" && (
           <Alert variant="destructive">
-            <AlertTitle>{actionData?.error}</AlertTitle>
+            <AlertTitle>{form.errors}</AlertTitle>
           </Alert>
         )}
         <FormField

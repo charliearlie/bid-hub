@@ -1,5 +1,5 @@
-import { conform, useForm } from "@conform-to/react";
-import { getFieldsetConstraint, parse } from "@conform-to/zod";
+import { getFormProps, getInputProps, useForm } from "@conform-to/react";
+import { getZodConstraint, parseWithZod } from "@conform-to/zod";
 import { ReportType } from "@prisma/client";
 import { DataFunctionArgs, json, redirect } from "@remix-run/node";
 import { Form, useActionData } from "@remix-run/react";
@@ -28,26 +28,31 @@ const ReportSchema = z.object({
 export async function action({ params, request }: DataFunctionArgs) {
   invariant(params.username, "No username provided");
   const formData = await request.formData();
-  const submission = parse(formData, { schema: ReportSchema });
+  const submission = parseWithZod(formData, { schema: ReportSchema });
 
-  if (submission.intent !== "submit" || !submission.value) {
-    return json({ status: "idle", submission } as const);
+  if (submission.status !== "success") {
+    return json(
+      { result: submission.reply(), status: submission.status } as const,
+      {
+        status: submission.status === "error" ? 400 : 200,
+      }
+    );
   }
 
   const user = await getUserByUsernameOrEmail(params.username);
   const currentUserId = await getUserId(request);
   if (!user) {
     return json({
+      result: submission.reply({ formErrors: ["This user no longer exists"] }),
       status: "error",
-      submission,
-      message: "This user no longer exists",
     } as const);
   } else if (!currentUserId) {
     return json({
+      result: submission.reply({
+        formErrors: ["You must be logged in to report a user"],
+      }),
       status: "error",
-      submission,
-      message: "You must be logged in to report a user",
-    } as const);
+    });
   }
 
   await reportUser(
@@ -64,12 +69,12 @@ export default function ReportUserRoute() {
   const actionData = useActionData<typeof action>();
   const [form, fields] = useForm({
     id: "report-user-form",
-    lastSubmission: actionData?.submission,
+    lastResult: actionData?.result,
     shouldValidate: "onBlur",
     onValidate: ({ formData }) => {
-      return parse(formData, { schema: ReportSchema });
+      return parseWithZod(formData, { schema: ReportSchema });
     },
-    constraint: getFieldsetConstraint(ReportSchema),
+    constraint: getZodConstraint(ReportSchema),
   });
 
   return (
@@ -79,20 +84,24 @@ export default function ReportUserRoute() {
         <Alert variant="destructive" className="my-2">
           <AlertTitle>User not found</AlertTitle>
           <AlertDescription>
-            {actionData.message ?? "Something went wrong"}
+            {form.errors ?? "Something went wrong"}
           </AlertDescription>
         </Alert>
       )}
-      <Form {...form.props} method="post" className="flex flex-col gap-4">
+      <Form
+        {...getFormProps(form)}
+        method="post"
+        className="flex flex-col gap-4"
+      >
         <FormField
           label="Report Type"
           errors={fields.type.errors}
-          {...conform.input(fields.type)}
+          {...getInputProps(fields.type, { type: "text" })}
         />
         <FormFieldTextArea
           label="Description"
           errors={fields.description.errors}
-          {...conform.input(fields.description)}
+          {...getInputProps(fields.description, { type: "text" })}
           rows={10}
         />
         <div className="flex sm:justify-end">
