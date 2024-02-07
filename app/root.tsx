@@ -83,6 +83,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const user = await getUser(request);
+  console.log("DATABASE_URL", process.env.DATABASE_URL);
   const categories = await getHomepageCategories();
   return json({ user, categories, ENV: getEnv() });
 };

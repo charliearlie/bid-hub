@@ -6,6 +6,7 @@ const schema = z.object({
   CLOUDINARY_KEY: z.string(),
   CLOUDINARY_SECRET: z.string(),
   CLOUDINARY_LEGACY_URL: z.string().url(),
+  DATABASE_URL: z.string(),
   HONEYPOT_SECRET: z.string(),
   SESSION_SECRET: z.string(),
   RESEND_API_KEY: z.string(),
