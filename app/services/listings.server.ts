@@ -256,13 +256,31 @@ export const getUsersListings = async (username: string) => {
   return listings;
 };
 
-export const getSearchListings = async (query: string) => {
+export type SearchOptions = {
+  take?: number;
+  skip?: number;
+  orderBy?: {
+    [key: string]: "asc" | "desc";
+  };
+};
+
+export const getSearchListings = async (
+  query: string,
+  options: SearchOptions = {
+    take: 10,
+    skip: 0,
+    orderBy: {
+      createdAt: "desc",
+    },
+  }
+) => {
   const matchedByTitle = await prisma.listing.findMany({
     where: {
       title: {
         search: query,
       },
     },
+    ...options,
   });
 
   const matchedByDescription = await prisma.listing.findMany({

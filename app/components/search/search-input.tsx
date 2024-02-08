@@ -6,7 +6,9 @@ import { loader } from "~/routes/api+/realtime-search";
 
 import { Input } from "~/components/common/ui/input";
 
+import { Button } from "../common/ui/button";
 import { Card } from "../common/ui/card";
+import { Separator } from "../common/ui/separator";
 
 export function SearchInput() {
   const fetcher = useFetcher<typeof loader>();
@@ -21,6 +23,8 @@ export function SearchInput() {
       { method: "GET", action: "/api/realtime-search" }
     );
   }, [debouncedQuery]);
+
+  const shouldShowAllResultsButton = fetcher?.data?.length === 3;
 
   return (
     <div className="relative w-full">
@@ -42,7 +46,7 @@ export function SearchInput() {
         />
       </Form>
       {fetcher.data && isFocused ? (
-        <Card className="absolute z-50 max-h-60 w-full overflow-scroll">
+        <Card className="absolute z-50 max-h-72 w-full overflow-scroll">
           <ul className="space-y-2">
             {fetcher.data.map(({ slug, thumbnail, title }) => (
               <li key={slug} className="flex items-center space-x-2">
@@ -57,6 +61,16 @@ export function SearchInput() {
               </li>
             ))}
           </ul>
+          {shouldShowAllResultsButton && (
+            <>
+              <Separator />
+              <Button className="w-full text-white" asChild variant="link">
+                <Link to={`/search?query=${debouncedQuery}`}>
+                  See all results
+                </Link>
+              </Button>
+            </>
+          )}
         </Card>
       ) : null}
     </div>

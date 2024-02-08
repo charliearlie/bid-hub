@@ -8,7 +8,7 @@ export const loader = async ({ request }: DataFunctionArgs) => {
   let query = searchParams.get("query");
   invariant(query, "Query is required");
 
-  const searchResults = await getSearchListings(query);
+  const searchResults = await getSearchListings(query, { take: 3 });
 
   return json(
     searchResults.map(({ slug, thumbnail, title }) => ({

@@ -1074,6 +1074,10 @@ h3 {
   max-height: 100vh;
 }
 
+.max-h-72 {
+  max-height: 18rem;
+}
+
 .min-h-\[18px\] {
   min-height: 18px;
 }
@@ -2101,6 +2105,11 @@ h3 {
   color: hsl(var(--secondary-foreground));
 }
 
+.text-white {
+  --tw-text-opacity: 1;
+  color: rgb(255 255 255 / var(--tw-text-opacity));
+}
+
 .underline {
   text-decoration-line: underline;
 }
@@ -2411,6 +2420,10 @@ h3 {
 
 .hover\:underline:hover {
   text-decoration-line: underline;
+}
+
+.hover\:underline-offset-2:hover {
+  text-underline-offset: 2px;
 }
 
 .hover\:opacity-100:hover {
