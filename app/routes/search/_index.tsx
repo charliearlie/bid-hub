@@ -30,9 +30,14 @@ export const loader = async ({ request }: DataFunctionArgs) => {
 
 export default function SearchRoute() {
   const { query, results } = useLoaderData<typeof loader>();
+
+  const headerText =
+    results.length > 0 ? "Search results for:" : "No results found";
   return (
     <StandardLayout>
-      <h1>Search results for: {query}</h1>
+      <h1>
+        {headerText} {query}
+      </h1>
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
         {results.map((listing) => (
           <ListingPreview key={listing.slug} listing={listing} />

@@ -64,7 +64,7 @@ export function SearchInput() {
           {shouldShowAllResultsButton && (
             <>
               <Separator />
-              <Button className="w-full text-white" asChild variant="link">
+              <Button className="w-full text-foreground" asChild variant="link">
                 <Link to={`/search?query=${debouncedQuery}`}>
                   See all results
                 </Link>
