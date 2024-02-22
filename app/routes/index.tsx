@@ -52,29 +52,33 @@ export default function Index() {
         <h2 className="flex h-16 w-full items-center justify-center rounded bg-accent text-center text-3xl font-black">
           Buy & sell things
         </h2>
-        <div className="mx-auto max-w-screen-xl py-4 px-2 lg:px-4">
+        <div className="mx-auto max-w-screen-xl px-2 py-4 lg:px-4">
           <h2>Recent listings</h2>
           <Previews listings={loaderData.listings} />
         </div>
         <div className="bg-accent">
-          <div className="mx-auto max-w-screen-xl py-4 px-2 lg:px-4">
+          <div className="mx-auto max-w-screen-xl px-2 py-4 lg:px-4">
             <h2>Popular Categories</h2>
-            <div className="grid grid-cols-2 gap-4 py-4 md:grid-cols-4">
+            <ul
+              className="grid grid-cols-2 gap-4 py-4 md:grid-cols-4"
+              id="popular-category-list"
+            >
               {loaderData.categories.map((category) => (
-                <Link
-                  className="flex cursor-pointer flex-col gap-2 hover:opacity-80"
-                  to={`/category/${category.slug}`}
-                  key={category.slug}
-                >
-                  <img
-                    className="rounded-md"
-                    src={category.image || ""}
-                    alt={category.name}
-                  />
-                  <p className="text-center">{category.name}</p>
-                </Link>
+                <li key={category.slug}>
+                  <Link
+                    className="flex cursor-pointer flex-col gap-2 hover:opacity-80"
+                    to={`/category/${category.slug}`}
+                  >
+                    <img
+                      className="rounded-md"
+                      src={category.image || ""}
+                      alt={category.name}
+                    />
+                    <p className="text-center">{category.name}</p>
+                  </Link>
+                </li>
               ))}
-            </div>
+            </ul>
           </div>
         </div>
       </div>
