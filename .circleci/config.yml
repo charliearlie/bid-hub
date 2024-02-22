@@ -92,9 +92,9 @@ workflows:
           filters:
             branches:
               only: /.*/
-      # - test:
-      #     requires:
-      #       - build
-      #     filters:
-      #       branches:
-      #         only: /.*/
+      - test:
+          requires:
+            - build
+          filters:
+            branches:
+              only: /.*/
