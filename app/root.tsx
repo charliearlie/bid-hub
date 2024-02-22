@@ -8,7 +8,6 @@ import {
 } from "@remix-run/node";
 import {
   Links,
-  LiveReload,
   Meta,
   Outlet,
   Scripts,
@@ -18,8 +17,8 @@ import {
 } from "@remix-run/react";
 import { AlertOctagon } from "lucide-react";
 import { z } from "zod";
-import styles from "~/styles/app.css";
-import fontStylesheet from "~/styles/font.css";
+import styles from "~/styles/app.css?url";
+import fontStylesheet from "~/styles/font.css?url";
 
 import { ErrorBoundaryComponent } from "~/components/error-boundary";
 import { SharedHeader } from "~/components/header/shared-header";
@@ -100,7 +99,6 @@ function Document({ children }: { children: React.ReactNode }) {
         {children}
         <ScrollRestoration />
         <Scripts />
-        <LiveReload />
       </body>
     </html>
   );
