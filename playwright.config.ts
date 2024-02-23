@@ -70,6 +70,7 @@ export default defineConfig({
   webServer: {
     command: "PORT=7777 pnpm run dev",
     url: "http://localhost:7777",
+    timeout: 2 * 60 * 1000,
     reuseExistingServer: !process.env.CI,
   },
 });
