@@ -4,7 +4,7 @@ import { defineConfig, devices } from "@playwright/test";
  * Read environment variables from file.
  * https://github.com/motdotla/dotenv
  */
-// require('dotenv').config();
+require("dotenv").config();
 
 /**
  * See https://playwright.dev/docs/test-configuration.
@@ -68,8 +68,8 @@ export default defineConfig({
     // },
   ],
   webServer: {
-    command: "pnpm run dev",
-    port: 7777,
+    command: "PORT=7777 pnpm run dev",
+    url: "http://localhost:7777",
     timeout: 2 * 60 * 1000,
     reuseExistingServer: !process.env.CI,
   },
