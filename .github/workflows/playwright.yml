@@ -9,6 +9,16 @@ jobs:
   test:
     timeout-minutes: 60
     runs-on: ubuntu-latest
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
+      HONEYPOT_SECRET: ${{ secrets.HONEYPOT_SECRET }}
+      CLOUDINARY_SECRET: ${{ secrets.CLOUDINARY_SECRET }}
+      CLOUDINARY_KEY: ${{ secrets.CLOUDINARY_KEY }}
+      RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+      FRONTEND_URL: "http://localhost:3000"
+      CLOUDINARY_CLOUD_NAME: "bidhub"
+      CLOUDINARY_LEGACY_URL: "https://api.cloudinary.com/v1_1/bidhub/image/upload"
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
