@@ -4,10 +4,21 @@ on:
     branches: [main, master]
   pull_request:
     branches: [main, master]
+
 jobs:
   test:
     timeout-minutes: 60
     runs-on: ubuntu-latest
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
+      HONEYPOT_SECRET: ${{ secrets.HONEYPOT_SECRET }}
+      CLOUDINARY_SECRET: ${{ secrets.CLOUDINARY_SECRET }}
+      CLOUDINARY_KEY: ${{ secrets.CLOUDINARY_KEY }}
+      RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+      FRONTEND_URL: ${{ variables.FRONTEND_URL }}
+      CLOUDINARY_CLOUD_NAME: ${{ variables.CLOUDINARY_CLOUD_NAME }}
+      CLOUDINARY_LEGACY_URL: ${{ variables.CLOUDINARY_LEGACY_URL }}
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
