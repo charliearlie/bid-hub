@@ -17,6 +17,13 @@ jobs:
         run: npm install -g pnpm && pnpm install
       - name: Install Playwright Browsers
         run: pnpm exec playwright install --with-deps
+      - name: Start web server and save logs (with longer timeout)
+        run: pnpm run dev > webserver.log 2>&1 &
+      - name: Wait for server to be ready
+        run: |
+          while ! nc -z localhost 3000; do   
+            sleep 1 # wait for 1 second before checking again
+          done
       - name: Run Playwright tests
         run: pnpm run test:e2e
       - uses: actions/upload-artifact@v3
@@ -24,4 +31,10 @@ jobs:
         with:
           name: playwright-report
           path: playwright-report/
+          retention-days: 30
+      - uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: webserver-logs
+          path: webserver.log
           retention-days: 30
