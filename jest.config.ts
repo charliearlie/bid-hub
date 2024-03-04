@@ -16,6 +16,7 @@ const jestConfig: JestConfigWithTsJest = {
     "^.+\\.(ts|tsx)?$": "ts-jest",
     "^.+\\.(js|jsx)$": "babel-jest",
   },
+  modulePathIgnorePatterns: ["<rootDir>/playwright"],
 };
 
 export default jestConfig;

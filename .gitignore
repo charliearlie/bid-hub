@@ -4,3 +4,8 @@ node_modules
 /build
 .env
 /public/build
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+.notes.md

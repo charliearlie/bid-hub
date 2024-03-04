@@ -10,7 +10,7 @@ export default function Previews({
   listings: ListingPreviewType[];
 }) {
   return (
-    <ScrollableRow>
+    <ScrollableRow id="listing-previews">
       {listings.map((listing) => (
         <li key={listing.id} className="snap-start">
           <ListingPreview listing={listing} key={listing.slug} />
