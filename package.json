@@ -7,7 +7,7 @@
   },
   "scripts": {
     "start": "remix-serve ./build/server/index.js",
-    "build": "pnpm run build:css && vite:build",
+    "build": "pnpm run build:css && remix vite:build",
     "build:css": "tailwindcss -m -i ./styles/tailwind.css -o app/styles/app.css --minify",
     "dev": "concurrently \"pnpm run dev:css\" \"remix vite:dev\"",
     "dev:css": "tailwindcss -w -i ./styles/tailwind.css -o app/styles/app.css",
