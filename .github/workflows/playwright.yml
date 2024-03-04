@@ -27,7 +27,7 @@ jobs:
       - name: Install dependencies
         run: npm install -g pnpm && pnpm install
       - name: Seed database
-        run: prisma seed
+        run: pnpm exec prisma seed
       - name: Install Playwright Browsers
         run: pnpm exec playwright install --with-deps
       - name: Run Playwright tests
