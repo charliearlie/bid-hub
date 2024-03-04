@@ -27,7 +27,7 @@ jobs:
       - name: Install dependencies
         run: npm install -g pnpm && pnpm install
       - name: Seed database
-        run: ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts
+        run: npx ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts
       - name: Install Playwright Browsers
         run: pnpm exec playwright install --with-deps
       - name: Run Playwright tests
