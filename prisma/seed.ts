@@ -7,7 +7,7 @@ import {
   fulfilmentOptions,
   productDetails,
 } from "./fixtures";
-import { createCategoriesWithImages, createListing } from "./helpers";
+import { createCategoriesWithImages, createTestData } from "./helpers";
 
 const prisma = new PrismaClient();
 async function seed() {
@@ -293,6 +293,10 @@ async function seed() {
   await prisma.$transaction(listingInserts);
 
   createCategoriesWithImages(prisma);
+  setTimeout(async () => {
+    await createTestData(prisma, userIds, categoryIds);
+    console.log("🌱 Categories have been seeded");
+  }, 5000);
 
   console.timeEnd(`🌱 Database has been seeded`);
 }
