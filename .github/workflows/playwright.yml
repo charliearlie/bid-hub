@@ -41,19 +41,21 @@ jobs:
         with:
           node-version: 18
 
-      # Install dependencies
       - name: Install dependencies
         run: npm install -g pnpm && pnpm install
 
-      # Install Playwright browsers
+      - name: Generate Prisma
+        run: npx prisma migrate deploy
+
+      - name: Seed database
+        run: npx prisma db seed
+
       - name: Install Playwright Browsers
         run: pnpm exec playwright install --with-deps
 
-      # Run Playwright tests
       - name: Run Playwright tests
         run: pnpm run test:e2e
 
-      # Collect artifacts for analysis
       - uses: actions/upload-artifact@v3
         if: always()
         with:
