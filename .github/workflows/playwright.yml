@@ -19,21 +19,41 @@ jobs:
       FRONTEND_URL: "http://localhost:3000"
       CLOUDINARY_CLOUD_NAME: "bidhub"
       CLOUDINARY_LEGACY_URL: "https://api.cloudinary.com/v1_1/bidhub/image/upload"
+
+    services:
+      postgres:
+        image: postgres:latest
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: test_db
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
           node-version: 18
+
+      # Install dependencies
       - name: Install dependencies
         run: npm install -g pnpm && pnpm install
-      - name: Generate Prisma
-        run: npx prisma migrate deploy
-      - name: Seed database
-        run: npx prisma db seed
+
+      # Install Playwright browsers
       - name: Install Playwright Browsers
         run: pnpm exec playwright install --with-deps
+
+      # Run Playwright tests
       - name: Run Playwright tests
         run: pnpm run test:e2e
+
+      # Collect artifacts for analysis
       - uses: actions/upload-artifact@v3
         if: always()
         with:
@@ -46,18 +66,7 @@ jobs:
           name: webserver-logs
           path: webserver.log
           retention-days: 30
-    services:
-      postgres:
-        image: postgres:latest
-        env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: test_db
-        ports:
-          - 5432:5432
-        # Add health checks to wait for Postgres to be ready (optional, but recommended for stability)
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
+
+      - name: Tear down Postgres
+        if: ${{ always() }}
+        run: psql postgres://postgres:postgres@localhost:5432/test_db -c 'DROP SCHEMA public CASCADE; CREATE SCHEMA public;'
