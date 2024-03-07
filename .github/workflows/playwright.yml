@@ -44,10 +44,6 @@ jobs:
       - name: Install dependencies
         run: npm install -g pnpm && pnpm install
 
-      - name: Tear down Postgres
-        if: ${{ always() }}
-        run: psql postgres://postgres:postgres@localhost:5432/test_db -c 'DROP SCHEMA public CASCADE; CREATE SCHEMA public;'
-
       - name: Generate Prisma
         run: npx prisma migrate deploy
 
@@ -72,3 +68,7 @@ jobs:
           name: webserver-logs
           path: webserver.log
           retention-days: 30
+
+      - name: Tear down Postgres
+        if: ${{ always() }}
+        run: psql postgres://postgres:postgres@localhost:5432/test_db -c 'DROP SCHEMA public CASCADE; CREATE SCHEMA public;'
