@@ -34,3 +34,11 @@ Data can be viewed in Prisma's studio. To do this run:
 ```sh
 pnpm db:studio
 ```
+
+## Playwright tests
+
+Currently on the CI we create and seed a brand new database every time we run the e2e tests. Locally, this is possible but will likely need to be done in a container. So until I set that up, it's preferred that you create a db locally and run the tests against that, and empty it when finished. Especially for tests involving mutations.
+
+Or solely run your tests on the CI
+
+Talking to myself but never mind.

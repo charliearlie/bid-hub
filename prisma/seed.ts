@@ -7,7 +7,7 @@ import {
   fulfilmentOptions,
   productDetails,
 } from "./fixtures";
-import { createCategoriesWithImages, createListing } from "./helpers";
+import { createCategoriesWithImages, createTestData } from "./helpers";
 
 const prisma = new PrismaClient();
 async function seed() {
@@ -289,115 +289,14 @@ async function seed() {
     });
   });
 
-  const user = await prisma.user.create({
-    data: {
-      email: "playwright@test.com",
-      password: faker.internet.password(),
-      username: "TestUser",
-      feedbackScore: 5,
-      avatarUrl: faker.image.urlPicsumPhotos(),
-    },
-  });
-
-  await prisma.address.create({
-    data: {
-      name: "Test Person",
-      addressLine1: "101 Test Lane",
-      cityOrTown: "Testville",
-      country: "Testland",
-      postcode: "TE5T 1NG",
-      user: {
-        connect: {
-          id: user.id,
-        },
-      },
-    },
-  });
-
-  await prisma.listing.create({
-    data: {
-      title: "Test listing",
-      description: "Description for test listing",
-      buyItNowPrice: 150,
-      category: {
-        connect: {
-          id: categoryIds[
-            faker.number.int({ min: 1, max: categoryIds.length - 1 })
-          ],
-        },
-      },
-      seller: {
-        connect: {
-          id: user.id,
-        },
-      },
-      slug: `${faker.helpers.slugify("Test listing")}-${uuidv4()}`,
-      thumbnail: cloudinaryImages[0].thumbnail,
-      quantity: 10,
-      images: {
-        create: [
-          {
-            altText: cloudinaryImages[0].altText,
-            imageUrl: cloudinaryImages[0].imageUrl,
-            publicId: cloudinaryImages[0].publicId,
-          },
-          {
-            altText: "SpongeBob SquarePants",
-            imageUrl:
-              "https://res.cloudinary.com/bidhub/image/upload/v1701896680/bidhub/dxcfmoarddecngekkg7w.webp",
-            publicId: "bidhub/dxcfmoarddecngekkg7w",
-          },
-        ],
-      },
-      rating: 4,
-      reviews: {
-        create: [1, 2, 3].map(() => ({
-          rating: faker.number.int({ min: 1, max: 5 }),
-          comment: faker.lorem.paragraph(),
-          buyer: {
-            connect: {
-              id: userIds[
-                faker.number.int({ min: 1, max: userIds.length - 1 })
-              ],
-            },
-          },
-          seller: {
-            connect: {
-              id: user.id,
-            },
-          },
-        })),
-      },
-      numberSold: faker.number.int({ min: 0, max: 100 }),
-      warranty: {
-        create: {
-          duration: 12,
-          bidHubExtendedWarranty: true,
-          extendable: true,
-        },
-      },
-      fulfilmentOptions: {
-        create:
-          fulfilmentOptions[
-            faker.number.int({ min: 0, max: fulfilmentOptions.length - 1 })
-          ],
-      },
-      productDetails: {
-        create: {
-          brand: "Testisoft",
-          sizes: ["SM", "MD", "LG", "XL"],
-          materials: ["Rubber", "Leather"],
-          fit: "Slim",
-          colours: ["Black", "White"],
-        },
-      },
-    },
-  });
-
   // https://github.com/prisma/prisma/issues/8131
   await prisma.$transaction(listingInserts);
 
   createCategoriesWithImages(prisma);
+  setTimeout(async () => {
+    await createTestData(prisma, userIds, categoryIds);
+    console.log("🌱 Categories have been seeded");
+  }, 5000);
 
   console.timeEnd(`🌱 Database has been seeded`);
 }

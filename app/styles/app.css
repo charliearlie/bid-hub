@@ -1735,11 +1735,6 @@ h3 {
   background-color: transparent;
 }
 
-.bg-red-900 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(127 29 29 / var(--tw-bg-opacity));
-}
-
 .fill-accent {
   fill: hsl(var(--accent));
 }
@@ -2104,10 +2099,6 @@ h3 {
 
 .text-secondary-foreground {
   color: hsl(var(--secondary-foreground));
-}
-
-.text-background {
-  color: hsl(var(--background));
 }
 
 .underline {
