@@ -303,3 +303,9 @@ export const cloudinaryImages: {
       "https://res.cloudinary.com/bidhub/image/upload/v1700861751/bidhub/jteq7onnq9r03eqjuznk.webp",
   },
 ];
+
+export const userData = {
+  email: "playwright@test.com",
+  password: "password",
+  username: "TestUser",
+};

@@ -1,4 +1,4 @@
-import { Form, Link, useFetcher } from "@remix-run/react";
+import { Form, Link, useFetcher, useNavigation } from "@remix-run/react";
 import { useCombobox } from "downshift";
 import { SearchIcon } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -13,6 +13,8 @@ import { Separator } from "../common/ui/separator";
 
 export function SearchInput() {
   const fetcher = useFetcher<typeof loader>();
+  const [showResults, setShowResults] = useState(false);
+  const navigation = useNavigation();
   const [query, setQuery] = useState("");
   let [debouncedQuery] = useDebounce(query, 300);
 
@@ -22,7 +24,12 @@ export function SearchInput() {
       { query: debouncedQuery },
       { method: "GET", action: "/api/realtime-search" }
     );
+    setShowResults(true);
   }, [debouncedQuery]);
+
+  useEffect(() => {
+    setShowResults(false);
+  }, [navigation.location?.pathname]);
 
   const { getInputProps, getMenuProps } = useCombobox({
     items: fetcher.data || [],
@@ -55,23 +62,23 @@ export function SearchInput() {
         />
       </Form>
       <Card
-        id="search-list"
         className="absolute z-50 max-h-72 w-full overflow-scroll"
         {...getMenuProps()}
       >
-        <ul className="space-y-2">
-          {fetcher?.data?.map(({ slug, thumbnail, title }) => (
-            <li key={slug} className="flex items-center space-x-2">
-              <Link className="flex gap-4 p-2" to={`/listings/${slug}`}>
-                <img
-                  src={thumbnail}
-                  alt={title}
-                  className="h-12 w-12 rounded-md object-cover"
-                />
-                <h4>{title}</h4>
-              </Link>
-            </li>
-          ))}
+        <ul id="search-list" className="space-y-2">
+          {showResults &&
+            fetcher?.data?.map(({ slug, thumbnail, title }) => (
+              <li key={slug} className="flex items-center space-x-2">
+                <Link className="flex gap-4 p-2" to={`/listings/${slug}`}>
+                  <img
+                    src={thumbnail}
+                    alt={title}
+                    className="h-12 w-12 rounded-md object-cover"
+                  />
+                  <h4>{title}</h4>
+                </Link>
+              </li>
+            ))}
         </ul>
         {shouldShowAllResultsButton && (
           <>

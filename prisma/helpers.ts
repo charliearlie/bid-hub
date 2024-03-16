@@ -1,8 +1,9 @@
 import { faker } from "@faker-js/faker";
 import type { PrismaClient } from "@prisma/client";
+import bcrypt from "bcryptjs";
 import { v4 as uuidv4 } from "uuid";
 
-import { fulfilmentOptions, productDetails } from "./fixtures";
+import { fulfilmentOptions, productDetails, userData } from "./fixtures";
 
 const cloudinaryImages: {
   altText: string;
@@ -269,9 +270,9 @@ export const createTestData = async (
 ) => {
   const user = await prisma.user.create({
     data: {
-      email: "playwright@test.com",
-      password: faker.internet.password(),
-      username: "TestUser",
+      email: userData.email,
+      password: await bcrypt.hash(userData.password, 10),
+      username: userData.username,
       feedbackScore: 5,
       avatarUrl: faker.image.urlPicsumPhotos(),
     },
