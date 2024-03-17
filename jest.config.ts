@@ -10,6 +10,7 @@ const jestConfig: JestConfigWithTsJest = {
     "^~/(.*)$": "<rootDir>/app/$1",
   },
   watchPathIgnorePatterns: ["/node_modules/", "/\\.git/", "\\.snap$"],
+  transformIgnorePatterns: ["/node_modules/@remix-run/react.+\\.js$"],
   extensionsToTreatAsEsm: [".ts", ".tsx"],
   preset: "ts-jest",
   transform: {
